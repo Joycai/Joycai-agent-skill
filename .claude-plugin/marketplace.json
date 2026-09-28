@@ -1,0 +1,17 @@
+{
+  "name": "joycai-agent-skill",
+  "description": "Joycai 的 Claude 插件市场：LLM 接入知识库、agent 架构等自用 skill",
+  "owner": {
+    "name": "Joycai"
+  },
+  "plugins": [
+    {
+      "name": "ai-agent-architecture",
+      "source": "./plugins/ai-agent-architecture",
+      "description": "平台 × 协议 × 模型 的已验证事实矩阵、供应商分层架构与知识吸收协议（OpenAI / Anthropic / Gemini / 百炼 / 火山 / 智谱 / 中转站 / 本地；出图 / 视频 / ASR）",
+      "version": "2.0.0",
+      "category": "engineering",
+      "keywords": ["llm", "api", "provider", "relay", "中转站", "thinking", "structured-output", "web_search", "image-generation", "asr"]
+    }
+  ]
+}

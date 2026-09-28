@@ -1,0 +1,9 @@
+{
+  "name": "ai-agent-architecture",
+  "version": "2.0.0",
+  "description": "平台 × 协议 × 模型 的已验证 LLM 端点事实矩阵、供应商分层架构与知识吸收协议",
+  "author": {
+    "name": "Joycai"
+  },
+  "keywords": ["llm", "api", "provider", "relay", "thinking", "structured-output", "server-tools", "image-generation", "video-generation", "asr"]
+}
