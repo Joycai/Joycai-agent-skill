@@ -1,0 +1,7 @@
+{
+  "name": "agent-runtime-architecture",
+  "version": "1.0.0",
+  "description": "LLM API 之上 agent 层的架构标准：工具循环与终止规则、审批与写安全、工具按需加载、子代理委派、上下文压缩与会话持久化",
+  "author": { "name": "Joycai" },
+  "keywords": ["agent", "tool-loop", "approval", "subagent", "context-compaction", "session-persistence"]
+}

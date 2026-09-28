@@ -17,6 +17,7 @@ claude plugin marketplace add Joycai/Joycai-agent-skill
 
 ```bash
 claude plugin install ai-agent-architecture@joycai-agent-skill
+claude plugin install agent-runtime-architecture@joycai-agent-skill
 ```
 
 会话内 `/plugin marketplace add …`、`/plugin install …` 同理。本地目录添加的市场，改完文件后 `/reload-plugins` 或重开会话即生效。
@@ -26,6 +27,7 @@ claude plugin install ai-agent-architecture@joycai-agent-skill
 | 插件 | skill | 用途 |
 | --- | --- | --- |
 | `ai-agent-architecture` | `ai-agent-architecture` | 平台 × 协议 × 模型 的 LLM 端点事实矩阵、供应商分层架构、知识吸收协议 |
+| `agent-runtime-architecture` | `agent-runtime-architecture` | agent 层架构：工具循环、审批与写安全、子代理、上下文压缩与会话持久化 |
 
 ## 目录约定
 

@@ -11,7 +11,32 @@
       "description": "平台 × 协议 × 模型 的已验证事实矩阵、供应商分层架构与知识吸收协议（OpenAI / Anthropic / Gemini / 百炼 / 火山 / 智谱 / 中转站 / 本地；出图 / 视频 / ASR）",
       "version": "2.0.0",
       "category": "engineering",
-      "keywords": ["llm", "api", "provider", "relay", "中转站", "thinking", "structured-output", "web_search", "image-generation", "asr"]
+      "keywords": [
+        "llm",
+        "api",
+        "provider",
+        "relay",
+        "中转站",
+        "thinking",
+        "structured-output",
+        "web_search",
+        "image-generation",
+        "asr"
+      ]
+    },
+    {
+      "name": "agent-runtime-architecture",
+      "source": "./plugins/agent-runtime-architecture",
+      "description": "agent 层架构标准：工具循环、审批与写安全、工具按需加载、子代理委派、上下文压缩与会话持久化（与 ai-agent-architecture 配套）",
+      "version": "1.0.0",
+      "category": "engineering",
+      "keywords": [
+        "agent",
+        "tool-loop",
+        "approval",
+        "subagent",
+        "context-compaction"
+      ]
     }
   ]
 }
