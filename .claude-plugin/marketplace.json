@@ -9,7 +9,7 @@
       "name": "ai-agent-architecture",
       "source": "./plugins/ai-agent-architecture",
       "description": "平台 × 协议 × 模型 的已验证事实矩阵、供应商分层架构与知识吸收协议（OpenAI / Anthropic / Gemini / 百炼 / 火山 / 智谱 / 中转站 / 本地；出图 / 视频 / ASR）",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "engineering",
       "keywords": [
         "llm",
