@@ -65,6 +65,20 @@
         "pricing",
         "fee-groups"
       ]
+    },
+    {
+      "name": "dev-workflow",
+      "source": "./plugins/dev-workflow",
+      "description": "标准化的需求实现 / bug 修复流程：定位范围、设计文档、UI 稿、执行计划、分片提交、子代理 review、开 PR",
+      "version": "1.0.0",
+      "category": "engineering",
+      "keywords": [
+        "workflow",
+        "feature",
+        "bugfix",
+        "review",
+        "pull-request"
+      ]
     }
   ]
 }

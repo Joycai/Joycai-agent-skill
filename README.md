@@ -20,6 +20,7 @@ claude plugin install ai-agent-architecture@joycai-agent-skill
 claude plugin install agent-runtime-architecture@joycai-agent-skill
 claude plugin install channel-route-model@joycai-agent-skill
 claude plugin install llm-billing-model@joycai-agent-skill
+claude plugin install dev-workflow@joycai-agent-skill
 ```
 
 会话内 `/plugin marketplace add …`、`/plugin install …` 同理。本地目录添加的市场，改完文件后 `/reload-plugins` 或重开会话即生效。
@@ -32,6 +33,7 @@ claude plugin install llm-billing-model@joycai-agent-skill
 | `agent-runtime-architecture` | `agent-runtime-architecture` | agent 层架构：工具循环、审批与写安全、子代理、上下文压缩与会话持久化 |
 | `channel-route-model` | `channel-route-model` | LLM 接入配置三层架构：渠道 → 线路 → 模型 |
 | `llm-billing-model` | `llm-billing-model` | LLM / 出图 / 视频 API 计量与计费设计标准 |
+| `dev-workflow` | `dev-workflow` | 标准化的需求实现 / bug 修复流程（定位 → 设计 → 计划 → 分片提交 → review → PR） |
 
 ## 目录约定
 

@@ -1,0 +1,7 @@
+{
+  "name": "dev-workflow",
+  "version": "1.0.0",
+  "description": "标准化的需求实现 / bug 修复流程：子代理定位范围、设计文档、Claude Design 出 UI 稿、执行计划、分片提交、每次提交后子代理 review、整体 review 循环、开 PR",
+  "author": { "name": "Joycai" },
+  "keywords": ["workflow", "feature", "bugfix", "review", "pull-request"]
+}
