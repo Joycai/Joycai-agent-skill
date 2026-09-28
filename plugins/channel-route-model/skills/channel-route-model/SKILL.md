@@ -16,6 +16,9 @@ description: >-
   "渠道", "线路", "一个 key 多个协议", "模型切换协议", "按模型选协议",
   "多面供应商", "合并供应商", "provider schema", "multi-protocol provider",
   "per-route params".
+metadata:
+  version: "1.0.0"
+  updated: 2026-09-28
 ---
 
 # 渠道 × 线路 × 模型（Channel × Route × Model）

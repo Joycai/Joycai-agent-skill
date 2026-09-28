@@ -11,6 +11,9 @@ description: >-
   debugging a session that got permanently broken, a hung approval, or a
   sub-agent returning nothing. For wire-format / endpoint protocol facts
   use the ai-agent-architecture skill instead.
+metadata:
+  version: "1.0.0"
+  updated: 2026-09-28
 ---
 
 # Agent Runtime Architecture（Agent / 子代理体系搭建标准）
