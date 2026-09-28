@@ -13,7 +13,7 @@ description: >-
   use the ai-agent-architecture skill instead.
 metadata:
   version: "1.0.0"
-  updated: 2026-09-28
+  updated: "2026-09-28"
 ---
 
 # Agent Runtime Architecture（Agent / 子代理体系搭建标准）

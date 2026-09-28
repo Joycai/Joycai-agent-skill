@@ -15,6 +15,9 @@ description: >-
   "输入图计费", "上游报价", "用量统计", "token 成本", "cache 计价",
   "usage tracking", "fee groups", "pricing tiers", "spec billing",
   "cost per image", "reported cost", "usage dashboard".
+metadata:
+  version: "1.0.0"
+  updated: "2026-09-28"
 ---
 
 # LLM 计费模型（Fee Groups × Usage Rows）

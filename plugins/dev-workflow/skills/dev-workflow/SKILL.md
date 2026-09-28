@@ -1,6 +1,9 @@
 ---
 name: "dev-workflow"
 description: "标准化的需求实现 / bug 修复流程：子代理定位范围、设计文档、Claude Design 出 UI 稿、执行计划、分片提交、每次提交后子代理 review、整体 review 循环、开 PR。用户说“按工作流做”“实现这个需求”“修这个 bug”“走流程”或调用 /dev-workflow 时使用。"
+metadata:
+  version: "1.0.0"
+  updated: "2026-09-28"
 ---
 
 # 开发工作流

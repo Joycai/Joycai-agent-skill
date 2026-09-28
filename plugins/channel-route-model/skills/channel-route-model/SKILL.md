@@ -18,7 +18,7 @@ description: >-
   "per-route params".
 metadata:
   version: "1.0.0"
-  updated: 2026-09-28
+  updated: "2026-09-28"
 ---
 
 # 渠道 × 线路 × 模型（Channel × Route × Model）

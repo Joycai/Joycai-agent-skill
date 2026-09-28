@@ -15,6 +15,9 @@ description: >-
   failures, or record a test result. Triggers: 接入, 审查模型接入, 中转站,
   思考模型, 结构化输出, web_search, 服务端工具, 出图, 视频生成, 语音识别, ASR,
   流式解析, 供应商分层, 记录实测结果, 更新知识库, any vendor or model name.
+metadata:
+  version: "2.1.0"
+  updated: "2026-09-28"
 ---
 
 # LLM 接入知识库与架构指引
