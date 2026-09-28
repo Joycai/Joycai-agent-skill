@@ -1,0 +1,5 @@
+# channel-route-model
+
+一个 skill：`channel-route-model`。LLM 接入配置的三层架构标准：渠道（一把 key 一个平台）→ 线路（一个地址一个协议族）→ 模型（按线路独立参数 + 当前线路），含平台画像表、旧供应商记录迁移、合并供应商、备份版本与设置 UI
+
+触发：`/channel-route-model:channel-route-model`。

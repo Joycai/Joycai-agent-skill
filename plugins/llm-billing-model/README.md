@@ -1,0 +1,5 @@
+# llm-billing-model
+
+一个 skill：`llm-billing-model`。LLM / 出图 / 视频 API 用量计量与计费的设计标准：三种计费模式的计费组（按 token 含缓存价、按次、按输出规格档位表）、规格匹配、用量行快照、上游报价覆盖、视频先扣后结、用量页与计费组编辑器
+
+触发：`/llm-billing-model:llm-billing-model`。

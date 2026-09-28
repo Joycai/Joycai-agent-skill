@@ -37,6 +37,34 @@
         "subagent",
         "context-compaction"
       ]
+    },
+    {
+      "name": "channel-route-model",
+      "source": "./plugins/channel-route-model",
+      "description": "LLM 接入配置三层架构：渠道 → 线路 → 模型；一把 key 多协议、按模型选协议、旧记录迁移、合并供应商、设置 UI",
+      "version": "1.0.0",
+      "category": "engineering",
+      "keywords": [
+        "llm",
+        "provider",
+        "channel",
+        "route",
+        "multi-protocol"
+      ]
+    },
+    {
+      "name": "llm-billing-model",
+      "source": "./plugins/llm-billing-model",
+      "description": "LLM / 出图 / 视频 API 计量与计费设计标准：计费组三种模式、规格档位表、用量快照、上游报价覆盖、视频先扣后结",
+      "version": "1.0.0",
+      "category": "engineering",
+      "keywords": [
+        "llm",
+        "billing",
+        "usage",
+        "pricing",
+        "fee-groups"
+      ]
     }
   ]
 }
