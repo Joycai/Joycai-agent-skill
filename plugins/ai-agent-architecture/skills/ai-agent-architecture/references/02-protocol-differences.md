@@ -80,6 +80,12 @@ AWSb 400 `URL sources are not supported`。base64 图片四个渠道都送得到
 - **做法**：视频输入做成平台格——实测收的平台点名 `true`，实测不收的写 `false`（与「没测过」分开：没测过落到「未列出」，不发）；
   中转站 / 自定义渠道背后可能正是百炼，判「未知」而不是「不收」。已声明视频、却落在不发上的旧模型行保留声明，界面说「已声明，不发送」。
 
+**④ 面兼容层对未知字段／非法思考值：四家四种报法。**「④ 官方对未知顶层键 400」（§7.1 规则 5 与 21 §3.16 的族级口径）在第三方的 ④ 兼容层上**不成立**——顶层未知字段四家都 200 放过（① 族的 `reasoning_effort` 也放过）；
+`thinking.type:"bogus"` 才分出四种【实测 2026-09-28，各家官方直连，每格一次；simple-ai-writer landscape.md 第四、六、十四、二十个样本】：
+MiniMax 一律 200 静默吞下，`thinking.type:"bogus"` 反而**开启**思考；DeepSeek 422 反序列化报错并点名枚举（``unknown variant `bogus`, expected one of `adaptive`, `enabled`, `disabled` ``）；
+智谱借用「关不掉」的 1210；百炼 400 `Request body format invalid`，不点名字段。报错原文、各家其它非法值（`top_p`、`temperature`、`budget_tokens`、未知模型名）与对「按 400 学降级」的影响见 03 §3.5；
+不这样会怎样：拿「发个 bogus 看 400 不 400」当探测，在 MiniMax 上会把思考打开且不响（坑 217、220）。
+
 ## 2. 消息转换的结构性修补
 
 内部消息是 OpenAI 形状（见第 1 篇），转换到 ③④ 时不是逐字段改名，而是要做**结构性修补**——这是适配器里真正的活。

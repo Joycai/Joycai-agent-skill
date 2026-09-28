@@ -8,8 +8,8 @@
 目录：
 - §1 三分法：强度 / 取回 / 回传义务
 - §2 强度：自有六档词汇 + 每族翻译表（§2.1「关闭」只是最低档时：回退要既发 off 又带一句提示）
-- §3 ThinkingDialect：代次差异由作者声明，不猜（§3.1 智谱 GLM、§3.2 火山方舟豆包：三面控制、思考摘要与加密原文、§3.3 中转站上的 Claude：① `max` = 不想是转换层的；④ 思考随渠道——Kiro effort 只有 low 生效、anti 不想、CC opus-5 空文本、Bedrock 真分档 · §3.4 ④ 开关型方言关思考时的温度：火山方舟听（`0` 等于没发）、MiniMax 不听；事实挂在类目上）
-- §4 思维链的流式暴露：三族三种读法，统一产出 `{reasoning}` chunk
+- §3 ThinkingDialect：代次差异由作者声明，不猜（§3.1 智谱 GLM、§3.2 火山方舟豆包：三面控制、思考摘要与加密原文、§3.3 中转站上的 Claude：① `max` = 不想是转换层的；④ 思考随渠道——Kiro effort 只有 low 生效、anti 不想、CC opus-5 空文本、Bedrock 真分档 · §3.4 ④ 开关型方言关思考时的温度：火山方舟听（`0` 等于没发）、MiniMax 不听；事实挂在类目上 · §3.5 第三方 ④ 面：思考默认值与 `disabled` 三种结局按平台 × 模型；未知字段／非法思考值四家四种）
+- §4 思维链的流式暴露：三族三种读法，统一产出 `{reasoning}` chunk（§4.1 判「想没想」看文本或签名，至少一个非空）
 - §5 回传义务：三族三种载体、三种失败模式
 - §6 `<think>` 标签兜底切分器
 - §7 ② Responses 族：强度 / 取回 / 回传（§7.4 中转站上的 GPT：账号池真分档、`none` 在 ② 上哪都关不掉，① `none` 只在网关上生效）
@@ -41,7 +41,7 @@ ReasoningEffort = default | off | low | medium | high | max
 | 本项目档位 | ① OpenAI 系 `reasoning_effort` | ③ Gemini `generationConfig.thinkingConfig.thinkingLevel` | ④ Anthropic `output_config.effort` |
 | --- | --- | --- | --- |
 | off | `"none"` | `"LOW"`（③ 关不掉，降级为所有型号都收的最低档；**2026-09-26 前写的是 `MINIMAL`**，3.8 Flash 对它 400，见下） | `"low"`（disabled 会被多款模型 400，官方也建议降 effort 而非关；【实测 2026-09-26】Opus 5.5 / Fable 5.1 对 `thinking:{type:"disabled"}` 回 400 `requires adaptive thinking; omit thinking or use thinking.type=adaptive and output_config.effort`） |
-| low/medium/high | 同名 | `LOW/MEDIUM/HIGH`（**全大写**！小写 `thinking_level` 属于另一个 surface：Interactions API） | 同名 |
+| low/medium/high | 同名 | `LOW/MEDIUM/HIGH`（**全大写**！小写 `thinking_level` 属于另一个 surface：Interactions API；值本身小写 `"low"` 在 AI Studio 也收【实测 2026-09-28】，见下） | 同名 |
 | max | `"max"` | `"HIGH"`（枚举到头） | `"max"` |
 
 必须写进实现的细节：
@@ -50,6 +50,10 @@ ReasoningEffort = default | off | low | medium | high | max
 - ③ 的旧字段 `thinkingBudget` 与新字段 `thinkingLevel` 并存于同一对象，靠"用错模型报错"区分。规则：**只发一代字段**，选目标支持范围对应的那代（参考实现支持 Gemini 3 起，只发 level）。
   【实测 2026-09-26，3.8 Flash 经 OrcaRouter】`thinkingBudget` 仍被接受，但 **`thinkingBudget: 0` 照样思考**（312 token）——网关会重新序列化请求（第 1 篇 §9.5），可能是它把 `0` 当空值丢了，所以只能说「经那台网关关不掉」；无论哪种，都不能拿它代替缺席的 `minimal`。
 - **③ 的 `MINIMAL` 不是每个型号都有，缺的时候是 400 而不是降级。**【实测 2026-09-26，3.8 Flash（Vertex）经 OrcaRouter】400 `Thinking level MINIMAL is not supported for this model.`（枚举由上游校验，报文是 Vertex 原文）；【文档】3.1 Pro 的档位也只有 `low/medium/high`。`minimal` 本来也不等于关闭（文档：*does not guarantee that thinking is off*）。所以「关闭 / 尽量少想」要映射到**每个型号都收的最低档 `LOW`**：多想几百 token 是便宜的一边，报错是最坏的一边。同题 `thoughtsTokenCount`：`LOW` 193 / `MEDIUM` 641 / `HIGH` 1,348（单调），不发时 685（单次采样）。
+- **③ 的档位值小写也收，运行时不分大小写；会 400 的是枚举外的值。**【实测 2026-09-28，Google AI Studio 官方直连 `generateContent`，gemini-3-flash-preview / gemini-3.8-flash，同一道一词题】`"low"` 与 `"LOW"` 都 200。
+  gemini-3-flash-preview 上思考 token 落在同一范围（小写几次 19–41，大写三次 21–72，随机波动）；gemini-3.8-flash 两种写法各一次，usage **都不带 `thoughtsTokenCount`**（`low` 答一个词时）。
+  `"lowest"` → 400 `Invalid value at 'generation_config.thinking_config.thinking_level' (type.googleapis.com/google.ai.generativelanguage.v1beta.ThinkingConfig.ThinkingLevel), "lowest"`，`details[].fieldViolations[].field` 同名。
+  参考页只列大写（`THINKING_LEVEL_UNSPECIFIED` / `MINIMAL` / `LOW` / `MEDIUM` / `HIGH`）。**发小写不算错，审查时别据此判错**；照参考页发大写仍是稳妥写法。这是本库第一条 AI Studio 直连实测（此前 3.8 Flash 全部经 OrcaRouter 即 Vertex）；`MINIMAL` 400、`thinkingBudget:0`、内置工具在 AI Studio 上仍未直验（31 OQ-021）。
 - ④ 的 `output_config.effort` 管的是**整个回复**（正文 + 工具调用 + 思考），不只思考深度。UI 上仍然只放一个拨盘，变的是标签——因为没有任何端点把"回复深度"与"思考深度"作为两个独立输入暴露，两个拨盘 = 两个控件写一个值。
 - **① 的 off = `"none"` 不是全族通用的关闭**：DeepSeek 的档位表没有 `none`，发了被无视、照想照计费，只有顶层 `thinking:{type:"disabled"}` 关得掉【文档 2026-08；Joycai 2026-09-05 按文档修复，未实测】；GLM 各代见 §3.1，火山方舟见 §3.2（在那里 `none` 实测关得掉）。所以「关」是按厂商声明的方言，不是一个族级常量。
 - 私有方言开关（DeepSeek 的 `thinking:{type}`、千问的 `enable_thinking`）**默认不发**——OpenAI 官方端点对未知顶层字段直接拒绝，为一家的方言破坏官方路径不值。唯一的例外是作者在模型上**声明了 `switch` 方言**（见 §3）：那时该字段就是这个端点的思考词汇，改发它并停发 `reasoning_effort`。未声明方言的默认路径必须一个字节不变。
@@ -101,7 +105,7 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
   - **④ 族拼法**（MiniMax-M3 的 `/anthropic/v1/messages`）：只有 `{type:"adaptive"|"disabled"}`，无 `display`、无 `output_config`——`reasoningBody` 对它返回 undefined。schema 没有的字段（如 display）不发——兼容层"忽略未知键"与"400 未知键"一样常见，文档没写的不发。
     关思考时发不发 `temperature`：同一个拼法，MiniMax 与火山方舟 ④ 结论相反，见 §3.4。
   - **① 族拼法**（千问 DashScope compatible-mode）：顶层 `enable_thinking: bool`（官方 SDK 示例写在 `extra_body`，那只是 OpenAI SDK 的透传机制——落到 wire 就是 body 顶层字段）。声明后**停发 `reasoning_effort`**：千问文档写明它与 `thinking_budget` 互斥，且"声明 switch"本身就是"此端点没有深度档"的陈述。`thinking_budget` 刻意不接——没有 UI 载体的字段只会变成噪音（与 ③ 的 thinkingBudget 同一判断）。另一条联动：千问文档明载**思考开启时 `tool_choice` 只接受 `auto|none`**，forced 的降级条件见 04 篇 §4。
-  - 两个样本共同的动机：这些端点上思考对相当一部分模型**默认关**（MiniMax-M3 全部；千问的 Qwen3-Max/Plus 等商业款——Qwen3.5+/3.7+ 则默认开），不发开关就永不思考。千问的附加事实：新款 Qwen3.7+ 直接接受标准 `reasoning_effort`（与 budget 互斥），**不必声明方言**；部分开源模型思考模式强制 `stream: true`。同一端点、两代模型、两套控制字段——"默认值要按模型代问"的又一实例。
+  - 两个样本共同的动机：这些端点上思考对相当一部分模型**默认关**（旧：MiniMax-M3 全部 → 新：MiniMax ④ 面按型号——M3 默认关且 `disabled` 真关，M2.7 默认想、`disabled` 收下照想，2026-09-28 实测，见 §3.5；千问的 Qwen3-Max/Plus 等商业款——Qwen3.5+/3.7+ 则默认开），不发开关就永不思考。千问的附加事实：新款 Qwen3.7+ 直接接受标准 `reasoning_effort`（与 budget 互斥），**不必声明方言**；部分开源模型思考模式强制 `stream: true`。同一端点、两代模型、两套控制字段——"默认值要按模型代问"的又一实例。
 - **`none`**：不发任何 thinking 字段。
 
 **缺省方言的猜测规则**：anthropic 族猜 `adaptive`，其他族 `none`。乐观猜的理由：对支持范围（4.6+）全对；错的方式是旧模型 400 且报出字段名——比默认"不思考"让作者纳闷"我的推理模型怎么从不推理"好得多。原则：**乐观猜测只在"错的方式会响"时使用**。注意 ① 族的缺省语义不是"不发"：openai 分支对未声明方言的模型照走标准 `reasoning_effort` 路径——所以 ① 族适配器把**作者声明的原值**传给写侧函数即可，不要先过缺省替换。
@@ -270,6 +274,52 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
   不在适配器里把 0 改发成极小正数——那是改写作者写下的值。温度框随「开 / 关」出现与收起，收起时值留着。
 - 声明了 `temperatureWhenOff` 的类目，其 off 必须是真关（`offSpelling:"disable"`）；测试逐格比对「标准 × 类目 × 强度」上发送端的决定与界面的问法。
 
+### 3.5 第三方 ④ 面：思考默认值与 `disabled` 三种结局按平台 × 模型；未知字段／非法值四家四种（2026-09-28 实测）
+
+来源：simple-ai-writer `docs/api/reasoning.md` §1.2 / §1.7 / §2.2、`docs/api/landscape.md` §7 第四（MiniMax 补测）、第六（百炼补测）、第十四（智谱补测）、第二十（DeepSeek）个样本。
+四家都是**官方直连**、非中转，**每格一次请求**（样本量 1，只看方向；结论记号按「收下不生效 = 🔇」记）。
+
+官方 Claude 有两派（4.6+ 省略 = 用默认（开），≤4.5 省略 = 关着，§3）；第三方的 ④ 兼容层还要**再按平台 × 模型分一次**——同一个百炼 ④ 面，千问默认想、qwen-turbo 从不想；同一家智谱，4.7 默认不想、5.3 关不掉：
+
+| 平台 · ④ 面 · 模型 | 不发 `thinking` | `{type:"disabled"}` | 细节与证据 |
+| --- | --- | --- | --- |
+| DeepSeek 官方 `https://api.deepseek.com/anthropic/v1/messages`（`x-api-key` + `anthropic-version`）：deepseek-v4-pro、deepseek-flash | **想**（输入 token 从 11 涨到 90，思考模式带了自己的前缀） | ✅ 收，真关（200，只回 text 块；同时带 `temperature` / `top_p` / `top_k` 也收） | `{type:"adaptive"}` 与 `{type:"enabled", budget_tokens}` 都 200、都想（文档说 `budget_tokens` 被忽略）【实测 2026-09-28】 |
+| 阿里百炼 `/apps/anthropic`（普通 `sk-` key 走 `x-api-key`）：qwen3.8-flash、qwen3.7-flash、qwen3.5-plus | **想** | ✅ 收，真关（同时带 `temperature` / `top_p` / `top_k` 也收；qwen3.8-flash 关时只回 text 块） | 新旧 host 等价：文档给 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`，旧的 `https://dashscope.aliyuncs.com/apps/anthropic` 同一把 key 照样 200【实测 2026-09-28】 |
+| 百炼上的 qwen-turbo | 不想（从不想） | — | 【实测 2026-09-28】 |
+| 百炼上的 MiniMax-M2.5 | 想 | ❌ **400，关不掉**：`<400> InternalError.Algo.InvalidParameter: The value of the enable_thinking parameter is restricted to True.` | 翻译层把上游拒绝原样传回，点名的是 ① 的字段名（见下）【实测 2026-09-28】 |
+| 百炼上的 glm-5.3 | —（来源表格留空，未测） | ❌ 400，同上一句 | 【实测 2026-09-28】 |
+| 百炼上的 kimi-k2-thinking | — | 🔇 收下，**照想**（200，thinking 块有文本） | 【实测 2026-09-28】 |
+| 百炼上的 kimi-k2.6 | 回一个**文本与签名都空**的 thinking 块（内容上没想） | ✅ 收下，同样回空块（没想）；显式 `enabled` 才有文本——空块不等于「关不掉」（§4.1） | 空块行为【实测 2026-09-28】；文档默认表：kimi-k2.6 / 2.5 默认关 📄——「显式 `enabled` 才有文本」是否等于「默认关」待核实（31 OQ-074） |
+| 百炼上的 deepseek-v4-pro | — | ✅ 收，真关 | 【实测 2026-09-28】 |
+| 智谱 `/api/anthropic`：glm-5.3、glm-5.3-flash | **想** | ❌ **400（1210），关不掉**：`{"type":"invalid_request_error","code":"1210","message":"[1210][该模型始终思考，不支持关闭思考；请使用 low、high 或 max。][<request id>]"}` | `output_config:{effort:"low"}` → 200 **无 thinking 块**；`adaptive`、`enabled` 都 200、都想【实测 2026-09-28】 |
+| 智谱 glm-4.6 | — | ✅ 200，真关 | 【实测 2026-09-28】 |
+| 智谱 glm-4.7 | 不想（只回 text 块，与 ① 面相反，§3.1） | — | 【实测 2026-09-19，只探两次】 |
+| MiniMax 国内站 `api.minimaxi.com/anthropic`：MiniMax-M3 | **不想**（不发 `thinking` 不想，「默认 `disabled`」成立） | ✅ 收，真关（200，只回 text 块） | 【实测 2026-09-28】 |
+| MiniMax M2.7 | 想 | 🔇 收下，**照想**（200，回 thinking 块，不报错——与文档「M2.x 思考无法关闭」一致，但它不拒） | 【实测 2026-09-28】 |
+
+#### 兼容层上 `disabled` 的三种结局
+
+1. **收下且真关**：DeepSeek v4-pro / flash、百炼千问三款与 deepseek-v4-pro、智谱 glm-4.6、MiniMax-M3。
+2. **拒绝并说明关不掉**（会响）：智谱 `1210 该模型始终思考，不支持关闭思考`（① 面那句 1210 在 ④ 面原样出现，外面多包一层 `[1210][…][id]`）；百炼则借自家 ① 方言的字段名 `The value of the enable_thinking parameter is restricted to True.`。
+3. **收下但照想**（🔇 静默）：MiniMax M2.7、百炼上的 kimi-k2-thinking。**请求侧没有任何信号**（200，没有警告字段），只能看回复里还有没有思考内容（§4.1）。
+   不这样会怎样：作者选了「关闭」、账单照付思考 token，界面上还以为关了。对策：思考类目的 `offSpelling` 按 (平台, 模型) 声明；「关没关」的验证看响应块，不看请求发了什么（同 §3.3 的教训）。
+
+**百炼 ④ 的拒绝点名的是别家协议的字段**：上文「MiniMax-M2.5 除外，400」和 ① 面那句 `The value of the enable_thinking parameter is restricted to True` 是**同一个校验**——④ 面的 `thinking` 被翻成百炼自家 ① 方言 `enable_thinking` 再下发，拒绝时连 ① 的字段名一起回来（glm-5.3 同样）。一个 ④ 客户端收到的拒绝里点名的是 `enable_thinking`，按 `thinking` 找原因会找不到；「按 400 学降级」的正则若按本族字段名匹配，在这里失配（06 §2、坑 219）。
+
+#### 未知顶层字段／非法思考值：四家四种报法
+
+顶层未知字段**四家都 200 放过**（① 族的 `reasoning_effort` 也放过）。`thinking.type:"bogus"` 则四家四种：
+
+| 平台 · ④ 面 | `thinking.type:"bogus"` | 其它 |
+| --- | --- | --- |
+| MiniMax ④（型号未标：M3／M2.7 补测块，每条一次；31 OQ-072） | 🔇 **200，而且开始想**——非法值被当成了「开」 | 什么都收（同块，型号未标）：`enabled` + `budget_tokens`、`adaptive` + `display:"summarized"`、`top_k:99999`、`temperature:2.5`（文档说 [0, 2] 外报错）都 200；唯一撞出来的 400 是 `top_p:1.5` → `{"type":"invalid_request_error","message":"invalid params, param 'top_p' should be in (0,1] (2013)"}`；**未知模型名静默改映射**：`MiniMax-M3.1-Flash-Preview`（文档列着、该 key 的 `/v1/models` 里没有）200，响应的 `model` 是 `MiniMax-M3`——只有拿响应里的 `model` 核对才看得出 |
+| DeepSeek | ❌ **422，点名枚举**：``Failed to deserialize the JSON body into the target type: thinking.type: unknown variant `bogus`, expected one of `adaptive`, `enabled`, `disabled` at line 1 column 142``——四家 ④ 兼容层里唯一在请求形状上严格的一家 | 文档（2026-09）：`top_k` 忽略；`top_p` 只在思考模式生效（下限 0.95），非思考模式固定 1.0；`temperature` [0, 2]；`claude-opus*` 映射到 deepseek-v4-pro，`claude-haiku*` / `claude-sonnet*` 映射到 deepseek-flash，**不认识的模型名也映射到 deepseek-flash，不报错** 📄 |
+| 智谱（glm-5.3 / 5.3-flash） | ❌ 回的也是那句 1210「该模型始终思考」，不是「非法值」 | 顶层未知字段 200 放过，与 ① 面一致 |
+| 阿里百炼 | ❌ 400 `Request body format invalid`（不点名字段） | 未知模型 → 400 ``The model `qwen-nonexistent` does not exist or you do not have access to it.``；`temperature:2.5` → 400 `Temperature should be in [0.0, 2.0)`；`budget_tokens:1024` 配 `max_tokens:512` → 400 `max_completion_tokens [512] must be greater than thinking_budget [1024]`（2048 时 200）；`thinking.type` 文档只列 `enabled` / `disabled`，实测 `adaptive` 也收 |
+
+- 06 §8 第 10 条「非法参数分类法」在四家 ④ 面上各有一种答案：DeepSeek 与百炼、智谱会响（但智谱的文案不指向值），MiniMax 不响且反向生效——「按 400 学降级」只在前三家学得到东西，在 MiniMax 上什么都学不到、还会把思考打开（坑 217、220）。
+- 百炼 ④ 的文档（2026-09）默认表：qwen3.8-max / 3.8-flash、deepseek-v4 系、glm 系默认开；kimi-k2.6 / 2.5 默认关；kimi-k2.7-code、kimi-k2-thinking、MiniMax-M2.5 / 2.1 只有思考模式 📄。与实测一致的部分已并进上表；glm-5.3 的默认值未测（31 OQ-073）。
+
 ## 4. 思维链的流式暴露：三族三种读法，统一产出 `{reasoning}` chunk
 
 | 族 | 读哪里 |
@@ -285,6 +335,20 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 
 产出侧统一为 `{reasoning: string}` chunk（与 `{text}` 是不同变体，见第 1 篇）：思维链绝不能混进正文流。
 
+### 4.1 判「这一轮想没想」看文本或签名，至少一个非空（2026-09-28）
+
+空的 `thinking` 字段本身什么也说明不了【实测 2026-09-28，各家 ④ 面；simple-ai-writer `docs/api/reasoning.md` §2.2】：
+
+| 来源 | `thinking` 文本 | `signature` | 想了没有 |
+| --- | --- | --- | --- |
+| Claude 当前代，默认 `display:"omitted"` | 空 | 有 | 想了（照计费） |
+| 百炼 ④ 上的千问 | 有 | 恒为空串 | 想了 |
+| 百炼 ④ 上的 kimi-k2.6（不发 `thinking`，或 `disabled`） | 空 | 空 | 没想 |
+
+只认文本，会把 Claude 的 `omitted` 读成「没想」；只认块在不在，会把 kimi-k2.6 读成「关不掉」（它显式 `enabled` 时块里才有文本）。
+按型号分的空块【实测 2026-09-28，百炼 ④】：qwen3.8-flash 关时只回 text 块；kimi-k2.6 不发 `thinking` 与 `disabled` 时都回 `{type:"thinking",thinking:"",signature:""}` 空块——适配器要容忍这个空块（旧结论「关掉思考时响应里仍有一个空块」是按型号的，不是整个面的）。
+对策：判据写成「文本或签名至少一个非空」；这也是 §3.5 第三种结局（收下照想）与 §5 ④ 行「缺失 → 静默降级」的唯一验证手段（坑 218）。
+
 ## 5. 回传义务：三族三种载体、三种失败模式
 
 **心法：跨轮要回传的东西必须整块留存原物，不能归一化后重建。**"理解后重建"恰好丢掉的就是完整性校验依赖的那部分（signature、encrypted payload、字段拼写、块顺序）。
@@ -293,6 +357,7 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 | --- | --- | --- |
 | ① DeepSeek 系 | **400**（会响，逼你修） | `_reasoning: {field, text}`——收到什么字段名就用什么名字还回去，无需知道对面是谁 |
 | ① 火山方舟（豆包 2.1 起） | **静默降级**：只回摘要不报错，模型在摘要上推理（厂商：「推理效果下降」） | `_reasoning` 旁加 `encrypted: {modelId, value}`——原样留存密文，同一模型才回传（§3.2） |
+| ① MiniMax（M3，`api.minimaxi.com/v1`） | **不报错，不强制**：文档要工具轮带回完整 assistant 消息（「务必完整保留模型思考内容……才能保证 Interleaved Thinking 生效」），指的是效果不是校验。【实测 2026-09-28，样本量未标】工具轮的 assistant 消息保留 `<think>…</think>`、去掉、`content: null`、改放 `reasoning_content` 四种写法都 200、答案正常；保留时思考照计 prompt token（多 26），服务端不剥 | 思考以 `<think>…</think>` 内联在 `content`（M3 默认内联思考、不出 `reasoning_content`，`completion_tokens_details.reasoning_tokens` 有值）；§6 切分器切出的只展示不回传，与本行不冲突——回不回都 200，回了多付 26 token 换交错思考 |
 | ③ Gemini | 多轮工具失效；HTTP 200 + `finishReason: MISSING_THOUGHT_SIGNATURE`（第三种形态：不是 400 也不是静默）。**【2026-09-26 补】3.8 Flash（Vertex，经 OrcaRouter）上 `functionCall` part 缺签名是 HTTP 400** `Function call is missing a thought_signature in functionCall parts`——两种形态都要认成「我方丢了签名」。签名位置：正文 text part、并行调用的**第一个** `functionCall` part，流式时落在最后一块 `{text:"", thoughtSignature}` 上 | `_geminiModelParts: unknown[]`——整组原始 parts 原样回传（含 thought parts 与 thoughtSignature）；**例外：流末光秃秃的 `{text:""}` 剔除**（第 5 篇 §3） |
 | ④ Anthropic | **静默降级**：API 不报错，直接关掉这轮思考（最危险——唯一验证手段是看响应里还有没有 thinking block）；**改动/重排/部分丢弃才是 400**。【实测 2026-09-26，Sonnet 5 adaptive + 并行工具，经 OrcaRouter】原样回灌 200；**改 `signature` → 400** ``Invalid `signature` in `thinking` block``；改 thinking 文本、留原签名 200（`summarized` 的摘要文本本来就不是被签的那份）；整块丢掉也 200——正是上面的「缺失 → 静默降级」，印证而非例外；改文本留签名 200 是经网关的请求侧结论（第 1 篇 §9.5）。对策仍是原样带回 | `_thinkingBlocks: {modelId, blocks}`——有序块数组原样回传（`redacted_thinking` 只有不透明 data 也要回） |
 
@@ -389,6 +454,7 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 - [ ] Claude 5 系「跟随默认」也在思考并计费（adaptive + `omitted` 是默认）：成本估算与「思考面板为什么空」的说明都按这个默认写。
 - [ ] Anthropic `off` 翻译为降 effort 而不是 disabled。
 - [ ] 每个思考类目声明 off 在线上是真关还是最低档（`offSpelling`）；「让它少想」的回退在最低档类目上既发 off 又带提示，真关的只发 off，没有 off 的只带提示。
+- [ ] 第三方 ④ 面的思考默认值与 `disabled` 结局按 (平台, 模型) 查 §3.5，不从「这是 ④ 面」推；「关没关」看响应块的文本或签名（§4.1），不看请求；MiniMax 上 `thinking.type` 非法值会把思考打开，不拿它探测。
 - [ ] ④ 的温度：在想就不发；开关型类目关思考时发不发，按类目声明（火山方舟 ④ 听、`0` 等于没发；MiniMax 不听），不按「线上没在想」一刀切，也不写成平台格；`0` 只加说明，不改写成极小正数。
 - [ ] `ThinkingDialect` 是作者声明的 L3 字段，没有任何"从模型 id 猜代次"的启发式。
 - [ ] `adaptive`/`extended` 恒发 `display:"summarized"`；`switch` 方言不发 display。

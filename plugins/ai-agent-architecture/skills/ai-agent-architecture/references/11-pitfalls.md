@@ -34,6 +34,7 @@
 - Z. ④ 开关型思考的温度、「关闭」只是最低档时的思考回退（坑 198–204）
 - AA. 视频输入 `video_url` 按平台（坑 205–208）
 - AB. 按 400 学降级：一个执行器、学到的上限持久化（坑 209–216）
+- AC. 第三方 ④ 面的思考默认值与关闭结局、兼容层的非法值、中转站作者前缀（坑 217–223）
 
 ## A. 协议层 · 静默失败类
 
@@ -808,3 +809,30 @@
 216. **给学到的上限和探测出的上限用同一条过期规则：探测值满 7 天后，作者字段里的上下文上限悄悄变了。**
     原因：被动的值（400 教会的）不在作者的字段里，过期只是多撞一次 400；主动的值（作者点的探测）写进作者的字段，过期会让字段无声地变【实现 2026-09-28，设计取舍】。
     对策：学到的会过期、改声明或重新探测即作废；探测值不过期、重新探测时覆盖（06 §9.5、01 §1）。
+
+## AC. 第三方 ④ 面的思考默认值与关闭结局、兼容层的非法值、中转站作者前缀（详见 03 §3.5、§4.1、02 §1 表后、06 §2、01 §9.2）
+
+来源：simple-ai-writer PR #733（`docs/api/reasoning.md` §1.2 / §1.7 / §2.2、`docs/api/landscape.md` §7 第四、第六、第十四、第二十个样本，2026-09-28，
+DeepSeek `/anthropic`、百炼 `/apps/anthropic`、智谱 `/api/anthropic`、MiniMax `/anthropic` 官方直连各一次；Google AI Studio 直连）、`docs/api/capability-resolution-lld.md` §9.8（2026-09-27，规范化 id）。
+
+217. **④ 兼容层收下 `thinking:{type:"disabled"}`、200，模型照想、账单照付，请求侧没有任何信号。**
+    原因：`disabled` 在第三方 ④ 面上有三种结局——收下真关（DeepSeek v4-pro / flash、百炼千问、智谱 4.6、MiniMax-M3）、拒绝会响（智谱 5.3 系 1210、百炼托管的 M2.5 / glm-5.3）、**收下但照想**（MiniMax M2.7、百炼上的 kimi-k2-thinking）；第三种 200 且没有任何警告字段【实测 2026-09-28，每格一次】。「省略 = 用默认」的默认也按平台 × 模型分：DeepSeek ④ 默认想、MiniMax-M3 ④ 默认不想。
+    对策：思考类目的 `offSpelling` 按 (平台, 模型) 声明；「关没关」只看响应里有没有思考内容，不看请求发了什么（03 §3.5）。
+218. **响应里有一个 `thinking` 块但文本是空的——读成「没想」，或读成「关不掉」，两种都错。**
+    原因：Claude 当前代默认 `display:"omitted"` 文本空但签名有、想了且计费；百炼上的千问文本有、`signature` 恒为空串；百炼上的 kimi-k2.6 不发 `thinking` 与 `disabled` 时都回文本与签名都空的块，是真没想（显式 `enabled` 才有文本）【实测 2026-09-28】。
+    对策：判「想没想」看文本或签名**至少一个非空**；空块要容忍、不当错误；空块不等于没想，也不等于关不掉（03 §4.1）。
+219. **④ 客户端收到的 400 点名的是 `enable_thinking`——请求里根本没有这个字段，按 `thinking` 找原因找不到。**
+    原因：百炼 ④ `/apps/anthropic` 是翻译层：`thinking` 被翻成自家 ① 方言 `enable_thinking` 下发，上游（MiniMax-M2.5、glm-5.3）拒绝时原文原样传回：`<400> InternalError.Algo.InvalidParameter: The value of the enable_thinking parameter is restricted to True.`【实测 2026-09-28】。
+    对策：按文案做「按 400 学降级」时，正则匹配参数名不匹配本族字段名；翻译层的拒绝按「上游说了什么」读，字段名对不上就查 03 §3.5 的对照表（06 §2）。
+220. **拿 `thinking.type:"bogus"` 探测「这台会不会校验」，MiniMax 上 200 了，而且思考被打开了。**
+    原因：MiniMax ④ 什么都收（`top_k:99999`、`temperature:2.5`、顶层未知字段都 200），非法的 `thinking.type` 被当成「开」；同一值 DeepSeek 422 点名枚举、智谱回 1210、百炼 400 `Request body format invalid`——四家四种【实测 2026-09-28】。
+    对策：非法值探测只在会响的家用；MiniMax 上不拿 `bogus` 探测，「按 400 学降级」在它身上什么都学不到；`top_p:1.5` 是它唯一撞出来的 400（03 §3.5）。
+221. **模型名填错了（`MiniMax-M3.1-Flash-Preview`、DeepSeek ④ 上随便一个名字），200、有答案，账单也对得上——只是不是你以为的模型。**
+    原因：MiniMax ④ 对目录里没有的模型名静默改映射，响应 `model` 是 `MiniMax-M3`【实测 2026-09-28】；DeepSeek ④ 文档明写 `claude-opus*` → v4-pro、其余与不认识的名字 → deepseek-flash，不报错 📄；百炼 ④ 则 400 点名 `does not exist`。
+    对策：回显比对把响应 `model` ≠ 请求 `model` 记成一条告警（06 §4.1）；不把「200 有答案」当模型名正确的证据（06 §2）。
+222. **Gemini 请求里 `thinkingLevel` 写成小写 `"low"`，审查时按参考页「全大写」判它写错了。**
+    原因：AI Studio 直连运行时不分大小写，`"low"` 与 `"LOW"` 都 200、思考 token 同一范围；会 400 的是枚举外的值（`"lowest"` → `Invalid value at 'generation_config.thinking_config.thinking_level' …`）【实测 2026-09-28，gemini-3-flash-preview / 3.8-flash】。另：3.8-flash `low` 答一个词时 usage 不带 `thoughtsTokenCount`，不等于没想。
+    对策：发小写不算错、不据此判错；照参考页发大写仍是稳妥写法；缺 `thoughtsTokenCount` 不当「没想」的判据（03 §2）。
+223. **中转站上 `[x]gpt-5.6-sol`、`特价kiro | gpt-5.6-sol` 查不到目录里的严格 schema 名单与上限，自动档停在 `json_object`、规划上限用缺省——同一个模型在官方平台上却查得到。**
+    原因：作者前缀让按 id 查目录的逻辑认不出；旧对策「不加剥前缀规则、让作者手动声明」（怕吞掉别家中继的别名）使目录事实在中转站上整体丢失【实现 2026-09-27，P6b】。
+    对策：**规范化 id，只在中转平台上做**——渠道前缀表最长匹配优先、否则去开头 `[…]`、再去 `vendor/`；只用来查目录，平台格与上游格仍按原始 id 匹配，目录上限只进规划不进 `max_tokens`；「所有平台都去」已由金标收回（离线，非实测：官方平台上的 `[特价kiro量]claude-opus-5` 也开始提档）（01 §9.2）。

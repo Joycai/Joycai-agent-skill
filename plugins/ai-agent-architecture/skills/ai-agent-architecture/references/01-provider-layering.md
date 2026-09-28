@@ -157,6 +157,7 @@ ContentPart = { type: text, text } | { type: image_url, image_url: { url: "data:
 5. 按 `familyOf(standard)` 分发到四个族适配器之一，默认落 ① 族。
 
 统一入口的请求参数（节选）：`baseUrl / apiKey / standard / authMode / modelId / messages / onChunk / signal / tools / serverTools / toolChoice / extraBody / safetySettings / prefix / contextSize / maxOutput / reasoningEffort / thinkingDialect / _onRequestBody`。
+（`thinkingDialect` 作为行字段是 2026-09 前的形态；参考实现 2026-09-27 已把方言一次性迁成思考类目，行上与停放线路上不再存方言，`ConnOptions` 里也没有它——见 channel-route-model skill。本篇保留旧字段名只为溯源。）
 
 其中几个字段的语义必须写进规范，因为它们在各族上行为不同：
 
@@ -204,6 +205,10 @@ resolveConn(模型表, 供应商表, modelId) -> 连接 | 未选模型 | 模型�
   不是加 header 切换）；视频只有异步任务。且协议可用性**按模型分**：
   Qwen-Audio 仅私有面、Anthropic 面只服务模型子集、qwen-image 仅同步、
   wan2.7-image 同步异步皆可（用户选）、wan3.0 视频仅异步。
+  ④ 面【实测 2026-09-28】服务到的模型：qwen3.8-flash / qwen3.7-flash / qwen3.5-plus / qwen-turbo，以及托管的第三方 MiniMax-M2.5、glm-5.3、
+  kimi-k2-thinking、kimi-k2.6、deepseek-v4-pro；不存在的 id 400 ``The model `qwen-nonexistent` does not exist or you do not have access to it.``；
+  文档现在给的 host 是 `https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`，旧的 `https://dashscope.aliyuncs.com/apps/anthropic` 同一把 key 照样 200。
+  各模型的思考默认值与 `disabled` 结局在第 3 篇 §3.5；完整名单仍未枚举（31 OQ-030）。
 - **OpenAI 官方**已有 Responses-only 模型（o1-pro / codex 系 /
   computer-use，截至 2026-08）——同一家的 chat surface 有两条结构不兼容的
   wire，走哪条由模型决定。Google 的 Interactions 与 generateContent 同构。
@@ -300,8 +305,17 @@ resolveConn(模型表, 供应商表, modelId) -> 连接 | 未选模型 | 模型�
 4. **一个档位背后多个上游**：同一请求的响应形状时有时无回显字段——每次落到哪个上游，请求侧无法决定。
    【实测 2026-09-24】`[特价Pro]` 同一类请求的注入量有 0 / 11 / 296 / 4.4K / 17K 五种，延迟从 3 s 到超时——一档之内也不是一个账号。
 
-另：档位前缀模型 id（`[Plus]gpt-5.6-terra`）让按 id 前缀查表的逻辑认不出——不要为此加剥前缀规则
+另：旧：档位前缀模型 id（`[Plus]gpt-5.6-terra`）让按 id 前缀查表的逻辑认不出——不要为此加剥前缀规则
 （会吞掉别家中继的别名），让作者手动声明。
+→ **新：中转站上做「规范化 id」，且只在中转平台上做**（2026-09-27，被 simple-ai-writer `capability-resolution-lld.md` §9.8 P6b 取代，【实现 2026-09-27】）。
+`canonicalModelId(raw, relay?)`：在中转站上先去作者前缀——渠道前缀表里**最长**的一行命中就按它去，没命中就去掉开头的 `[…]`——再去 `vendor/` 命名空间；读目录的地方（严格 schema 名单、上限、`reasons`）都改读它，缺省退回原始 id。
+限制条件，每一条都对应当初「吞别家别名」的顾虑：
+- **只在中转平台上做**：非中转平台上不去 `[…]`——那样的 id 不是平台供应的 id。第一版在所有平台上都去，结果官方平台上的 `[特价kiro量]claude-opus-5` 也开始提档，与账本「中转站上」不符，**已收回**（金标 / 变异检查，离线，不是打端点的实测）。变异检查另证：在所有平台上都去前缀 → 金标 8 个非中转平台报红。
+- **前缀表优先于通用规则**：作者声明的渠道前缀表最长匹配先于「去开头 `[…]`」，`longestPrefix` 只有一份（上游画像的 `matchUpstreamPrefix` 改为调用它）——别家中继的别名若在表里，按作者的声明去；不在表里的只去方括号，不碰别的形状。
+- **平台格与上游格仍按原始 id 匹配**：平台格描述的是这个平台自己供应的 id，作者前缀只出现在中转站上、中转站没有模型行，改写得不到任何命中；反过来对规范化 id 匹配会让平台不供应的写法命中它的行（api.openai.com 上的 `openai/gpt-5.6-sol`、OrcaRouter 上不带命名空间的 `gpt-5.6-sol`）。上游格照旧按原始 id 子串匹配。
+- **目录上限只进规划，不进 `max_tokens`**：`[x]kimi-k3` 规划得 1,000,000，④ 发出去仍是 32768——规范化 id 必须排在「值类事实与出处」之后，否则目录上限会直接上线。
+效果：中转站上同一个模型不再因前缀而失去目录里的已知事实（Azure 上游的 `[x]gpt-5.6-sol` 自动档从 `json_object` 提到 `json_schema`，请求体金标一行没变，只有摘要变）。
+所以当初的顾虑（一条通用剥前缀规则会吞掉别家中继的别名、在官方平台上误命中）被「只在中转平台、前缀表优先、平台格仍按原始 id」三条限制解决；主键仍是 (平台·渠道, 面, 原始 id)，规范化 id 只用来**查目录**，不改变任何平台格 / 上游格的匹配，也不改请求（坑 223；产品形态见 channel-route-model skill）。
 
 #### 同一台中转站，渠道写在模型 id 里：Kiro 渠道的 Claude（2026-09-23）
 
@@ -663,6 +677,8 @@ resolveConn(模型表, 供应商表, modelId) -> 连接 | 未选模型 | 模型�
   【实测 2026-09-19 + 文档】
 - **② 面的 `/api/v1/models` 不是 OpenAI 形**：是 Codex CLI 的模型目录（`{models:[{slug, context_window,
   supported_reasoning_levels, input_modalities, …}]}`），只列 3 个模型。④ 面 `/v1/models` 是 Anthropic 形。
+- **④ 面 `/api/anthropic` 的思考默认值按模型分**【实测 2026-09-28，glm-5.3 / 5.3-flash / 4.6 每条一次】：5.3 系默认想且 `disabled` 400（1210，「该模型始终思考」）、
+  4.6 收 `disabled` 真关、4.7 默认不想（2026-09-19）；`thinking.type:"bogus"` 回的也是 1210；顶层未知字段放过。表与报错原文在第 3 篇 §3.5。
 - **模型集合**：11 个对话 id（glm-4.5 / 4.5-air / 4.6 / 4.7 / 5 / 5-turbo / 5.1 / 5.2 / 5.3 / 5.3-flash / 5.3-flashx）。
   **思考控制按代分三种**（第 3 篇 §3.1），**只有 5.3-flash / flashx 读图**，其余文本模型收到 `image_url` 直接 400。
   这是「协议族默认的思考参数在一家之内就不对」的样本：按族取默认值（① 族 = `reasoning_effort`）在 11 款上全错，

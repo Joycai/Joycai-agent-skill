@@ -147,7 +147,19 @@ HTTP 状态另给。多数文案具体（`temperature参数非法：限制数值
 但有两类不可信：同一句「该模型始终思考，不支持关闭思考」覆盖 5.3 代**所有**非法思考参数（连关思考时的图片请求也报它）；
 「API 调用参数有误，请检查文档」不说是哪个参数（被拒的强制 `tool_choice`、glm-5 的非法 effort 都是它）。
 按文案关键词做错误驱动降级前，先看这家的文案是否点名参数。错 key 是 401 `{"code":"401","message":"令牌已过期或验证不正确"}`；
-**未知顶层字段一律放过**。
+**未知顶层字段一律放过**。同一句 1210 在 ④ `/api/anthropic` 上原样出现，外面多包一层 `[1210][…][<request id>]`，`thinking.type:"bogus"` 回的也是它【实测 2026-09-28】（03 §3.5）。
+
+**翻译层把上游的拒绝原样传回，点名的是别家协议的字段**（阿里百炼 ④ `/apps/anthropic`，【实测 2026-09-28】，第六个样本补测）：
+④ 面的 `thinking:{type:"disabled"}` 被翻成百炼自家 ① 方言 `enable_thinking` 再下发，MiniMax-M2.5 / glm-5.3 拒绝时连 ① 的字段名一起回来：
+`<400> InternalError.Algo.InvalidParameter: The value of the enable_thinking parameter is restricted to True.`——与 ① 面那句是**同一个校验**。
+一个 ④ 客户端收到的拒绝里点名的是 `enable_thinking`，按本族的 `thinking` 找原因找不到；「按 400 学降级」按本族字段名写的正则在这里失配（§9）。
+百炼 ④ 自己的校验则不点名字段：`thinking.type:"bogus"` → 400 `Request body format invalid`；未知模型 → 400 ``The model `qwen-nonexistent` does not exist or you do not have access to it.``；
+`temperature:2.5` → 400 `Temperature should be in [0.0, 2.0)`；`budget_tokens:1024` 配 `max_tokens:512` → 400 `max_completion_tokens [512] must be greater than thinking_budget [1024]`（03 §3.5）。
+
+**未知模型名不报错、静默改映射**——「模型名错了」只有拿响应里的 `model` 核对才看得出：
+- MiniMax ④ `api.minimaxi.com/anthropic`【实测 2026-09-28】：`MiniMax-M3.1-Flash-Preview`（文档列着、该 key 的 `/v1/models` 里没有）200，响应的 `model` 是 `MiniMax-M3`。同一面上 `thinking.type:"bogus"` 200 且开始想、`top_k:99999` / `temperature:2.5` 都 200；唯一撞出来的 400 是 `top_p:1.5` → `{"type":"invalid_request_error","message":"invalid params, param 'top_p' should be in (0,1] (2013)"}`。
+- DeepSeek ④ `api.deepseek.com/anthropic`【文档 2026-09】：`claude-opus*` 映射到 deepseek-v4-pro，`claude-haiku*` / `claude-sonnet*` 映射到 deepseek-flash，**不认识的模型名也映射到 deepseek-flash**，不报错。同一面上非法思考值会响：`thinking.type:"bogus"` 422 并点名枚举（03 §3.5）。
+- 对照：百炼 ④ 未知模型 400（上文）。对策：回显比对（§4.1）把响应 `model` 与请求 `model` 不同记成一条告警；作者填错 id 时 MiniMax / DeepSeek 上不会有任何报错（坑 221）。
 
 **同一个非法参数，四个上游四种报法**（New API 中转站，同一个 `gpt-5.6-sol`，【实测 2026-09-24】，第十七个样本）：
 

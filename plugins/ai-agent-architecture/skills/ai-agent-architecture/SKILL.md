@@ -76,14 +76,14 @@ agent 体系（tool loop、审批、子代理、上下文压缩）不在这里�
 | 某一家的全部事实散在哪（目录，不写事实） | `15-vendor-index.md` |
 | 四族的端点、消息、流、地址、鉴权对照；图片 / PDF / 视频片段（`video_url` 是厂商扩展） | `02-protocol-differences.md` |
 | 分层：「加一家 = 加一行数据」；多面厂商；xAI / New API / 火山 / 智谱 / OrcaRouter 数据行样例；经网关判断每个面背后是谁 | `01-provider-layering.md` |
-| 思考 / 推理：强度档位、各族取回、回传义务、`<think>` 切分；「关闭」只是最低档时怎样少想；关思考时的温度 | `03-reasoning.md` |
+| 思考 / 推理：强度档位、各族取回、回传义务、`<think>` 切分；「关闭」只是最低档时怎样少想；关思考时的温度；第三方 ④ 面的默认值与 `disabled` 三种结局按平台 × 模型（§3.5）、判「想没想」看文本或签名（§4.1） | `03-reasoning.md` |
 | 结构化输出：每族 JSON mode 形状、强制工具回退链、`text.format` / `verbosity` | `04-structured-output.md` |
 | 工具定义与 tool_choice、流式拼接、配对义务、服务端工具（搜索 / 抓取 / 代码）、`pause_turn` 续跑、工具按需加载 | `05-tools-and-server-tools.md` |
 | usage 口径、上游报价进账、HTTP 200 里的失败、重试超时、日志与回显比对、探测、付费实测纪律、按 400 学降级 | `06-errors-probing-observability.md` |
 | 出图管线正文：各 route、异步、流式出图、编辑降级、响应统一化、计费、图层 | `13-image-generation.md` |
 | 视频管线正文：提交与轮询、五家速查、横切不变量 | `14-video-generation.md` |
 | 语音识别正文：三种线格式、时间码、静音切片、说话人分离、断点续跑、原 pyVideoTrans 渠道 | `16-speech-recognition.md` |
-| 按「现象」反查怪问题（坑 1–18、54–216；19–53 在 agent skill） | `11-pitfalls.md` |
+| 按「现象」反查怪问题（坑 1–18、54–223；19–53 在 agent skill） | `11-pitfalls.md` |
 | 本库改动史 | `CHANGELOG.md` |
 
 ## 证据记法

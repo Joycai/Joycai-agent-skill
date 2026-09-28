@@ -51,15 +51,15 @@
 | --- | --- | --- | --- |
 | GPT | OpenAI 官方 ①②（多为 📄）；New API `[特价Pro]`②①、`[Plus]`②①、`[Pro]`②①、`[Azure]`②①、`[官key]`／`[AWSb]`（503）；New API 另一台 `[Pro]`／`[Plus]` ②（第八、第十个样本）；OrcaRouter ①、② 默认线路、② 原样线路 | `web_search`：账号池真搜、`[Azure]` 网关静默丢、OrcaRouter 真跑；`instructions`：账号池不发就注入 4.4K、网关发了挂 1.2K 护栏；`text.format`：`[Pro]` 整个丢、其余执行；`effort:"none"`：② 四上游都改 `medium`，① 只在网关真关；`temperature`：账号池回显 1.0、网关 500 | 【实测 2026-09-24】【实测 2026-09-26】【文档】 |
 | Claude | Anthropic 官方 ④（📄 + 经 OrcaRouter 原样实测 Sonnet 5／Opus 5.5／Fable 5.1／Sonnet 4.6／Opus 4.5）；OrcaRouter ①；New API · Kiro ④①、CC ④①、anti ④①、AWSb ④①、官key（502）；某中转 ①（畸形样本） | 思考是否存在／有文本（anti 不想、CC opus-5 空文本、Kiro 只两态）；签名是否校验（官方／AWSb 400，Kiro／CC 200）；`output_config.format` ④ 按渠道甚至按型号、① 整台 New API 都丢；PDF／URL 图是否送达；服务端工具：劫持／真做／丢／400 四种；`max_tokens` Kiro 无视、anti ① 无视 ④ 生效 | 【实测 2026-09-23】【实测 2026-09-26】【实测 2026-09-28】【文档】 |
-| Gemini | Google AI Studio ③（📄）；OrcaRouter ③（Vertex 原样）、①；New API ③ 面 | 图片键 snake_case：官方两种都收、New API 只 camelCase；`video_url` 经 OrcaRouter ① 层静默丢；`:countTokens` 经 OrcaRouter 当生成计费；报价需 `X-OrcaRouter-Include-Cost` 头 | 【实测 2026-09-05】【实测 2026-09-26】【实测 2026-09-28】【文档】 |
+| Gemini | Google AI Studio ③（📄 + 2026-09-28 直连实测档位大小写，gemini-3-flash-preview／3.8-flash）；OrcaRouter ③（Vertex 原样）、①；New API ③ 面 | 图片键 snake_case：官方两种都收、New API 只 camelCase；`video_url` 经 OrcaRouter ① 层静默丢；`:countTokens` 经 OrcaRouter 当生成计费；报价需 `X-OrcaRouter-Include-Cost` 头；AI Studio `thinkingLevel` 小写也收、`lowest` 400 | 【实测 2026-09-05】【实测 2026-09-26】【实测 2026-09-28】【文档】 |
 | Grok | xAI 官方 ②、①（legacy） | 只测官方：② 拒 `none`、拒 `max`；① `video_url` 400；`tool_search` 403 | 【实测 2026-09】【实测 2026-09-28】 |
-| DeepSeek | DeepSeek 官方 ①（📄 + `video_url` 实测）；DashScope 托管 ② | 服务端工具：官方无；DashScope ② 面 `code_interpreter` 放行 `deepseek-v4` | 【文档 2026-08】【实测 2026-09-17】【实测 2026-09-28】 |
-| Qwen | DashScope 百炼 ①、②、④（⚠）、Ⓓ（Qwen-Audio ⚠） | 同一端点两代思考控制不同；`code_interpreter` ① 面按型号「跑／静默忽略／400」、② 面到 3.8 都跑；`agent_max` 3.8-flash 400、3-max／3.5-plus 收 | 【实测 2026-09-17】【实测 2026-09-28】【文档】 |
-| GLM | 智谱按量 ①；智谱 Coding Plan ④（glm-4.7）、①②④（⚠）；百炼／火山（平台执行搜索） | 联网搜索：自家端点靠对话内 `tools[]` + `search_intent:false`，在百炼／火山由平台执行；④ 面 glm-4.7 默认不想、① 面默认想 | 【实测 2026-09-19】 |
+| DeepSeek | DeepSeek 官方 ①（📄 + `video_url` 实测）、④（deepseek-v4-pro／flash，2026-09-28）；DashScope 托管 ②、④（deepseek-v4-pro） | 服务端工具：官方无；DashScope ② 面 `code_interpreter` 放行 `deepseek-v4`；④ 官方默认开、`disabled` 真关、`bogus` 422 点名枚举——百炼 ④ 上 v4-pro 也收 `disabled` 真关 | 【文档 2026-08】【实测 2026-09-17】【实测 2026-09-28】 |
+| Qwen | DashScope 百炼 ①、②、④（qwen3.8-flash／3.7-flash／3.5-plus／qwen-turbo，2026-09-28）、Ⓓ（Qwen-Audio ⚠） | 同一端点两代思考控制不同；`code_interpreter` ① 面按型号「跑／静默忽略／400」、② 面到 3.8 都跑；`agent_max` 3.8-flash 400、3-max／3.5-plus 收；④ 千问默认想、`disabled` 真关，qwen-turbo 从不想 | 【实测 2026-09-17】【实测 2026-09-28】【文档】 |
+| GLM | 智谱按量 ①；智谱 Coding Plan ④（glm-4.7、5.3、5.3-flash、4.6）、①②（⚠）；百炼 ④（glm-5.3）；百炼／火山（平台执行搜索） | 联网搜索：自家端点靠对话内 `tools[]` + `search_intent:false`，在百炼／火山由平台执行；④ 面默认值按模型：4.7 不想、5.3 系想且关不掉（1210）、4.6 收 `disabled` 真关；百炼 ④ 上 glm-5.3 `disabled` 400 点名 `enable_thinking` | 【实测 2026-09-19】【实测 2026-09-28】 |
 | 豆包 Seed | 火山方舟 · 套餐 ①②④；火山方舟 · 按量（对话面未测） | `json_schema` 按型号守不守（2.1-turbo 守、2.0-lite 不守、2.0-mini ② 多字段）；④ 2.0 系无 `signature`、2.1 有；服务端搜索 ②④ 有、① 无；套餐 vs 按量 key 不通用 | 【实测 2026-09-18】【实测 2026-09-23】【实测 2026-09-28】 |
-| MiniMax | MiniMax 国内站 ④、① | ④ 面思考默认关且真关，① 面总在想且 `<think>` 内联；两面温度都不听 | 【实测 2026-08】【实测 2026-09-28】 |
+| MiniMax | MiniMax 国内站 ④（M3、M2.7）、①（M3）；百炼 ④（MiniMax-M2.5） | ④ 面 M3 思考默认关且真关、M2.7 收下 `disabled` 照想，`thinking.type:"bogus"` 反而开思考、未知模型名静默改映射；① 面总在想且 `<think>` 内联、交错思考回传不强制；两面温度都不听；百炼 ④ 上 M2.5 `disabled` 400 点名 `enable_thinking` | 【实测 2026-08】【实测 2026-09-28】 |
 | 本地模型 | Ollama ①；LM Studio／llama.cpp ① | 超窗静默从头部截断（Ollama `num_ctx`）；LM Studio 严格交替模板 | 【实测，日期未标】⚠ ⏳待复核【参考实现】 |
-| 其他 | Kimi ①；OpenRouter ①（仅指纹经 OrcaRouter）；欠费中转（402） | — | 【实测 2026-09-19】⚠【文档】【实测 2026-09-03】 |
+| 其他 | Kimi ①；百炼 ④（kimi-k2-thinking、kimi-k2.6）；OpenRouter ①（仅指纹经 OrcaRouter）；欠费中转（402） | 百炼 ④ 上 kimi-k2-thinking 收 `disabled` 照想、kimi-k2.6 开关都回空 thinking 块（显式 `enabled` 才有文本） | 【实测 2026-09-19】⚠【实测 2026-09-28】【文档】【实测 2026-09-03】 |
 
 ## 3 GPT
 
@@ -170,7 +170,7 @@
 
 ### 家族固有特性（跨平台一致）
 
-- 思考控制 `generationConfig.thinkingConfig.thinkingLevel: LOW／MEDIUM／HIGH`（全大写；小写 `thinking_level` 属 Interactions API）；发 level 必带 `includeThoughts: true`（否则付钱看不见思考）；`thinkingBudget`（2.5 代 `extended` 方言）与 `thinkingLevel` 只发一代。【文档】【参考实现】详见 03 §2、§3。
+- 思考控制 `generationConfig.thinkingConfig.thinkingLevel: LOW／MEDIUM／HIGH`（参考页全大写；小写 `thinking_level` 属 Interactions API；值小写 `"low"` 在 AI Studio 也收、运行时不分大小写，枚举外 `"lowest"` 才 400【实测 2026-09-28，仅测于 AI Studio】）；发 level 必带 `includeThoughts: true`（否则付钱看不见思考）；`thinkingBudget`（2.5 代 `extended` 方言）与 `thinkingLevel` 只发一代。【文档】【参考实现】详见 03 §2、§3。
 - `MINIMAL` 不是每个型号都有，缺时 400 非降级（3.8 Flash 实测、3.1 Pro 文档）且文档明说 minimal ≠ 关闭；「关闭」映射到 `LOW`。旧：2026-09-26 前 off → `MINIMAL` → 新：`LOW`。【实测 2026-09-26】【文档】坑 170，详见 03 §2。
 - 回传义务：`_geminiModelParts` 整组原始 parts 原样回灌（含 thought parts 与 `thoughtSignature`）；不回传 → 200 + `finishReason: MISSING_THOUGHT_SIGNATURE`（旧型号）或 HTTP 400 `Function call is missing a thought_signature in functionCall parts`（3.8 Flash）——两种都要认成「我方丢了签名」；并行调用签名只在第一个 `functionCall` part，流式落在末块 `{text:"", thoughtSignature}`。【参考实现】【实测 2026-09-26】坑 173，详见 03 §5、05 §3。
 - 流：每个 chunk 是完整响应对象非 delta；`functionCall` 一次给全、args 是对象；旧型号无 id（适配器自造）、3.8 Flash 起带 `id`；`functionResponse` 靠函数名匹配。【文档】【实测 2026-09-26】详见 02 §2.2、§3.2。
@@ -187,6 +187,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Gemini 3.8 Flash（`google/gemini-3.8-flash`） | OrcaRouter · ③ 线路（**Vertex AI 原样**，不是 AI Studio） | ③ | `thinkingLevel` LOW／MEDIUM／HIGH ✅ 单调（`thoughtsTokenCount` 193／641／1,348，不发 685）；`MINIMAL` ❌ 400 `Thinking level MINIMAL is not supported for this model.`；`thinkingLevel:"BOGUS"` ❌ Vertex 原文 400；`thinkingBudget: 0` 🔇 照想 312 token（网关重序列化把 0 当空值 ⚠）；回退实测不设 1,980／高 4,973／关(=低) 1,977／高+提示 1,830（3／5 对）／关+提示 1,300（5／5）——不设与关闭分不开 | 思考摘要一个整段 `{text, thought:true}` part（流式不逐字）；`thoughtSignature` 挂正文 text part、流式末块 `{text:"", thoughtSignature}`；`functionCall` 缺签名 ❌ HTTP 400 `Function call is missing a thought_signature…`；流末光秃秃 `{text:""}` 回灌 ❌ 400 `required oneof field 'data' must have one initialized field`（网关还是 Vertex ⚠） | ✅ `responseJsonSchema` 守住回 `red`；旧 `responseSchema` 也守；strict 风格 200；与 `googleSearch` + `responseMimeType` 同发 200 | `functionCall` 带 `id`（`call_1626125`）；`functionResponse` 带不带 id 都 200；`mode:"ANY"` 与内置工具同发 200（先搜再调函数）；并行只第一个 part 带签名 | googleSearch ✅ 真搜（`groundingMetadata`；`uri` 是 `vertexaisearch` 跳转、`title` 是域名）；codeExecution ✅（`executableCode` → `codeExecutionResult`，代码 part 回灌 200）；urlContext ✅（`urlContextMetadata` 首块、末块 `groundingChunks` 真实 uri、无 `webSearchQueries`）；三者与函数工具同发 200 | `inlineData` 与 `inline_data` 都看得见图；16×16 PNG 记 1,098 prompt token；PDF `inlineData`+`application/pdf` ✅ 一页按图像计 520 token | 目录 1,048,576／65,536；usage 只末块带计数；`toolUsePromptTokenCount` 另计（20+65+77=162）；`trafficType:"ON_DEMAND"`；搜索约 $0.014／条（一题 6 条 $0.084；旧：一次 $0.028 按请求）；末块 `usageMetadata.costUsd` 需 `X-OrcaRouter-Include-Cost: true` | `thinkingBudget:0` 不关；`:countTokens` 被当 `generateContent` 执行并计费（$0.0028）；错误信封改写成 OpenAI 形 `type:"invalid_argument"`、路径 `***`；不带 `alt=sse` 也回 SSE | 【实测 2026-09-26】【实测 2026-09-28】 | 03 §2、§2.1、§4、§5；02 §1、§2.2、§3.2；04 §2；05 §3、§5；06 §1、§2 | 170–173、176、177、178、186、190–195、197、203、204 |
 | Gemini 3.8 Flash | OrcaRouter · ① 线路（翻译层） | ① | 不返回思维链、只报 `reasoning_tokens` | — | ⚠ | 发无 `parameters` 的 function 工具名 `googleSearch`／`urlContext`／`codeExecution` → 网关换成原生内置工具（网关约定）📄 | 同左 📄 | `video_url` 🔇 **200 但静默丢弃**：三次答错、输入 token 25 → 25 不变（Gemini 本身读视频，丢在 ① 翻译层，回答照示例格式瞎编）；PDF 经 ① 只算推断 | 目录同上 | 视频静默丢（最坏一种） | 【实测 2026-09-26】【实测 2026-09-28】；保留函数名【文档 2026-09】 | 01 §9.5；02 §1；05 §5 | 205 |
+| gemini-3-flash-preview ／ gemini-3.8-flash | Google AI Studio 官方直连（`generativelanguage.googleapis.com`，`generateContent`） | ③ | `thinkingLevel` 小写 `"low"` 与大写 `"LOW"` 都 ✅ 200：3-flash-preview 思考 token 同一范围（小写几次 19–41、大写三次 21–72，随机波动）；3.8-flash 两种写法各一次、usage **都不带 `thoughtsTokenCount`**（`low` 答一词）；`"lowest"` ❌ 400 `Invalid value at 'generation_config.thinking_config.thinking_level' (type.googleapis.com/google.ai.generativelanguage.v1beta.ThinkingConfig.ThinkingLevel), "lowest"`（`details[].fieldViolations[].field` 同名）；`MINIMAL`、`thinkingBudget:0` 在此未测 | — | — | — | —（`googleSearch` 仍「未实测、照发」） | — | — | 发小写不算错，别据此判错；缺 `thoughtsTokenCount` 不等于没想 | 【实测 2026-09-28，同一道一词题，每格一到几次】——本库第一条 AI Studio 直连实测 | 03 §2；20 §3 Gemini 节 | 222 |
 | Gemini 3.1 Pro | Google 官方 | ③ | 📄 档位只有 `low／medium／high`（无 minimal） | — | — | — | — | — | — | — | 【文档】 | 03 §2 | 170 |
 | Gemini 2.5（家族） | Google 官方 | ③ | 📄 方言 `extended` 同形（固定 `thinkingBudget`） | — | — | — | — | — | — | — | 【参考实现】 | 03 §3 | — |
 | Gemini 2.x | Google AI Studio | ③ | — | — | — | — | 与函数工具同发内置工具的问题 ⚠ 未测（有意接受的风险）；`googleSearch` 官方「未实测、照发」 | — | — | ⚠ | 【未测】 | 05 §5 | — |
@@ -199,6 +200,7 @@
 - **视频输入**：Gemini 本身读视频，经 OrcaRouter ① 翻译层 200 静默丢弃（输入 token 不变）；③ 线路未测视频。【实测 2026-09-28】坑 205
 - **缺签名报法**：旧型号 200 + `MISSING_THOUGHT_SIGNATURE`；3.8 Flash（Vertex 经 OrcaRouter）HTTP 400——两代型号形态不同。坑 173
 - **网关特有**：`:countTokens` 被当生成计费、`{text:""}` 空 part 回灌 400、`thinkingBudget:0` 关不掉、报价需 `X-OrcaRouter-Include-Cost` 头——只对 OrcaRouter 成立，不照搬给 AI Studio。【实测 2026-09-26】坑 171、172、176、186
+- **AI Studio 直连 vs Vertex 经 OrcaRouter**：目前唯一的直连事实是档位值不分大小写、`lowest` 400 原文带 `generation_config.thinking_config.thinking_level` 路径（AI Studio 直连，错误路径不被遮）；Vertex 经网关的 `MINIMAL` 400、缺签名 400、`thinkingBudget:0` 照想在 AI Studio 上未直验。【实测 2026-09-28】坑 222；OQ-021
 
 ## 6 Grok
 
@@ -226,7 +228,8 @@
 
 ### 家族固有特性（跨平台一致）
 
-- ① 档位表**没有 `none`**：`reasoning_effort:"none"` 🔇 被无视照想照计费；只有顶层 `thinking:{type:"disabled"}` 关得掉（Joycai 2026-09-05 按文档修复，**未实测** ⚠）；`medium` 折进 `high`。【文档 2026-08】详见 03 §2、§5。
+- ① 档位表**没有 `none`**：`reasoning_effort:"none"` 🔇 被无视照想照计费；只有顶层 `thinking:{type:"disabled"}` 关得掉（Joycai 2026-09-05 按文档修复，① 面**未实测** ⚠；④ 面的 `disabled` 已实测真关，**仅测于官方 ④**，见表）；`medium` 折进 `high`。【文档 2026-08】【实测 2026-09-28，④】详见 03 §2、§3.5、§5。
+- ④ 面思考**默认开**（不发 `thinking` 就想）——仅测于官方直连 ④，百炼 ④ 上 deepseek-v4-pro 的默认值未测；`thinking.type:"bogus"` 422 点名枚举是官方 ④ 的行为；百炼 ④ 面对同一值报的是 400 `Request body format invalid`（面级实测，未在 v4-pro 上单独发 ⚠）。【实测 2026-09-28】详见 03 §3.5。
 - 回传义务分场景**两个方向都 400**：有工具调用的轮次 `reasoning_content` 必须回传（官方原文「若您的代码中未正确回传 reasoning_content，API 会返回 400」）；无工具轮次不要携带（400 `reasoning_content is not allowed in the input messages`；新版部分改为忽略但不可依赖）。【文档 2026-08】坑 1（对比），详见 03 §5。
 - 结构化：`json_object` 需 "JSON" 字样（同 OpenAI）；**不支持 `json_schema`**。【文档】详见 04 §2。
 - usage 顶层 `prompt_cache_hit_tokens`／`prompt_cache_miss_tokens`，无标准 `cached_tokens`，`prompt_tokens` 已含命中（只读标准拼写 = 命中按全价记）。【文档；Joycai 2026-09-14 修复】详见 06 §1。
@@ -237,12 +240,15 @@
 | 型号 | 平台·渠道·线路 | 面 | 思考控制 | 思考取回／回传 | 结构化输出 | 工具／tool_choice | 服务端工具 | 多模态输入 | 上限与采样 | 静默失败要点 | 证据 | 详见 | 坑 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | DeepSeek 推理系（`deepseek-flash` 实测视频） | DeepSeek 官方 | ① | `none` 🔇 无视；`thinking:{type:"disabled"}` 📄 关（未实测 ⚠）；`medium` 折 `high` | `reasoning_content`；有工具轮不回传 ❌ 400，无工具轮携带 ❌ 400 | 📄 `json_object`（需 "JSON"）；`json_schema` 不支持 | 📄 V4 错误文案点名参数 | 无（官方无服务端工具字段） | `video_url` ❌ 422 `unknown variant video_url, expected one of text, image_url, file` | `prompt_cache_hit_tokens`／`miss_tokens` 顶层 | `none` 无症状；缓存命中按标准拼写读会全价记 | 【文档 2026-08】；视频【实测 2026-09-28】 | 03 §2、§5；04 §2；06 §1；02 §1 | 206 |
+| deepseek-v4-pro ／ deepseek-flash | DeepSeek 官方 `https://api.deepseek.com/anthropic/v1/messages`（`x-api-key` + `anthropic-version`） | ④ | **默认开**：不发 `thinking` 就回 thinking 块（输入 token 11 → 90，思考模式带自己的前缀）；`{type:"disabled"}` ✅ 真关（200 只回 text 块；同时带 `temperature`／`top_p`／`top_k` 也收）；`adaptive` 与 `enabled + budget_tokens` 都 200 都想（文档说 `budget_tokens` 被忽略）；`thinking.type:"bogus"` ❌ 422 ``unknown variant `bogus`, expected one of `adaptive`, `enabled`, `disabled` `` | — | — | — | — | — | 顶层未知字段 200 放过；文档 `top_k` 忽略、`top_p` 只在思考模式生效（下限 0.95）、非思考固定 1.0、`temperature` [0, 2] 📄 | 文档：`claude-opus*` → v4-pro、`claude-haiku*`／`claude-sonnet*` → flash，**不认识的模型名也 🔇 映射到 deepseek-flash 不报错** 📄 | 【实测 2026-09-28，每条一次】 | 03 §3.5；06 §2；20 §3 DeepSeek 节 | 217、221 |
+| deepseek-v4-pro（DashScope 托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | `{type:"disabled"}` ✅ 收，真关；默认值（不发 `thinking`）未测 — | — | — | — | — | — | — | — | 【实测 2026-09-28，一次】 | 03 §3.5 | — |
 | `deepseek-v4`（DashScope 托管） | 阿里百炼 DashScope | ② | ⚠ | ⚠ | ⚠ | ⚠ | `code_interpreter` ✅ ② 面按模型 id 放行 | ⚠ | ⚠ | — | 【实测 2026-09-17】 | 05 §5 | — |
 
 ### 随平台变化的特性
 
 - **服务端工具**：DeepSeek 官方无任何服务端工具；同一家族的 `deepseek-v4` 托管在百炼时 ② 面 `code_interpreter` 放行——「能不能联网／跑代码」是 (平台, 面) 属性不是模型属性。【实测 2026-09-17】
 - 官方 ① `video_url` 422 会响；其余平台未测。【实测 2026-09-28】坑 206
+- **④ 面默认值与关闭结局**：官方 ④ 默认开、`disabled` 真关、非法值 422 点名枚举；百炼 ④ 上 v4-pro 也收 `disabled` 真关，但非法值报的是百炼的 400 `Request body format invalid`（面级实测，未在 v4-pro 上单独发 ⚠）、默认值未测——「会不会响、怎么响」随平台变，「收下真关」目前两平台一致。【实测 2026-09-28】坑 217
 
 ## 8 Qwen（千问）
 
@@ -254,7 +260,8 @@
 - ① 私有顶层 `enable_search: true`（无痕：不返回来源、不支持角标、无 `max_uses`）、`search_options:{search_strategy:"agent_max"}`、`enable_code_interpreter: true`；`agent_max`／`enable_code_interpreter` 与 `tools` 同发 ❌ 400 `Agent mode does not support tools…`；`enable_code_interpreter` 非流式 ❌ 400。【实测 2026-09-17】坑 10、74，详见 05 §5。
 - ② 面 `tools:[{type:"web_search"}]`、`web_extractor`（仅当 `web_search` 同在）、`web_search_image`／`image_search`（可单独，按次价 6–12 倍）、`code_interpreter`（思考关闭 → 200 后 `response.failed`）；Responses 面无 `encrypted_content`，回传明文 `summary`；文档有 `reasoning_text.delta`；文档无 `text` 字段（报错还是忽略未验 ⚠）。【文档】【实测 2026-09-17】坑 70、76，详见 03 §7.2、§7.3、05 §5、04 §5.1。
 - 视频 `video_url` + 片段旁 `fps`（私有扩展，发起者）；`vl_high_resolution_images` 私有。【文档】详见 02 §1。
-- 一把 key 三张 chat 脸：① `/compatible-mode/v1`、Ⓓ `/api/v1/services/aigc/text-generation/…`、④ `/apps/anthropic/v1/messages`（只服务模型子集）；协议可用性按模型分。【文档 2026-09】详见 01 §8.1。
+- 一把 key 三张 chat 脸：① `/compatible-mode/v1`、Ⓓ `/api/v1/services/aigc/text-generation/…`、④ `/apps/anthropic/v1/messages`（只服务模型子集；实测到千问四款 + 托管第三方五款，见表；新旧 host 等价）；协议可用性按模型分。【文档 2026-09】【实测 2026-09-28】详见 01 §8.1、03 §3.5。
+- ④ 面千问（3.8-flash／3.7-flash／3.5-plus）默认想、`disabled` 真关；thinking 块 `signature` 恒为空串；qwen-turbo 从不想——仅测于百炼 ④（千问没有别的 ④ 平台）。【实测 2026-09-28】详见 03 §3.5、§4.1。
 
 ### 按平台 × 面
 
@@ -272,7 +279,9 @@
 | `qwen3.5-plus` | 阿里百炼 DashScope | ① | — | — | — | — | `agent_max` ✅ 收 | — | — | — | 【实测 2026-09-17】 | 05 §5 | — |
 | `qwen-max` ／ `qwen3-max-preview` | 阿里百炼 DashScope | ① | — | — | — | — | `enable_code_interpreter` 🔇 **静默忽略**（不报错、prompt 不变、答案没算过） | — | — | 静默忽略 | 【实测 2026-09-17】 | 05 §5 | 75 |
 | qwen3.5–3.7 plus／max／flash、部分开源版 | 阿里百炼 DashScope | ①／② | — | — | — | — | 代码解释器实测正则表放行（锚定，防 `qwen3.5-omni-plus`、`qwen3-vl-plus` 误中；下一代不预放行） | — | — | — | 【实测 2026-09-17】 | 05 §5 | 75 |
-| Anthropic 面模型子集（具体哪些未给） | 阿里百炼 `/apps/anthropic/v1/messages` | ④ | ⚠ | ⚠ | ⚠ | ⚠ | ⚠ | ⚠ | ⚠ | 只服务模型子集 | 【文档】 | 01 §8.1 | — |
+| qwen3.8-flash ／ qwen3.7-flash ／ qwen3.5-plus | 阿里百炼 · ④ `/apps/anthropic/v1/messages`（普通 `sk-` key 走 `x-api-key`；旧 host `dashscope.aliyuncs.com` 与文档新 host `{WorkspaceId}.cn-beijing.maas.aliyuncs.com` 等价） | ④ | **默认想**（不发 `thinking` 都回 thinking 块）；`{type:"disabled"}` ✅ 真关（同时带 `temperature`／`top_p`／`top_k` 也收；3.8-flash 关时只回 text 块）；`adaptive` 也收（文档只列 `enabled`／`disabled`）；⚠ 以下 400 来自百炼 ④ 补测块、来源未标发到哪个模型（面级校验）：`thinking.type:"bogus"` ❌ 400 `Request body format invalid`（不点名）；`budget_tokens:1024` 配 `max_tokens:512` ❌ 400 `max_completion_tokens [512] must be greater than thinking_budget [1024]`（2048 时 200） | thinking 块有文本、`signature` 恒为空串（想了，03 §4.1） | — | — | — | — | 温度范围 [0, 2)（`temperature:2.5` ❌ 400 `Temperature should be in [0.0, 2.0)` ⚠ 型号未标）；顶层未知字段与 ① 的 `reasoning_effort` 200 放过 | 未知模型 ❌ 400 ``The model `qwen-nonexistent` does not exist or you do not have access to it.``（会响，面级） | 【实测 2026-09-28，每条一次】 | 03 §3.5、§4.1；06 §2；20 §3 百炼节 | 217、218 |
+| qwen-turbo | 阿里百炼 · ④ `/apps/anthropic` | ④ | 从不想（不发 `thinking` 不想）；`disabled` 未测 — | — | — | — | — | — | — | — | 【实测 2026-09-28，一次】 | 03 §3.5 | — |
+| 旧行：Anthropic 面模型子集（具体哪些未给） | 阿里百炼 `/apps/anthropic/v1/messages` | ④ | 旧：⚠ → 新：见上两行与各家族节的「阿里百炼 · ④」行（MiniMax-M2.5 §11、glm-5.3 §9、kimi-k2-thinking／k2.6 §13、deepseek-v4-pro §7）；完整名单仍未枚举（OQ-030） | — | — | — | — | — | — | — | 【文档】→【实测 2026-09-28】 | 01 §8.1；03 §3.5 | — |
 | Qwen-Audio | 阿里百炼 DashScope | Ⓓ 私有面 | — | — | — | — | — | 仅私有面可用 | ⚠ | — | 【文档】 | 01 §8.1 | — |
 | Qwen（同步 ASR：qwen-audio-3.0-asr-flash 等） | 阿里百炼 | 🎤 | — | — | — | — | — | 同步接口 🔇 静默忽略 `diarization_enabled`；无句级时间戳 | — | 分离只走 `-filetrans` | 【实测】 | 16 §4.1、§7 | 115、116 |
 
@@ -281,6 +290,7 @@
 - 千问只在百炼一个平台测过，「随平台变化」体现为**同一端点随面与型号变化**：`code_interpreter` ① 面按型号「跑（qwen3-max）／静默忽略（qwen-max、qwen3-max-preview）／400（qwen3.8 全系）」，② 面到 3.8 都跑；`agent_max` 3.8-flash 400、3-max／3.5-plus 收；`enable_search` 不带策略在 qwen3-max 根本没搜。【实测 2026-09-17】坑 10、75
 - 思考控制按代：商业款默认关要 `enable_thinking`，3.5+ 默认开，3.7+ 收 `reasoning_effort`——参数按模型 id 预填，不能靠族默认。坑 9
 - 对比火山方舟：把千问的 `enable_thinking:false` 挂到豆包被静默忽略照想照计费（坑 114）；方舟 ① `none` 关得掉、千问要开关。
+- **同一端点随面（① vs ④）**：④ 面千问 3.5-plus／3.7-flash／3.8-flash 默认想、`disabled` 真关，qwen-turbo 从不想；④ 面的关闭被翻成 ① 的 `enable_thinking` 下发，所以拒绝时（托管的第三方模型）点名的是 ① 的字段名；④ 面的 `thinking.type:"bogus"` 是百炼自己的 400 `Request body format invalid`。【实测 2026-09-28】坑 217、219
 
 ## 9 GLM（智谱）
 
@@ -307,7 +317,10 @@
 | glm-4.7 ／ 4.6 ／ 4.5 | 智谱 BigModel · 按量 | ① | 同上行（开关型，档位丢弃） | 4.6／4.5 关思考时 `reasoning_tokens` 缺席 | 同上 | `required` 200 🔇 不强制；具名：思考开时 ❌ 400 `1210 API 调用参数有误`（不提 tool_choice）、关时 200 🔇 不强制；`none` ✅ 生效 | 同上 | `image_url` ❌ 400；`video_url` — | 上下文 4.7／4.6 200K、4.5 128K；`max_tokens` 4.6／4.7 ≤131,072、glm-4.5 实测 131,072（文档 96K） | 具名 400 文案笼统，学降级失效 | 【实测 2026-09-19】 | 03 §3.1；04 §4；01 §9.4 | 94–97 |
 | glm-4.5-air | 智谱 BigModel · 按量 | ① | 同上行 | `reasoning_tokens` 从不给 | 同上 | `required` ✅ **真强制**、具名 ✅ 真强制、`none` ✅——平台级降 `auto` 后失去其唯一真强制档（回退链兜住） | 同上 | `image_url` ❌ 400 | 上下文 128K；`max_tokens` ≤98,304 | — | 【实测 2026-09-19】 | 03 §3.1；04 §4 | 95 |
 | GLM（型号未标） | 智谱 BigModel · 按量 | ① | — | — | — | — | — | 收 `video_url`、`fps` 🔇 忽略（更早的样本，型号未记） | — | `fps` 静默无效 | 【实测，日期未标】 ⏳待复核⚠ ⏳待复核 | 02 §1 表后 | 206、208 |
-| glm-4.7 | 智谱 · Coding Plan `/api/anthropic` | ④ | 默认**不**思考（只回 text 块）——与 ① 面默认思考相反 | — | — | — | — | — | — | 默认值按「模型 × 面」问 | 【实测 2026-09-19】 | 03 §3.1；01 §9.4 | — |
+| glm-4.7 | 智谱 · Coding Plan `/api/anthropic` | ④ | 默认**不**思考（只回 text 块）——与 ① 面默认思考相反；`disabled` 未测 — | — | — | — | — | — | — | 默认值按「模型 × 面」问（旧行，只探两次；2026-09-28 补测的 5.3 系与 4.6 见下两行，与本行不矛盾：默认值按模型分） | 【实测 2026-09-19】 | 03 §3.1、§3.5；01 §9.4 | — |
+| glm-5.3 ／ glm-5.3-flash | 智谱 · Coding Plan `/api/anthropic` | ④ | 默认**想**（不发 `thinking` 就回 thinking 块）；`{type:"disabled"}` ❌ **400** `{"type":"invalid_request_error","code":"1210","message":"[1210][该模型始终思考，不支持关闭思考；请使用 low、high 或 max。][<request id>]"}`（① 面那句 1210 原样出现，外面多包一层）；`output_config:{effort:"low"}` ✅ 200 **无 thinking 块**；`adaptive`、`enabled` 都 200 都想；`thinking.type:"bogus"` ❌ 回同一句 1210（不是「非法值」） | 5.3-flash thinking 块无 `signature`【实测 2026-09-19，只探两次】 | — | — | `usage` 带 `server_tool_use.web_search_requests`【实测 2026-09-19】 | — | 顶层未知字段 200 放过（与 ① 一致） | 文案不指向值：`bogus` 与 `disabled` 同一句 1210 | 【实测 2026-09-28，每条一次】 | 03 §3.5；01 §9.4；20 §3 智谱 Coding Plan 节 | 217 |
+| glm-4.6 | 智谱 · Coding Plan `/api/anthropic` | ④ | `{type:"disabled"}` ✅ 200，真关；默认值（不发 `thinking`）未测 — | — | — | — | — | — | — | — | 【实测 2026-09-28，一次】 | 03 §3.5 | — |
+| glm-5.3（托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | `{type:"disabled"}` ❌ 400 `<400> InternalError.Algo.InvalidParameter: The value of the enable_thinking parameter is restricted to True.`（翻译层原样传回上游拒绝，点名 ① 的字段名）；默认值 — **未测**（来源表格留空） | — | — | — | — | — | — | 拒绝点名别家协议的字段，按 `thinking` 找不到原因 | 【实测 2026-09-28，一次】 | 03 §3.5；06 §2 | 219 |
 | 11 款（同上） | 智谱 · Coding Plan ① `/api/coding/paas/v4`、④ `/api/anthropic`、② `/api/v1` | ①④② | ⚠（完整实测未覆盖） | ⚠ | ⚠ | ⚠ | ⚠ | ⚠ | ② `/api/v1/models` 是 Codex CLI 目录形（只列 3 个）；④ `/v1/models` Anthropic 形 | 同一把按量 key 200 但**扣套餐**；路径决定扣哪笔钱；套餐条款只许指定工具 | 【实测 2026-09-19 + 文档】 | 01 §9.4 | — |
 | GLM（托管） | 千问百炼 ／ 火山方舟 | 视平台 | — | — | — | — | 由平台执行搜索（能不能联网是 (平台, 协议族) 属性，不能从模型 id 推） | — | — | — | 【实测 2026-09-19】 | 05 §5 | — |
 
@@ -315,6 +328,7 @@
 
 - **联网**：智谱自家端点靠对话内 `tools[]` `web_search`（且要 `search_intent:false`）或独立 `/web_search` 端点；同一 GLM 托管在百炼／火山时由平台执行搜索。【实测 2026-09-19】
 - **默认思考**：glm-4.7 在 ① 面默认想、在 Coding Plan ④ 面默认不想。【实测 2026-09-19】
+- **④ 面默认值与关闭结局按模型**：4.7 默认不想；5.3／5.3-flash 默认想且 `disabled` 400（1210，会响，文案与 ① 面同句）；4.6 收 `disabled` 真关。同一个 glm-5.3 托管到百炼 ④ 上，`disabled` 也 400，但报的是百炼翻译层透传的 `enable_thinking parameter is restricted to True`——关不掉的结论跨平台一致，报法随平台变。【实测 2026-09-28】坑 217、219
 - **计费路径**：同一把 key 打 `/api/paas/v4` 扣余额、打 `/api/coding/paas/v4`／`/api/anthropic`／`/api/v1` 扣套餐，选错不失败只换一笔钱——必须分行。【实测 2026-09-19】
 
 ## 10 豆包 Seed（火山方舟）
@@ -360,8 +374,10 @@
 
 ### 家族固有特性（跨平台一致，仅测于 MiniMax 国内站）
 
-- ① 面**总在想**且不分离思维链：`<think>…</think>\n\n正文` 塞进 `delta.content` → 需 `<think>` 兜底切分器（只认响应开头、跨 chunk `danglingPrefix`、流末未闭合按 reasoning flush）；切出的只展示不回传。【实测 2026-09-28】【参考实现】坑 15，详见 03 §3.4、§6。
-- ④ 面 `switch` 方言：只有 `thinking:{type:"adaptive"／"disabled"}`，无 `display`、无 `output_config`；思考**默认关**、真关。【实测 2026-09-28】详见 03 §3。
+- ① 面**总在想**且不分离思维链：`<think>…</think>\n\n正文` 塞进 `delta.content` → 需 `<think>` 兜底切分器（只认响应开头、跨 chunk `danglingPrefix`、流末未闭合按 reasoning flush）；切出的只展示不回传。M3 默认内联思考、不出 `reasoning_content`，`completion_tokens_details.reasoning_tokens` 有值。【实测 2026-09-28】【参考实现】坑 15，详见 03 §3.4、§6。
+- ① 面**交错思考的回传不强制**（M3）：工具轮 assistant 消息保留 `<think>…</think>`、去掉、`content: null`、改放 `reasoning_content` 四种都 200、答案正常；保留时思考照计 prompt token（多 26），服务端不剥；文档「务必完整保留」说的是效果不是校验。【实测 2026-09-28，样本量未标】详见 03 §5。
+- ④ 面 `switch` 方言：只有 `thinking:{type:"adaptive"／"disabled"}`，无 `display`、无 `output_config`。旧：思考**默认关**、真关 → 新（2026-09-28）：**按型号**——M3 默认关且 `disabled` 真关；M2.7 默认想、`disabled` 收下**照想**（🔇，与文档「M2.x 思考无法关闭」一致但不拒）。【实测 2026-09-28】详见 03 §3、§3.5。
+- ④ 面**什么都收**、非法值不响且反向生效：`thinking.type:"bogus"` 200 且**开始想**；未知模型名 🔇 静默改映射（响应 `model` 才看得出）；唯一撞出来的 400 是 `top_p:1.5`。【实测 2026-09-28】坑 220、221，详见 03 §3.5、06 §2。
 - 温度：**收下、不理会**（关思考 `0.01`／`0`／不发／`1` 分不开；开思考 + `0.3` 200 而非 400）；类目 `minimax` 不声明 `temperatureWhenOff`。【实测 2026-09-28，每档 20 次】坑 199、201，详见 03 §3.4。
 - tool_choice 枚举只剩 `auto／none`，强制档不存在 → 无条件预判降 `auto`；思考开时拒绝强制工具。【实测 2026-08】详见 04 §4。
 - 结构化：`json_object` 不查 "json" 字样。【实测 2026-08】详见 04 §2。
@@ -373,14 +389,18 @@
 
 | 型号 | 平台·渠道·线路 | 面 | 思考控制 | 思考取回／回传 | 结构化输出 | 工具／tool_choice | 服务端工具 | 多模态输入 | 上限与采样 | 静默失败要点 | 证据 | 详见 | 坑 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| MiniMax-M3 | MiniMax 国内站 `/anthropic/v1/messages` | ④ | `thinking:{type:"adaptive"／"disabled"}`；默认关；真关；无 `display`／`output_config`；思考开时拒绝强制工具（降 `auto`） | — | ⚠ | 强制降 `auto` | 见 MiniMax（通用）④ 行 | ⚠ | 关思考 + `0.3` 200 没想；`0.01` 🔇 不收敛（10–11／20，与不发、`1` 分不开）；`0` 同样；开思考 + `0.3` 200（官方 400）、`0.01` 不收敛 → 温度收下不理会 | 温度静默不理；开思考带温度不响 | 【实测 2026-09-28，每档 20 次】 | 03 §3、§3.4；04 §4；15 MiniMax 行 | 199、201、202 |
-| MiniMax-M3 | MiniMax 国内站 `/v1` | ① | ① 面总在想；`<think>…</think>` 混进 `delta.content` | 切出的 reasoning 只展示不回传 | — | — | — | ⚠ | 看不出温度；不发温度就 19–20／20 答同一种水果（缺省已收敛，那道题说明不了温度） | `<think>` 混进正文 | 【实测 2026-09-28】（温度）；【参考实现】（think 标签） | 03 §3.4、§6；06 §8 第 13 条 | 15、202 |
+| MiniMax-M3 | MiniMax 国内站 `api.minimaxi.com/anthropic`（`/v1/messages`） | ④ | `thinking:{type:"adaptive"／"disabled"}`；**默认关**（不发 `thinking` 不想）；`disabled` ✅ 收下且真关（200 只回 text 块）；无 `display`／`output_config`；思考开时拒绝强制工具（降 `auto`）。以下三条来自 M3／M2.7 补测块、**型号未标**（每条一次，OQ-072）：`enabled` + `budget_tokens`、`adaptive` + `display:"summarized"` 都 200 收；`thinking.type:"bogus"` 🔇 **200 而且开始想**（非法值被当成「开」） | — | ⚠ | 强制降 `auto` | 见 MiniMax（通用）④ 行 | ⚠ | 关思考 + `0.3` 200 没想；`0.01` 🔇 不收敛（10–11／20，与不发、`1` 分不开）；`0` 同样；开思考 + `0.3` 200（官方 400）、`0.01` 不收敛 → 温度收下不理会；（型号未标，同上）`top_k:99999`、`temperature:2.5`（文档说 [0, 2] 外报错）都 200；`top_p:1.5` ❌ 400 `invalid params, param 'top_p' should be in (0,1] (2013)`；顶层未知字段与 ① 的 `reasoning_effort` 200 放过 | 温度静默不理；开思考带温度不响；（型号未标）`bogus` 开思考不响；未知模型名 `MiniMax-M3.1-Flash-Preview` 🔇 200 改映射到 M3（响应 `model` 才看得出） | 【实测 2026-09-28，温度每档 20 次；关闭档与未知值每条一次】 | 03 §3、§3.4、§3.5；04 §4；06 §2；15 MiniMax 行 | 199、201、202、217、220、221 |
+| MiniMax-M2.7 | MiniMax 国内站 `api.minimaxi.com/anthropic` | ④ | 默认想；`disabled` 🔇 收下**照想**（200，回 thinking 块，不报错——与文档「M2.x 思考无法关闭」一致，但它不拒） | — | — | — | — | — | 「什么都收」来自同一补测块，型号未标（见 M3 行、OQ-072） | 关不掉且不响：请求侧没有任何信号，只能看回复里有没有思考内容（03 §4.1） | 【实测 2026-09-28，每条一次】 | 03 §3.5 | 217 |
+| MiniMax-M2.5（托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | 默认想；`disabled` ❌ 400 `<400> InternalError.Algo.InvalidParameter: The value of the enable_thinking parameter is restricted to True.`（百炼翻译层透传上游拒绝，点名 ① 的字段名） | — | — | — | — | — | — | 会响，但文案点名的是别家协议的字段 | 【实测 2026-09-28，一次】 | 03 §3.5；06 §2 | 219 |
+| MiniMax-M3 | MiniMax 国内站 `api.minimaxi.com/v1` | ① | ① 面总在想；默认内联思考、不出 `reasoning_content`；`<think>…</think>` 混进 `delta.content`；`completion_tokens_details.reasoning_tokens` 有值 | 切出的 reasoning 只展示不回传；**交错思考回传不强制**：工具轮保留 `<think>`／去掉／`content: null`／改放 `reasoning_content` 四种都 ✅ 200 答案正常；保留时多计 26 prompt token，服务端不剥 | — | — | — | ⚠ | 看不出温度；不发温度就 19–20／20 答同一种水果（缺省已收敛，那道题说明不了温度） | `<think>` 混进正文；回传缺失不响（效果差异未量） | 【实测 2026-09-28】（温度、回传）；【参考实现】（think 标签） | 03 §3.4、§5、§6；06 §8 第 13 条 | 15、202 |
 | MiniMax chat（通用，`switch` 方言端点） | MiniMax | ① | `<think>` 内联 | 同上 | `json_object` ✅ 不查 "json" | 枚举只 `auto／none`，强制档不存在 → 无条件降 `auto` | — | ⚠ | 空 assistant 消息 ❌ 400（需兜底文案） | `base_resp.status_code` 体内错误（1004／1008／1002）🔇 只认 `error` 读成空回复 | 【实测 2026-08】【文档 2026-08】 | 04 §2、§4；06 §2；01 §8.1 | 6、15 |
 | MiniMax（通用） | MiniMax ④ 兼容端点 | ④ | 同 M3 ④ | — | — | — | 停在 `*_tool_result` 报 `end_turn`（无 `pause_turn`）；回灌自己发出的块 ❌ 400 `invalid params, tool result's tool id(...) not found` → transcript 纯文本续跑（丢 citation，每次续跑全新计费） | ⚠ | — | 响应侧实现了、请求侧没抄 | 【实测 2026-08】 | 05 §6 | 11 |
 
 ### 随平台变化的特性
 
-- MiniMax 只在自家国内站测过；「随平台变化」体现为**同一 id 随面变化**：④ 面思考默认关且真关，① 面总在想且 `<think>` 内联；两面温度都不听。【实测 2026-09-28】坑 15、199
+- MiniMax 自家国内站：「随平台变化」体现为**同一 id 随面变化**：④ 面 M3 思考默认关且真关（M2.7 收下照想），① 面总在想且 `<think>` 内联；两面温度都不听。【实测 2026-09-28】坑 15、199、217
+- **④ 面默认值／关闭结局随平台**：自家 ④ 上 M2.7 关不掉是**静默**（200 照想）；托管到百炼 ④ 的 M2.5 关不掉是**会响**（400，且点名 `enable_thinking`）；自家 ④ 对 `thinking.type:"bogus"` 200 反而开思考（型号未标）、百炼 ④ 面对同一值 400 `Request body format invalid`（面级实测，未在 M2.5 上单独发 ⚠）。【实测 2026-09-28】坑 217、219、220
+- **对比 DeepSeek ④**：MiniMax ④ 默认不想、DeepSeek ④ 默认想——同为 ④ 兼容层，「省略 = 用默认」的默认按平台 × 模型问。【实测 2026-09-28】
 - **对比火山方舟 ④**（同样 `switch` 拼法）：方舟关思考时听温度（`0` 除外），MiniMax 不听——拼法相同差在听不听，故挂在思考类目而非平台格。坑 200
 - **对比 Anthropic 官方 ④**：MiniMax 兼容端点无 `pause_turn`、拒收自己发出的 `*_tool_result` 块；官方 verbatim 续跑。坑 11
 
@@ -408,6 +428,8 @@
 | 型号 | 平台·渠道·线路 | 面 | 思考控制 | 思考取回／回传 | 结构化输出 | 工具／tool_choice | 服务端工具 | 多模态输入 | 上限与采样 | 静默失败要点 | 证据 | 详见 | 坑 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Kimi | Kimi（Moonshot） | ① | — | — | `json_object` ✅ 不查 "json" 字样 | — | — | — | — | — | 【实测 2026-09-19】⚠（与智谱同批，日期为推断） | 04 §2 | — |
+| kimi-k2-thinking（托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | `disabled` 🔇 收下**照想**（200，thinking 块有文本）；默认值未测 —（文档：只有思考模式 📄） | — | — | — | — | — | — | 关不掉且不响，只能看回复里有没有思考内容（03 §4.1） | 【实测 2026-09-28，一次】 | 03 §3.5 | 217 |
+| kimi-k2.6（托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | 不发 `thinking` 与 `disabled` 都回一个**文本与签名都空**的 thinking 块（内容上没想）；显式 `enabled` 才有文本（文档：k2.6／2.5 默认关 📄；「显式 `enabled` 才有文本」是否等于「默认关」待核实 OQ-074） | 空块 `{type:"thinking",thinking:"",signature:""}` 要容忍 | — | — | — | — | — | 空块不等于没想也不等于关不掉：只认块在不在会读成「关不掉」 | 【实测 2026-09-28，每条一次】 | 03 §3.5、§4.1 | 218 |
 | 任意模型 | OpenRouter | ① | — | — | — | — | — | — | `/models` 带 `context_length`；① 回 `usage.cost`（未信任前不收） | SSE 体内 `data:{"error":…}` routinely（审核、上游故障、余额耗尽）；**指纹**（`gen-…`、`provider`、`native_finish_reason`、`reasoning_details[]`）是在 OrcaRouter 上看到的，不是对 OpenRouter 本身的实测 ⚠ | 【文档；指纹经 OrcaRouter 实测 2026-09-26】 | 06 §1、§2、§6；15 OpenRouter 行 | 185 |
 | 任意模型 | 欠费中转（通用）／ OrcaRouter 余额为零 | 任意 | — | — | — | — | — | — | — | ❌ 402 `insufficient_user_quota` 对任何真实请求都回、完整协议形状 JSON、先于模型名解析——不是「连通」也不是鉴权失败 | 【实测 2026-09-05】【实测 2026-09-03】 | 06 §5 | 112 |
 
