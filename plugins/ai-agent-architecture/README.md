@@ -8,20 +8,13 @@
 
 ```
 skills/ai-agent-architecture/
-├── SKILL.md                 入口：三个坐标轴、四种用法、按主题查、证据记法、六条原则
+├── SKILL.md                 入口：三个坐标轴、四种用法、五层文件地图、证据记法、六条原则
 └── references/
-    ├── 00-audit-playbook.md            审查一个项目
-    ├── 01-provider-layering.md         分层架构与数据行样例
-    ├── 02–06                           协议差异 / 思考 / 结构化 / 工具 / 错误与探测（正文）
-    ├── 11-pitfalls.md                  按现象反查
-    ├── 12-migration-roadmap.md         新增支持的配方
-    ├── 13 / 14 / 16                    出图 / 视频 / 语音识别（正文）
-    ├── 15-vendor-index.md              厂商索引（目录）
-    ├── 20-platform-matrix.md           平台表
-    ├── 21-protocol-matrix.md           协议表
-    ├── 22-model-capability-matrix.md   模型 × 平台 × 面 能力矩阵（核心）
-    ├── 23-media-matrix.md              出图 / 视频 / ASR 矩阵
-    ├── 30-knowledge-ingestion.md       新事实怎么进来、旧结论怎么改
-    ├── 31-open-questions.md            待核实清单
-    └── CHANGELOG.md
+    流程   00-audit-playbook.md · 12-migration-roadmap.md · 30-knowledge-ingestion.md
+    结论表 20-platform-matrix.md（平台，含各家正文索引）· 22-model-capability-matrix.md（模型 × 平台 × 面，核心）
+           23-media-matrix.md（出图 / 视频 / ASR）· 31-open-questions.md（待核实）
+    正文   01 架构分层 · 02 协议差异（含四族总对照表）· 03 思考 · 04 结构化 · 05 工具与服务端工具
+           06 错误 / usage / 探测 · 13 出图 · 14 视频 · 16 语音识别
+    反查   11-pitfalls.md（现象 → 对策 → 指针）
+    日志   CHANGELOG.md
 ```

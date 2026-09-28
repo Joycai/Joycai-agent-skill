@@ -174,6 +174,8 @@ OpenAI 官方 `web_search`（【实测 2026-09-26】，`gpt-6-luna` 经 OrcaRout
 正文带 `url_citation` 注解；`action.sources` 要发 `include:["web_search_call.action.sources"]` 才有；原样线路的 `usage.input_tokens_details` 多一个
 `cache_write_tokens`（一次 4,388，06 §1）。
 
+（自 11 篇坑 70 移入）DashScope ② 面单独声明 `web_extractor` 的报错原文：HTTP 200 后首个事件 `response.failed`，message `must be executed with web_search tool`。
+
 ### 代码解释器：按模型 id 放行、按请求丢弃（千问 DashScope）
 
 出处：`serverTools.ts` 的 `supportsCodeInterpreter` / `supportsServerToolFor` / `codeInterpreterEvent`；

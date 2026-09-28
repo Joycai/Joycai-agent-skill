@@ -69,7 +69,7 @@ prompt 却要真实结果并多要一个 `reason`——只有真被约束才会�
 
 | 面 | 发送 | 结果 |
 | --- | --- | --- |
-| ① | `response_format:{type:"json_object"}` / `{type:"json_schema", json_schema:{…, strict:true}}` | 都 200、都被忽略：回 ```` ```json ```` 代码块，键名自拟（`result`，不是被 enum 锁死的 `answer: 7`） |
+| ① | `response_format:{type:"json_object"}` / `{type:"json_schema", json_schema:{…, strict:true}}` | 都 200、都被忽略：回 json 围栏代码块，键名自拟（`result`，不是被 enum 锁死的 `answer: 7`） |
 | ④ | `output_config.format`（GA 写法）/ `output_format` + beta 头 | 都 200、都被忽略：模型照答 `2`，外面包 markdown |
 
 - 这种端点上「发了 JSON mode」比「没发」更糟：① 的 cue 是**条件追加**（规则 3），实现以为原生约束在位就不补「只输出 JSON」，

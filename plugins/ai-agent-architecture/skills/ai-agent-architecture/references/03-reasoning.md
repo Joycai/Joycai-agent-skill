@@ -474,3 +474,9 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 - [ ] ② 族回传的 reasoning 条目（含 `encrypted_content`）原样整组带回，载体带 modelId。
 - [ ] ② 族的「关闭」在中转站上逐上游核实过：GPT 账号池与网关 ② `effort:"none"` 都被改写成 `medium`，① `none` 只在网关生效；关不掉的写进作者说明，靠回显比对报告，不重试。
 - [ ] 经中转站（尤其翻译层后端，如 Kiro 渠道的 Claude）的思考档位逐档实测过：「最高」有没有变成不想（① `max`）、各档是否真分得开、`display` 是否被无视；结论写进作者说明或按 id 夹档，不假设翻译表处处成立。
+
+## 补遗（自 22 篇移入，2026-09-28）
+
+- （§2 Gemini 档位）Vertex 经 OrcaRouter ③：`thinkingLevel:"BOGUS"` ❌ 400，Vertex 原文（与 `MINIMAL` 400 同属会响，网关重序列化不吞这条）。【实测 2026-09-26】坑 170
+- （§3.3 New API · AWSb 渠道的 Claude ④）乱写 `effort`／思考时带 `temperature:0.3` ❌ 400，文案与官方同文 `Input should be 'low', 'medium', 'high' or 'max'`——四渠道里唯一在思考参数上校验的。【实测 2026-09-23】坑 147
+- （§7.2 OrcaRouter ② 默认线路的 GPT-6）流式 reasoning item 只有 `encrypted_content`、`summary: []`、无 `reasoning_summary_text.delta`（非流式时 luna 有摘要文本）；`summary:"auto"` 回显 `"detailed"`。【实测 2026-09-26】坑 175
