@@ -2,7 +2,7 @@
 name: reference-image-generate
 description: 基于当前仓库的可信文字设定和图像样本，从文字描述或草图生成新图片。用于按既定角色、服装、道具或视觉设计创作新构图，以及将草图完成为成图；已有成图的局部纠错使用同插件的 reference-image-repair。
 metadata:
-  version: "1.1.1"
+  version: "1.1.2"
   updated: "2026-10-13"
 ---
 
@@ -10,9 +10,11 @@ metadata:
 
 用文字或草图决定本次画面，用仓库中有明确来源和适用范围的知识与样本保持设计一致性。支持动漫角色及其他对象，不预置角色设定，不把“文件在仓库里”当作可信依据。
 
+将动漫角色服装转为真实材质的人台三视图、细节或内层展示时，使用 [reference-image-cosplay](../reference-image-cosplay/SKILL.md) 的专用审查、方案确认与展示流程。
+
 ## 仓库与依据
 
-先读当前工作区已有的 `AGENTS.md`、`REFERENCE_WORKSPACE.md`（如有）、`references/INDEX.md` 及索引指向的相关设定，再实际查看本次涉及的参考原图。沿用仓库已有组织方式；不要为了使用本 skill 重排素材。若用户要求初始化，使用同插件 [reference-image-workspace](../reference-image-workspace/SKILL.md) 的初始化与参考维护流程，三个 skill 共用参考索引；不需要待修成图也可以初始化。仅缺少索引时可直接使用用户本次明确提供的设定和参考，不以初始化或创建索引作为出图前置条件；写入共享索引须有用户维护参考的意图。
+先读当前工作区已有的 `AGENTS.md`、`REFERENCE_WORKSPACE.md`（如有）、`references/INDEX.md` 及索引指向的相关设定，再实际查看本次涉及的参考原图。沿用仓库已有组织方式；不要为了使用本 skill 重排素材。若用户要求初始化，使用同插件 [reference-image-workspace](../reference-image-workspace/SKILL.md) 的初始化与参考维护流程，各 skill 共用参考索引；不需要待修成图也可以初始化。仅缺少索引时可直接使用用户本次明确提供的设定和参考，不以初始化或创建索引作为出图前置条件；写入共享索引须有用户维护参考的意图。
 
 按部位和问题选择依据，而不是给全部图片排一个通用优先级：
 

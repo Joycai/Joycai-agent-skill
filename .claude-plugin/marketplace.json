@@ -53,15 +53,16 @@
     {
       "name": "reference-image-studio",
       "source": "./plugins/reference-image-studio",
-      "description": "可信参考工作区维护、先确认计划的图片修复，以及文字或草图生成图片",
-      "version": "1.1.1",
+      "description": "可信参考工作区维护、先确认计划的图片修复、文字或草图生成，以及真实 cosplay 服装人台展示",
+      "version": "1.2.0",
       "category": "productivity",
       "keywords": [
         "image-generation",
         "image-editing",
         "reference-images",
         "workspace",
-        "visual-consistency"
+        "visual-consistency",
+        "cosplay"
       ]
     }
   ]

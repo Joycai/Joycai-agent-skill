@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cosplay 服装人台展示"
+  short_description: "先审查角色参考并确认材质结构，再生成真实服装三视图、细节与可选内层展示"
+  default_prompt: "使用 $reference-image-cosplay，审查我提供的角色参考，先提出服装结构、真实材质和人台展示方案，等我补充并确认后再生成图片。"
