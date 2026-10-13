@@ -1,0 +1,4 @@
+interface:
+  display_name: "参考工作区与知识维护"
+  short_description: "初始化参考创作工作区，收录图片和文字说明，并持续维护可信设定与来源"
+  default_prompt: "使用 $reference-image-workspace 初始化当前工作区，或将我提供的图片和文字说明更新到参考索引。"

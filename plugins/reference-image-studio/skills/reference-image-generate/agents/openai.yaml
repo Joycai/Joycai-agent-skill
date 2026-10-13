@@ -1,0 +1,4 @@
+interface:
+  display_name: "可信参考图片生成"
+  short_description: "依据仓库中已确认的设定与图像样本，将文字构思或草图生成完整图片"
+  default_prompt: "使用 $reference-image-generate，根据当前仓库的可信设定与样本，把我的文字描述或草图生成图片。"

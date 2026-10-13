@@ -1,7 +1,7 @@
 {
   "name": "ai-agent-architecture",
-  "version": "2.1.0",
-  "description": "平台 × 协议 × 模型 的已验证 LLM 端点事实矩阵、供应商分层架构与知识吸收协议",
+  "version": "3.0.0",
+  "description": "四个按任务选用的 skill：LLM 接入知识库、agent 运行时架构、渠道 → 线路 → 模型配置、API 用量计量与计费",
   "author": {
     "name": "Joycai"
   },
@@ -15,6 +15,18 @@
     "server-tools",
     "image-generation",
     "video-generation",
-    "asr"
+    "asr",
+    "agent",
+    "tool-loop",
+    "approval",
+    "subagent",
+    "context-compaction",
+    "channel",
+    "route",
+    "multi-protocol",
+    "billing",
+    "usage",
+    "pricing",
+    "fee-groups"
   ]
 }

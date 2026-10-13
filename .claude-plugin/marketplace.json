@@ -1,6 +1,6 @@
 {
   "name": "joycai-agent-skill",
-  "description": "Joycai 的 Claude 插件市场：LLM 接入知识库、agent 架构等自用 skill",
+  "description": "Joycai 的 Claude 插件市场：LLM 与 agent 架构、开发工作流、可信参考驱动的图片创作",
   "owner": {
     "name": "Joycai"
   },
@@ -8,58 +8,28 @@
     {
       "name": "ai-agent-architecture",
       "source": "./plugins/ai-agent-architecture",
-      "description": "平台 × 协议 × 模型 的已验证事实矩阵、供应商分层架构与知识吸收协议（OpenAI / Anthropic / Gemini / 百炼 / 火山 / 智谱 / 中转站 / 本地；出图 / 视频 / ASR）",
-      "version": "2.1.0",
+      "description": "四个按任务选用的 skill：LLM 接入知识库、agent 运行时架构、渠道 → 线路 → 模型配置、API 用量计量与计费",
+      "version": "3.0.0",
       "category": "engineering",
       "keywords": [
         "llm",
         "api",
         "provider",
         "relay",
-        "中转站",
         "thinking",
         "structured-output",
-        "web_search",
+        "server-tools",
         "image-generation",
-        "asr"
-      ]
-    },
-    {
-      "name": "agent-runtime-architecture",
-      "source": "./plugins/agent-runtime-architecture",
-      "description": "agent 层架构标准：工具循环、审批与写安全、工具按需加载、子代理委派、上下文压缩与会话持久化（与 ai-agent-architecture 配套）",
-      "version": "1.0.0",
-      "category": "engineering",
-      "keywords": [
+        "video-generation",
+        "asr",
         "agent",
         "tool-loop",
         "approval",
         "subagent",
-        "context-compaction"
-      ]
-    },
-    {
-      "name": "channel-route-model",
-      "source": "./plugins/channel-route-model",
-      "description": "LLM 接入配置三层架构：渠道 → 线路 → 模型；一把 key 多协议、按模型选协议、旧记录迁移、合并供应商、设置 UI",
-      "version": "1.0.0",
-      "category": "engineering",
-      "keywords": [
-        "llm",
-        "provider",
+        "context-compaction",
         "channel",
         "route",
-        "multi-protocol"
-      ]
-    },
-    {
-      "name": "llm-billing-model",
-      "source": "./plugins/llm-billing-model",
-      "description": "LLM / 出图 / 视频 API 计量与计费设计标准：计费组三种模式、规格档位表、用量快照、上游报价覆盖、视频先扣后结",
-      "version": "1.0.0",
-      "category": "engineering",
-      "keywords": [
-        "llm",
+        "multi-protocol",
         "billing",
         "usage",
         "pricing",
@@ -78,6 +48,20 @@
         "bugfix",
         "review",
         "pull-request"
+      ]
+    },
+    {
+      "name": "reference-image-studio",
+      "source": "./plugins/reference-image-studio",
+      "description": "可信参考工作区维护、先确认计划的图片修复，以及文字或草图生成图片",
+      "version": "1.1.1",
+      "category": "productivity",
+      "keywords": [
+        "image-generation",
+        "image-editing",
+        "reference-images",
+        "workspace",
+        "visual-consistency"
       ]
     }
   ]

@@ -1,0 +1,15 @@
+{
+  "name": "reference-image-studio",
+  "version": "1.1.1",
+  "description": "可信参考工作区维护、先确认计划的图片修复，以及文字或草图生成图片",
+  "author": {
+    "name": "Joycai"
+  },
+  "keywords": [
+    "image-generation",
+    "image-editing",
+    "reference-images",
+    "workspace",
+    "visual-consistency"
+  ]
+}

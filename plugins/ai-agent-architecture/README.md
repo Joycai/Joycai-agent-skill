@@ -1,10 +1,27 @@
 # ai-agent-architecture
 
-一个 skill：`ai-agent-architecture`。平台无关的 LLM 接入知识库——已验证的「平台 × 协议 × 模型」事实矩阵、供应商分层架构经验、以及新知识的吸收与修正协议。
+一个插件，四个按任务选用的 skill。安装一次即可使用 LLM 接入、agent 运行时、接入配置与计费设计的知识和规范。
 
-安装后触发词：`/ai-agent-architecture:ai-agent-architecture`，或直接问「X 模型在 Y 平台支持不支持 Z」「审查模型接入」「接入新厂商」「这个中转站为什么…」。
+| 任务 | skill / 显式调用 |
+| --- | --- |
+| 查模型能力、审查 API 接入、接入新厂商、排查协议问题、记录实测结果 | `/ai-agent-architecture:ai-agent-architecture` |
+| 搭建 agent、工具循环、审批与写安全、子代理、上下文压缩与会话持久化 | `/ai-agent-architecture:agent-runtime-architecture` |
+| 设计渠道 → 线路 → 模型配置、多协议切换、迁移与合并供应商、设置 UI | `/ai-agent-architecture:channel-route-model` |
+| 设计 token / 按次 / 按规格计费、用量快照、上游报价、视频结算与用量 UI | `/ai-agent-architecture:llm-billing-model` |
+
+每个 skill 保留独立的 `SKILL.md`、触发描述与按需加载的 `references/`；按任务读取相应入口。开发流程由独立的 `dev-workflow` 插件提供。
 
 目录：
+
+```text
+skills/
+├── ai-agent-architecture/
+├── agent-runtime-architecture/
+├── channel-route-model/
+└── llm-billing-model/
+```
+
+其中 LLM 接入知识库的资料组织：
 
 ```
 skills/ai-agent-architecture/
