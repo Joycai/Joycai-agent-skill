@@ -1,5 +1,6 @@
 """Create a reference-repair workspace without overwriting existing files."""
 import argparse
+import runpy
 from pathlib import Path
 
 
@@ -25,6 +26,8 @@ def initialize(root: Path) -> None:
             print(f"Created: {target}")
         except FileExistsError:
             print(f"Preserved: {target}")
+    dashboard = assets.parent.parent / "reference-image-dashboard" / "scripts" / "dashboard.py"
+    runpy.run_path(str(dashboard))["init"](root)
     if rules_target.name == "REFERENCE_WORKSPACE.md":
         print("Review existing AGENTS.md and merge or link REFERENCE_WORKSPACE.md without replacing project rules.")
 

@@ -2,8 +2,8 @@
 name: reference-image-workspace
 description: 初始化参考图创作工作区，收录和更新参考图片、文字描述与已确认设定，维护可信来源、适用范围和参考索引。用于整理素材、补充或纠正设定；不执行图片生成或修复。
 metadata:
-  version: "1.1.1"
-  updated: "2026-10-13"
+  version: "1.2.0"
+  updated: "2026-10-15"
 ---
 
 # 参考工作区与知识维护
@@ -18,7 +18,7 @@ metadata:
 python3 "<skill目录>/scripts/init_workspace.py" "<工作区路径>"
 ```
 
-脚本只创建缺少的文件，不覆盖既有内容。已有 `AGENTS.md` 时，规则写入 `REFERENCE_WORKSPACE.md`；阅读两者后，将适用的参考工作区规则合并进现有约定或添加链接，保留其他项目规则。重复运行不重复添加规则。
+脚本创建标准目录与缺少的规则/索引，初始化 `.studio/project.json` 并构建 `dashboard/index.html`。登记表和原件不覆盖；Dashboard 页面与缩略图是可重建产物。已有 `AGENTS.md` 时，规则写入 `REFERENCE_WORKSPACE.md`；阅读两者后，将适用的参考工作区规则合并进现有约定或添加链接，保留其他项目规则。重复运行不重复添加规则。
 
 初始化不需要用户先交齐图片。缺少材料时完成目录与规则，再明确告知下一步需要哪些参考图片或文字设定；无需提供待修图片。不要扫描或复制无关工作区的素材；不自动继承本 skill 来源项目的角色、编号和设定。
 
@@ -42,3 +42,11 @@ python3 "<skill目录>/scripts/init_workspace.py" "<工作区路径>"
 收录新图片前核对来源、用途与是否已有相同素材；保持稳定编号与原文件内容。纯描述补充不要创建虚假的图像文件。大段设定可另存为 references/ 内的描述文档并在 INDEX.md 中链接，短说明可直接入索引。只维护当前请求涉及的知识，不顺带生成或修图。
 
 交付时简述新增或更正的依据、适用范围和仍待确认项，并给出更新文件链接。不要把收录成功说成所有设定已核实。
+
+## Dashboard 与统一记录
+
+使用 [reference-image-dashboard](../reference-image-dashboard/SKILL.md) 的 [仓库结构与记录协议](../reference-image-dashboard/references/workspace-contract.md)。新项目采用 `references/`、`inputs/`、`tasks/<任务>/`、`retained/`、`.studio/`、`dashboard/`；已有 `edits/`、`generations/`、`finals/` 不移动，登记原路径即可。初始化即有空页面，不需要先提供图片。
+
+收录或更改参考时，同步 `.studio/project.json` 的 reference 稳定编号、来源、确认状态与适用范围并 build；仅文字设定也可登记文本路径。用户明确保留结果时登记 retained 及 task/step/output 来源，不把保留自动升级为参考。网页展示与索引应表达同一确认边界，避免只改其中一处。
+
+已有项目接入只根据实际索引、历史记录与用户确认登记，不从文件名推断可信性；缺失历史输入和 prompt 明示未知。未登记的图片仅进入未登记栏。页面是快照，各创作技能在每次产出或失败后 build，用户刷新即可观察。

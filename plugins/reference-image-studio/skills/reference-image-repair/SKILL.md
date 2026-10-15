@@ -2,8 +2,8 @@
 name: reference-image-repair
 description: 依据工作区可信参考修复已有图片，先分析差异并提出具体修改计划，等待用户确认或调整后再执行和核对。初始化及参考图片、文字设定的更新使用 reference-image-workspace。
 metadata:
-  version: "1.1.1"
-  updated: "2026-10-13"
+  version: "1.2.0"
+  updated: "2026-10-15"
 ---
 
 # 先确认计划，再修复图片
@@ -14,7 +14,7 @@ metadata:
 
 先读工作区已有的 AGENTS.md、REFERENCE_WORKSPACE.md（如有）、references/INDEX.md 和相关文字设定，实际查看待修图与对应参考原图。尚无索引时，可使用用户本次明确提供的依据，不强制初始化。纯文字依据明确时可据此分析，不虚构图像证据。按部位使用可信标准，结合目标的透视、姿势、遮挡和光照判断；不能仅靠记忆，也不能把拆除配件、变身阶段或跨对象局部参考当成完整常规设计。
 
-建立 edits/<唯一批次>/，保存可获取的原图副本和 PLAN.md。先完成足以评审的计划，再请求确认；不要只给“稍后分析并修复”这样的任务步骤。每个修改项使用稳定编号，写明：
+建立 tasks/<唯一任务>/（已有项目可继续使用 edits/<唯一批次>/），保存可获取的原图副本和 PLAN.md。先完成足以评审的计划，再请求确认；不要只给“稍后分析并修复”这样的任务步骤。每个修改项使用稳定编号，写明：
 
 - 位置或部位，以及实际观察到的问题。
 - 依据的参考图片或文字条目，以及适用范围；不把未知隐藏结构写成事实。
@@ -44,3 +44,9 @@ metadata:
 ## 最小修正记录
 
 每批次的 `NOTES.md` 记录：目标原图与参考来源、用户要求、实际使用的提示词位置、输出版本、目视检查结果、尚未确认的问题。不能把“已生成”写成“用户已认可”。需要更新已确认设定时交由 reference-image-workspace 维护；单次编辑效果保留在批次记录中。
+
+## 项目 Dashboard 同步
+
+工作区存在 `.studio/project.json` 时，遵循 [Dashboard 记录协议](../reference-image-dashboard/references/workspace-contract.md)：新任务优先 `tasks/<唯一任务>/`，已有项目沿用原批次目录并登记 task.json 路径。计划、每次工具返回（包括失败）和核对完成后，逐次记录实际输入顺序/职责/是否传入、模型参数、实际 prompt、独立输出版本和检查结果，然后运行 dashboard skill 的 `scripts/dashboard.py build <工作区>`。不能只在全部成功后补写一条记录掩盖重试，也不能将目视查阅冒充传图。
+
+用户明确保留时增加 retained 记录并关联 task/step/output；生成结果未获相应用途的明确确认前不进入 confirmed reference。没有登记表时不强制初始化或重排素材；直接完成本次出图与既有日志。Dashboard 不替代本 skill 的授权和核对流程。
