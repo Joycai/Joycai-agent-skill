@@ -25,3 +25,13 @@ console.log('Passed: confirmed-reference filtering, task/model/search filters, c
 
 run("tab='archived';$('model').value='all';$('search').value='';render()");assert(run("visible().every(x=>x.asset.archived)"));assert(run("catalog.filter(x=>x.section==='tasks').every(x=>!x.asset?.archived)"));
 console.log('Passed: archived items separated from active tasks.');
+
+run("tab='deleted';render()");
+assert(run("visible().every(x=>x.asset.deleted)"));
+assert.equal(run("new Set(visible().map(x=>x.path)).size"),run("(project.archives||[]).filter(x=>x.deleted).length"));
+assert(run("catalog.filter(x=>x.section==='archived').every(x=>!x.asset.deleted)"));
+if(run('visible().length')){
+  assert(elements.grid.children.every(x=>x.innerHTML.includes('已删除')&&!x.innerHTML.includes('文件缺失')));
+  run("showDetails(visible()[0])");assert(elements.detailbody.innerHTML.includes('已删除'));
+}
+console.log('Passed: deleted results separated from archived items, history retained.');

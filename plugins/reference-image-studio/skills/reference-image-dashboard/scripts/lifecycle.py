@@ -51,6 +51,9 @@ def inspect(root, paths):
 def update(root, paths, reason, restore=False, include_protected=False):
     root = root.expanduser().resolve()
     report = inspect(root, paths)
+    project, _ = dashboard.read_project(root)
+    if any(x.get('deleted') and x['path'] in {r['path'] for r in report} for x in project.get('archives', [])):
+        raise ValueError('Permanently deleted result cannot be archived or restored; restore file bytes through a separate recovery workflow first')
     if any(not item['exists'] for item in report):
         raise ValueError('Missing target file; no archive state changed')
     if not restore and not include_protected and any(item['protected'] for item in report):

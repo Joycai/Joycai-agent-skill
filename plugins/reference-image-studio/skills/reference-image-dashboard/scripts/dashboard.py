@@ -87,6 +87,12 @@ def validate(project, tasks):
         require(entry, ['path', 'reason'], 'archive')
         if not isinstance(entry.get('archived'), bool):
             raise ValueError('archive.archived must be boolean')
+        if 'deleted' in entry and not isinstance(entry['deleted'], bool):
+            raise ValueError('archive.deleted must be boolean')
+        if entry.get('deleted'):
+            require(entry, ['deleted_at'], 'deleted archive')
+            if not entry['archived'] or not any(h.get('action') == 'permanent-delete' for h in entry.get('history', [])):
+                raise ValueError('Deleted archive requires archived state and permanent-delete history')
         archive_paths.append(entry['path'])
     if len(archive_paths) != len(set(archive_paths)):
         raise ValueError('Duplicate archive path')
@@ -219,11 +225,18 @@ def build(root):
         if name in cache:
             return cache[name]
         url = '../' + quote(name, safe='/')
+        entry = archives.get(str(path.relative_to(root)), {})
+        deleted = entry.get('deleted', False)
         result = {'path': name, 'url': url, 'exists': path.is_file(),
+                  'deleted': deleted, 'deletion_reason': entry.get('reason', '') if deleted else '',
+                  'deleted_at': entry.get('deleted_at') if deleted else None,
                   'archived': archives.get(str(path.relative_to(root)), {}).get('archived', False)}
         if not path.is_file():
-            warnings.append('Missing file: ' + name)
+            if not deleted:
+                warnings.append('Missing file: ' + name)
         else:
+            if deleted:
+                warnings.append('Marked deleted but file exists: ' + name)
             result['bytes'] = path.stat().st_size
             if path.suffix.lower() in IMAGE_TYPES:
                 digest = hashlib.sha256(path.read_bytes()).hexdigest()

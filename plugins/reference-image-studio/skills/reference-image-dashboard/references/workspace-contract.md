@@ -137,3 +137,10 @@ python3 <dashboard-skill>/scripts/dashboard.py record <workspace> --kind retaine
 `project.archives` 为可选数组，旧项目省略时行为不变。每条记录以规范化项目相对 `path` 定位，含 `archived` 布尔值、`reason` 和 `history`（action、at、reason、references、text_mentions）。任务状态、参考状态、用户认可和归档可见性是独立维度，不用 `failed` 或 `superseded` 代替归档。
 
 默认归档不移动文件；被归档的资产从普通列表移至归档栏，任务详情仍保留全部输入和输出。恢复将 `archived` 置 false，保留历史。操作、命令及删除边界见 [清理与归档流程](cleanup-and-archive.md)。
+
+
+### 主动删除与意外缺失
+
+`archives` 可记录已执行的永久删除：`deleted: true`、非空 `deleted_at`、`reason`，并在 `history` 中保留 `action: permanent-delete`（时间、SHA-256、字节数及审计路径见清理流程）。删除条目仍保留 `archived: true`，输出 ID/path 和 prompt 不删除。仅 output 上的 `deleted` 标记不足以抑制缺图；Dashboard 以有效 archive 删除登记为依据。
+
+构建的 asset 包含 `deleted`、`deleted_at`、`deletion_reason` 和实际 `exists`。主动删除显示独立占位，不产生 Missing file 警告；其他文件缺失仍警告，已标删除的文件重新出现也警告，避免静默状态漂移。恢复文件需要另行校验来源和字节后更新删除记录，不能用 archive restore 假称恢复永久删除的图片。

@@ -89,4 +89,4 @@ skills/
 python3 plugins/reference-image-studio/skills/reference-image-dashboard/scripts/dashboard.py build /path/to/workspace
 ```
 
-Dashboard 支持按自然语言要求清理版本：默认原位归档、检查任务与参考引用、自动更新页面，保留完整输入输出和 prompt 链路；可恢复，不释放磁盘空间。物理迁移或删除须用户明确指定。见 [清理与归档流程](skills/reference-image-dashboard/references/cleanup-and-archive.md)。
+Dashboard 支持按自然语言要求清理版本：默认原位归档、检查任务与参考引用、自动更新页面，保留完整输入输出和 prompt 链路；可恢复，不释放磁盘空间。物理迁移或删除须用户明确指定。明确删除无其他引用的归档图片时，检查登记和历史日志中的依赖、保留审计与 prompt，再实际删除；页面将“已删除”与意外缺失分开显示，永久删除不能用归档恢复。见 [清理与归档流程](skills/reference-image-dashboard/references/cleanup-and-archive.md)。

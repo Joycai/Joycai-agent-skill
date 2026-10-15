@@ -85,6 +85,42 @@ class DashboardTests(unittest.TestCase):
         self.assertIn('\\u003c/script', html)
         self.assertEqual((self.root / 'tasks/t1/output #1.png').read_bytes(), PNG)
 
+    def test_deleted_output_keeps_history_without_missing_warning(self):
+        self.task()
+        name = 'tasks/t1/output #1.png'
+        (self.root / name).unlink()
+        project, _ = dashboard.read_project(self.root)
+        project['archives'] = [{'path': name, 'archived': True, 'deleted': True,
+            'deleted_at': '2026-10-15T07:00:00+00:00', 'reason': 'User requested permanent deletion',
+            'history': [{'action': 'permanent-delete'}]}]
+        dashboard.dump(self.root / '.studio/project.json', project)
+        data = dashboard.build(self.root)
+        asset = data['tasks'][0]['steps'][1]['outputs'][0]['asset']
+        self.assertTrue(asset['deleted'])
+        self.assertFalse(asset['exists'])
+        self.assertEqual(asset['deletion_reason'], 'User requested permanent deletion')
+        self.assertEqual(data['warnings'], ['Missing file: references/missing.png'])
+        self.assertEqual(data['tasks'][0]['steps'][1]['outputs'][0]['id'], 'o1')
+        self.assertIn('真实 prompt', data['tasks'][0]['steps'][1]['prompt']['text'])
+        # A reappearing file is not silently treated as a successful deletion.
+        (self.root / name).write_bytes(PNG)
+        self.assertIn('Marked deleted but file exists: ' + name, dashboard.build(self.root)['warnings'])
+
+    def test_unsupported_deletion_marker_does_not_hide_missing_file(self):
+        self.task()
+        name = 'tasks/t1/output #1.png'
+        (self.root / name).unlink()
+        task = dashboard.load(self.root / 'tasks/t1/task.json')
+        task['steps'][1]['outputs'][0]['deleted'] = True
+        dashboard.dump(self.root / 'tasks/t1/task.json', task)
+        self.assertIn('Missing file: ' + name, dashboard.build(self.root)['warnings'])
+        project, _ = dashboard.read_project(self.root)
+        project['archives'] = [{'path': name, 'archived': True, 'deleted': True,
+                               'deleted_at': 'today', 'reason': 'x', 'history': []}]
+        dashboard.dump(self.root / '.studio/project.json', project)
+        with self.assertRaisesRegex(ValueError, 'permanent-delete history'):
+            dashboard.build(self.root)
+
     def test_new_images_are_not_silently_confirmed(self):
         (self.root / 'references/new.png').write_bytes(PNG)
         data = dashboard.build(self.root)
