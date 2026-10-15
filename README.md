@@ -32,7 +32,8 @@ claude plugin install reference-image-studio@joycai-agent-skill
 | `ai-agent-architecture` | `channel-route-model` | LLM 接入配置三层架构：渠道 → 线路 → 模型 |
 | `ai-agent-architecture` | `llm-billing-model` | LLM / 出图 / 视频 API 计量与计费设计标准 |
 | `dev-workflow` | `dev-workflow` | 标准化的需求实现 / bug 修复流程（定位 → 设计 → 计划 → 分片提交 → review → PR） |
-| `reference-image-studio` | `reference-image-workspace` | 初始化参考创作工作区，维护图片、文字设定、可信来源与适用范围 |
+| `reference-image-studio` | `reference-image-workspace` | 初始化参考创作工作区与 Dashboard，维护图片、文字设定、可信来源与适用范围 |
+| `reference-image-studio` | `reference-image-dashboard` | 浏览可信参考、任务逐次输入输出与 prompt、保留结果，缩略图筛选与并排对比 |
 | `reference-image-studio` | `reference-image-repair` | 依据可信参考分析成图，默认确认具体修改计划后执行修复 |
 | `reference-image-studio` | `reference-image-generate` | 依据可信设定与样本，将文字或草图生成新图片 |
 | `reference-image-studio` | `reference-image-cosplay` | 审查角色参考并确认结构与材质，生成真实服装人台三视图、特写及可选内层展示 |

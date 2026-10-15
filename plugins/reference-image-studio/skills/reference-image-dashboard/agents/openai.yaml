@@ -1,0 +1,4 @@
+interface:
+  display_name: "创作仓库 Dashboard"
+  short_description: "浏览可信参考、任务输入输出与提示词、保留结果，支持缩略图筛选和并排对比"
+  default_prompt: "使用 $reference-image-dashboard 为当前创作仓库创建或更新 Dashboard，整理参考、任务过程与保留结果。"
