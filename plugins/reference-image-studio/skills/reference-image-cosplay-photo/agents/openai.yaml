@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cosplay 真人摄影"
+  short_description: "基于服装设计图或角色原画生成真人 Cosplay 照片，支持可选模特参考与场景设定"
+  default_prompt: "使用 $reference-image-cosplay-photo，根据我提供的服装设计图或角色原画生成真人 cosplay 照片；有模特照片时按其保持面部身份。"
