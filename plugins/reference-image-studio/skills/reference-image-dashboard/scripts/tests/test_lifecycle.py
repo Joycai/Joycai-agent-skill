@@ -46,6 +46,17 @@ class LifecycleTests(unittest.TestCase):
         self.assertEqual(path.read_bytes(),before)
         with self.assertRaisesRegex(ValueError,'Missing target'):lifecycle.update(self.root,[self.path,'tasks/t1/missing.png'],'cleanup',include_protected=True)
         self.assertEqual(path.read_bytes(),before)
+    def test_permanently_deleted_result_cannot_be_logically_restored(self):
+        project,_=dashboard.read_project(self.root)
+        project['archives']=[{'path':self.path,'archived':True,'deleted':True,
+            'deleted_at':'2026-10-15T07:00:00+00:00','reason':'deleted by user',
+            'history':[{'action':'permanent-delete'}]}]
+        path=self.root/'.studio/project.json';dashboard.dump(path,project);before=path.read_bytes()
+        # Even reappearing bytes require a separate verified recovery, not logical restore.
+        with self.assertRaisesRegex(ValueError,'Permanently deleted'):
+            lifecycle.update(self.root,[self.path],'restore',restore=True)
+        self.assertEqual(path.read_bytes(),before)
+
     def test_build_failure_rolls_back_registry(self):
         path=self.root/'.studio/project.json';before=path.read_bytes()
         with patch.object(dashboard,'build',side_effect=OSError('disk error')):

@@ -54,7 +54,7 @@
       "name": "reference-image-studio",
       "source": "./plugins/reference-image-studio",
       "description": "可信参考工作区与项目 Dashboard、图片修复、文字或草图生成、cosplay 服装展示与真人摄影",
-      "version": "1.4.1",
+      "version": "1.4.2",
       "category": "productivity",
       "keywords": [
         "image-generation",
