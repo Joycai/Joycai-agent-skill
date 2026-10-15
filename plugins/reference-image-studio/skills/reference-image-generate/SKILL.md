@@ -2,8 +2,8 @@
 name: reference-image-generate
 description: 基于当前仓库的可信文字设定和图像样本，从文字描述或草图生成新图片。用于按既定角色、服装、道具或视觉设计创作新构图，以及将草图完成为成图；已有成图的局部纠错使用同插件的 reference-image-repair。
 metadata:
-  version: "1.1.2"
-  updated: "2026-10-13"
+  version: "1.1.3"
+  updated: "2026-10-15"
 ---
 
 # 可信参考驱动的图片生成
@@ -11,6 +11,8 @@ metadata:
 用文字或草图决定本次画面，用仓库中有明确来源和适用范围的知识与样本保持设计一致性。支持动漫角色及其他对象，不预置角色设定，不把“文件在仓库里”当作可信依据。
 
 将动漫角色服装转为真实材质的人台三视图、细节或内层展示时，使用 [reference-image-cosplay](../reference-image-cosplay/SKILL.md) 的专用审查、方案确认与展示流程。
+
+生成真人模特穿着 cosplay 的摄影照片时，使用 [reference-image-cosplay-photo](../reference-image-cosplay-photo/SKILL.md)，支持服装设计图或角色原画与可选模特照片。
 
 ## 仓库与依据
 

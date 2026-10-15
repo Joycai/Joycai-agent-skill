@@ -1,6 +1,6 @@
 # 参考图工作室
 
-一个插件，四个 skill，共用工作区内的可信参考索引。
+一个插件，五个 skill，共用工作区内的可信参考索引。
 
 ## 安装与调用
 
@@ -17,6 +17,7 @@ claude plugin install reference-image-studio@joycai-agent-skill
 /reference-image-studio:reference-image-repair
 /reference-image-studio:reference-image-generate
 /reference-image-studio:reference-image-cosplay
+/reference-image-studio:reference-image-cosplay-photo
 ```
 
 | Skill | 用途 |
@@ -25,6 +26,7 @@ claude plugin install reference-image-studio@joycai-agent-skill
 | `reference-image-repair` | 提出具体修改计划，经用户确认或调整后修复成图 |
 | `reference-image-generate` | 根据可信设定与样本，将文字描述或草图生成新图片 |
 | `reference-image-cosplay` | 先审查并确认材质、结构与展示方案，再生成真实 cosplay 服装人台图 |
+| `reference-image-cosplay-photo` | 按服装设计图或角色原画生成真人 cosplay 照片，模特照片可选 |
 
 使用示例：
 
@@ -35,8 +37,12 @@ claude plugin install reference-image-studio@joycai-agent-skill
 - 使用 reference-image-generate，保留这张草图的构图和动作，按仓库标准完成图片。
 - 使用 reference-image-cosplay，根据这些角色原画和饰品特写，先提出真实材质及人台展示方案，确认后生成正侧背与细节图。
 - 使用 reference-image-cosplay，在完整造型之外补充移除外裙的内层连体衣展示；也可以仅生成内层服装图。
+- 使用 reference-image-cosplay-photo，按服装 V1 和这组模特面部照片生成一张全身漫展照，配饰和假发保持一致。
+- 使用 reference-image-cosplay-photo，没有服装设计图，直接按这张角色原画生成清晨花园中的真人 cosplay 摄影，不指定模特。
 
-Cosplay 展示默认包含全套服装、假发与配饰的正侧背视图及必要特写；内层展示为可选项。先审查参考并给出结构、材质、缺失依据与出图清单，用户补充和确认后再生成。角色原设定与本次真实化方案分开记录，缺少背面或隐藏结构时不将推断当作事实。
+使用 reference-image-cosplay-photo，根据已确认的 cosplay 设计图生成漫展、棚拍或户外真人照片；可提供模特四宫格锁定面部，也可不指定模特。没有预先设计图时可直接从角色原画转译成照片，不强制先做人台图。支持按本次场景表现天气与材质，并核对工具实际输出尺寸；照片生成默认直接执行已明确的请求。
+
+Cosplay 人台展示默认包含全套服装、假发与配饰的正侧背视图及必要特写；内层展示为可选项。先审查参考并给出结构、材质、缺失依据与出图清单，用户补充和确认后再生成。角色原设定与本次真实化方案分开记录，缺少背面或隐藏结构时不将推断当作事实。
 
 插件提供工作流程与初始化脚本，实际出图使用所在环境已有的图像能力。没有捆绑角色素材、供应商账户或密钥。生成图不会自动成为可信样本。
 
@@ -60,9 +66,10 @@ skills/
 ├── reference-image-workspace/   # 入口、初始化脚本与模板
 ├── reference-image-repair/      # 分析、计划、修复与核对
 ├── reference-image-generate/    # 文字或草图生成与核对
-└── reference-image-cosplay/     # 角色服装真实化、人台展示与分层核对
+├── reference-image-cosplay/     # 角色服装真实化、人台展示与分层核对
+└── reference-image-cosplay-photo/ # 真人穿着摄影、可选面部参考与场景材质核对
 ```
 
-按本仓库的 Claude marketplace 格式打包，四个 skill 一起安装，保留相互引用。各 skill 的 `agents/openai.yaml` 是附带的界面元数据，不代表提供了独立的 Codex 插件安装包。
+按本仓库的 Claude marketplace 格式打包，五个 skill 一起安装，保留相互引用。各 skill 的 `agents/openai.yaml` 是附带的界面元数据，不代表提供了独立的 Codex 插件安装包。
 
 验证清单：在仓库根目录运行 `claude plugin validate .` 和 `claude plugin validate plugins/reference-image-studio`。

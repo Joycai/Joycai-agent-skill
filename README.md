@@ -36,6 +36,7 @@ claude plugin install reference-image-studio@joycai-agent-skill
 | `reference-image-studio` | `reference-image-repair` | 依据可信参考分析成图，默认确认具体修改计划后执行修复 |
 | `reference-image-studio` | `reference-image-generate` | 依据可信设定与样本，将文字或草图生成新图片 |
 | `reference-image-studio` | `reference-image-cosplay` | 审查角色参考并确认结构与材质，生成真实服装人台三视图、特写及可选内层展示 |
+| `reference-image-studio` | `reference-image-cosplay-photo` | 按服装设计图或角色原画生成真人 cosplay 照片，可选模特面部参考、场景与天气材质 |
 
 参考图插件的调用方式与工作区初始化说明见 [reference-image-studio](plugins/reference-image-studio/README.md)。
 
