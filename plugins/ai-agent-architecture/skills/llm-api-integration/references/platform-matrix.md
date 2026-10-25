@@ -2,6 +2,8 @@
 
 ## 当前结果（2026-10-25，OrcaRouter）
 
+火山套餐 `kimi-k3.1-pro` 的最新记录见 [专节](#kimi-k31-ark)。
+
 本次 OrcaRouter 的精确请求 ID、协议与当前支持状态见 [汇总](model-support-status.md)。Qwen 两条 27B 目录路由持续回显 qwen3.8-flash，权重身份未确认；不能用响应 model 自动覆盖请求 ID。Gemini 当前目标仅 3.8/3.6，均已有匹配版本回显；3.5 转路由与 3.7 的 404 保留为历史。原生回包形状不能证明请求完整透传。
 
 本表回答：「这个平台（含渠道／线路／套餐变体）有哪些面、地址与鉴权怎么写、目录可不可信、它会对请求做什么手脚、计费与 usage 怎么报」。主键 = 平台（渠道 / 线路 / 套餐变体各占一行，写作「New API · Kiro 渠道」「OrcaRouter · ② 默认线路」「火山方舟 · 套餐」「智谱 · Coding Plan」）。本表是结论表，报文细节与原因在 0x／1x 篇里，用「详见」列的指针链接过去；坑号指 [pitfalls](pitfalls.md)。原 `15-vendor-index.md`（厂商索引）已于 2026-09-28 并入本表：协议族的正文位置在 §0，每家厂商的正文位置在 §3 各节开头的「正文所在」行，模型级行为在 [model-capability-matrix](model-capability-matrix.md)。
@@ -427,3 +429,10 @@
 以下平台（原 `15-vendor-index.md`「本库尚未覆盖」节，2026-09-28 并入本节；完整的待核实清单含优先级与测法在 [open-questions](open-questions.md) §3「本库尚未覆盖的厂商／协议」）一律按「未知、需核实；先按 [provider-layering](provider-layering.md) §2 判族，再用该族底座的全部检查项去审；厂商特有的不从相邻厂商类推；核实后按 [knowledge-ingestion](knowledge-ingestion.md) 写回并补进本表 §2 / §3 与 [model-capability-matrix](model-capability-matrix.md) 对应家族节」处理。
 
 Kimi／Moonshot（本表 Kimi 行仅一条 `json_object` 事实）；智谱 GLM 的图像／视频模型；智谱 Coding Plan 编程端点的完整实测（本表只有「按量 key 200、扣套餐」）；Mistral；Cohere；Groq 的 chat 面（本表只有 ASR 面）；硅基流动的 chat 面（本表只有 ASR 面）；Together；Fireworks；Bedrock Converse 的 body（第五种 body，要么写第五个 adapter 要么明确不接）；OpenAI 兼容 ASR 的实测（[speech-recognition](../../ai-media-api-integration/references/speech-recognition.md) §3 全是文档与实现口径）；流式／实时 ASR（WebSocket，本库没有）；Azure 的 `api-version` 细节；Seedance 视频（火山方舟套餐不含，实测 404，需按量 key；body 形状未覆盖）；OpenAI 官方收不收 ① `video_url`（[protocol-differences](protocol-differences.md) §1 表后，未量）；火山方舟按量付费收不收 ① `video_url`（未量；按量对话面整体未实测）。
+
+<a id="kimi-k31-ark"></a>
+## 火山订阅套餐：Kimi K3.1 Pro 补充
+
+**FACT-KIMI-PLATFORM-001** — 2026-10-26 的精确测试组合为 `https://ark.cn-beijing.volces.com/api/plan/v3` + Bearer + `kimi-k3.1-pro`；② `/responses` 为首选，① `/chat/completions` 用于对照。没有调用 `/models`，按用户提供 ID 直接补全；目录不可用不应阻断接入。这里不覆盖 `/api/coding/v3`、按量 `/api/v3` 或 Moonshot 官方直连。响应日期版见 [VER-KIMI-001](model-versions.md#kimi-k31)。
+
+正文所在：[思考参数与文档差异](reasoning.md#kimi-k31-ark)、[函数工具与 tool_choice 静默失效](tools-and-server-tools.md#kimi-k31-ark)、[结构化](structured-output.md#kimi-k31-ark)、[图片/PDF/SSE/存储](protocol-differences.md#kimi-k31-ark)、[用量与错误](errors-probing-observability.md#kimi-k31-ark)。汇总与可复现请求见 [首轮 67 次验证记录](volcengine-kimi-k31-verification.md) 和 [追加 24 次流式验证](volcengine-kimi-k31-stream-verification.md)。这些差异仅属于本次模型×套餐×协议，不归因为所有火山模型共有行为。

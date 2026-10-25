@@ -3,8 +3,8 @@ name: llm-api-integration
 description: >-
   Design, implement, audit, or debug conversational LLM API integrations and check platform × protocol × model compatibility. Use for request/response formats, streaming, reasoning, structured output, tools, and endpoint failures. Media generation and transcription APIs use ai-media-api-integration; merely mentioning a vendor or using an existing generation tool does not trigger this skill.
 metadata:
-  version: "2.2.7"
-  updated: "2026-10-25"
+  version: "2.2.9"
+  updated: "2026-10-26"
 ---
 
 # LLM API 接入
@@ -21,6 +21,7 @@ metadata:
 | --- | --- |
 | 核实型号、别名、弃用与版本归属 | [模型版本](references/model-versions.md) |
 | 查看本轮 OrcaRouter 目标模型支持情况 | [实测汇总](references/model-support-status.md) |
+| 接入火山套餐 Kimi K3.1 Pro | [实测与接入要点](references/volcengine-kimi-k31-verification.md)（Responses 优先，tool_choice 有缺口） |
 | 查询某组合的能力 | [模型能力矩阵](references/model-capability-matrix.md)，按行内指针查正文 |
 | 查询地址、鉴权、平台变体与厂商差异 | [平台索引与矩阵](references/platform-matrix.md) |
 | 消息、流式、协议字段与鉴权 | [协议差异](references/protocol-differences.md) |

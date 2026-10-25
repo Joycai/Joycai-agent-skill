@@ -1,6 +1,6 @@
 # 模型名称、版本归属与生命周期
 
-本页为【官方文档，核对 2026-10-25】，不是实测。页面未提供更新日期时，核对日期仅表示读取时间。主键仍为平台 × 协议 × 请求模型 ID；别名映射会变化，不能反推历史请求的实际后端。参数细节见 [思考补充](reasoning.md#official-model-updates) 与 [工具补充](tools-and-server-tools.md#official-model-updates)。
+本页以官方文档为主，核对日期按条目记录；火山 Kimi 的响应版本单独标为线路实测。页面未提供更新日期时，核对日期仅表示读取时间。主键仍为平台 × 协议 × 请求模型 ID；别名映射会变化，不能反推历史请求的实际后端。参数细节见 [思考补充](reasoning.md#official-model-updates) 与 [工具补充](tools-and-server-tools.md#official-model-updates)。
 
 ## 目录
 
@@ -9,6 +9,7 @@
 - [Gemini 3.5 和 3.7 Flash](#gemini-versions)
 - [Qwen3.8-27B](#qwen-27b)
 - [DeepSeek V4.1 Flash](#deepseek-flash)
+- [Kimi K3.1 Pro](#kimi-k31)
 
 <a id="gpt-sol"></a>
 ## GPT 6.1 Sol
@@ -65,3 +66,10 @@ Opus 4.8 和 Fable 5 均为文字、图像输入，文字输出；不是图像�
 官方规格列出 1M 上下文、最大输出 384K、视觉输入、JSON Output、Tool Calls、Responses 与 Anthropic 接口。JSON Output 不能直接解释为 JSON Schema strict。9 月 28 日旧 `deepseek-flash` 日志保留其日期和别名，不能改标为 1017 版实测；当时拒绝 `video_url` 也不能概括为当前无视觉能力。
 
 来源：[更新日志](https://api-docs.deepseek.com/updates/)，2026-09-10 与 2026-10-17；[模型规格](https://api-docs.deepseek.com/quick_start/pricing/)，Model Details 与脚注 1。价格及峰谷时段会变，核算时重新读取报价页。
+
+<a id="kimi-k31"></a>
+## Kimi K3.1 Pro
+
+**VER-KIMI-001** — 【官方文档，核对 2026-10-26】[Kimi K3.1 Pro 指南](https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart) 使用 `kimi-k3.1-pro`，高速版 `kimi-k3.1-pro-highspeed` 是独立 ID。官方列 1M 上下文，`max_completion_tokens` 默认 131072、上限 1048576；采样固定 `temperature:1.0`、`top_p:0.95`、`n:1`、两项 penalty 为 0。接入通常省略采样字段。上述官方上限未在火山套餐压测，高速版也未测。
+
+【火山套餐实测 2026-10-26】请求 `kimi-k3.1-pro`，两面共 62 个成功响应均回显 `kimi-k3-1-pro-261024`，不是请求 ID 拼写错误。分别保存请求名和响应版本，不能据此认证权重或自行替换配置中的请求名。范围及来源见 [平台条目](platform-matrix.md#kimi-k31-ark)；官方思考契约与套餐差异见 [reasoning](reasoning.md#kimi-k31-ark)。

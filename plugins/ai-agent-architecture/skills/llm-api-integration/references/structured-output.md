@@ -304,3 +304,12 @@ JSON 输出场景对 `max_tokens` 截断尤其敏感：截断的 JSON 解析失�
 - [ ] 经中转站的 GPT 按上游用冲突 schema 验过 ① ② 两种写法：有上游（`[Pro]` 类账号档）不论写不写 `strict` 都整个丢 format，省略 `strict` 救不了；这类丢弃靠说明或回显比对告知，不靠「能解析」判断生效。
 - [ ] `text.verbosity` 是 L3 模型声明、未设不发；与 `text.format` 合并写入，不互相覆盖，合并结果放在 extraBody 之后。
 - [ ] 端点静默无视 JSON 旋钮（200、不合 schema）的模型，结构化能力判「不发」、解析成 cue-only（恒发 cue + 抠围栏）；强制 `tool_choice` 只在非流式生效的端点，按应用实际走的流式结果判定，forced 降 auto——两者都按模型 id 查表，查表点带 id。
+
+<a id="kimi-k31-ark"></a>
+## Kimi K3.1 Pro：火山套餐结构化输出
+
+**FACT-KIMI-SCHEMA-001**（火山 `/api/plan/v3`，①②，`kimi-k3.1-pro`，【实测 2026-10-26】）。① `response_format:{type:"json_schema",json_schema:{name,strict:true,schema}}`；② `text.format:{type:"json_schema",name,strict:true,schema}`。提示要求 `code=WRONG` 并添加额外字段，schema 以单值枚举限制为 ALPHA 或 BRAVO，且 `required:["code"]`、`additionalProperties:false`：① 2/2、② 2/2 非流式均 200，最终对象恰好匹配 schema；②再以 CHARLIE 流式 1/1 通过，回显保留 format 和 strict。`json_object` 两面各 1 次得到 `{"count":7}`。
+
+这证明所测 schema 的行为约束，不证明全部 JSON Schema 关键字或底层约束解码机制。接入仍需本地 schema 校验；只解析最终 `content` / `output_text`，不将 reasoning 拼进 JSON。追加①流式以 DELTA / ECHO 两组冲突枚举 2/2 通过、json_object 1/1 通过，普通 content 增量合并后本地校验；见 [流式证据](volcengine-kimi-k31-stream-verification.md)。未测非法 schema、复杂嵌套、拒答及结构化输出截断；普通文本的预算截断另见协议篇。
+
+官方字段依据：[Kimi response_format](https://platform.kimi.ai/docs/guide/response_format)、[火山 Responses 结构化输出](https://docs.volcengine.com/docs/ark/responses-api-structured-output?lang=zh)（核对 2026-10-26，火山页面更新 2026-09-22）。请求与结果见 [验证记录](volcengine-kimi-k31-verification.md#structured) / [证据](volcengine-kimi-k31-evidence.json)。
