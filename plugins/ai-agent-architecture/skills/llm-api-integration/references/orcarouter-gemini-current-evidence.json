@@ -1,0 +1,1212 @@
+{
+  "date": "2026-10-25",
+  "scope": "OrcaRouter only; Gemini 3.8 Flash and 3.6 Flash; no retries; max output 384; budget stop USD 0.10",
+  "reported_cost_usd": 0.003712,
+  "cases": [
+    {
+      "path": "/v1beta/models/google/gemini-3.8-flash:streamGenerateContent?alt=sse",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Reply with exactly STREAM_OK."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 2.69,
+      "event_types": [
+        "chunk",
+        "chunk",
+        "chunk"
+      ],
+      "case": "gemini38-stream",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "trafficType": "ON_DEMAND"
+        },
+        {
+          "trafficType": "ON_DEMAND"
+        },
+        {
+          "promptTokenCount": 7,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 10,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3
+            }
+          ],
+          "costUsd": 1.6e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 3,
+      "cost": 1.6e-05,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          },
+          "responseMimeType": "application/json",
+          "responseJsonSchema": {
+            "type": "object",
+            "properties": {
+              "color": {
+                "type": "string",
+                "enum": [
+                  "red"
+                ]
+              }
+            },
+            "required": [
+              "color"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "seconds": 4.57,
+      "event_types": [],
+      "case": "gemini38-schema",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 72,
+          "candidatesTokenCount": 5,
+          "totalTokenCount": 265,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 72
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5
+            }
+          ],
+          "thoughtsTokenCount": 188,
+          "costUsd": 0.000778
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000778,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Call report with color red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        },
+        "tools": [
+          {
+            "functionDeclarations": [
+              {
+                "name": "report",
+                "description": "Report a color",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "color": {
+                      "type": "string",
+                      "enum": [
+                        "red"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "color"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "seconds": 41.03,
+      "event_types": [],
+      "case": "gemini38-tool",
+      "http": null,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [],
+      "usage": [],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "timeout"
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingBudget": 0
+          }
+        }
+      },
+      "seconds": 2.16,
+      "event_types": [],
+      "case": "gemini38-off",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 15,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 18,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 15
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3
+            }
+          ],
+          "costUsd": 2.2e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 2.2e-05,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.6-flash:streamGenerateContent?alt=sse",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Reply with exactly STREAM_OK."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 2.46,
+      "event_types": [
+        "chunk",
+        "chunk"
+      ],
+      "case": "gemini36-stream",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 8,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 82,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 8
+            }
+          ],
+          "thoughtsTokenCount": 71,
+          "serviceTier": "standard",
+          "costUsd": 0.000284
+        },
+        {
+          "promptTokenCount": 8,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 82,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 8
+            }
+          ],
+          "thoughtsTokenCount": 71,
+          "serviceTier": "standard",
+          "costUsd": 0.000284
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 2,
+      "cost": 0.000284,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          },
+          "responseMimeType": "application/json",
+          "responseJsonSchema": {
+            "type": "object",
+            "properties": {
+              "color": {
+                "type": "string",
+                "enum": [
+                  "red"
+                ]
+              }
+            },
+            "required": [
+              "color"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "seconds": 4.92,
+      "event_types": [],
+      "case": "gemini36-schema",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "{\"color\":\"red",
+      "calls": [],
+      "finish": [
+        "MAX_TOKENS"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 12,
+          "candidatesTokenCount": 4,
+          "totalTokenCount": 380,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ],
+          "thoughtsTokenCount": 364,
+          "serviceTier": "standard",
+          "rawPromptTokenCount": 209,
+          "costUsd": 0.00139
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00139,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Call report with color red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        },
+        "tools": [
+          {
+            "functionDeclarations": [
+              {
+                "name": "report",
+                "description": "Report a color",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "color": {
+                      "type": "string",
+                      "enum": [
+                        "red"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "color"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "seconds": 3.4,
+      "event_types": [],
+      "case": "gemini36-tool",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 26,
+          "candidatesTokenCount": 14,
+          "totalTokenCount": 40,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 26
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 14
+            }
+          ],
+          "costUsd": 7.2e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 7.2e-05,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingBudget": 0
+          }
+        }
+      },
+      "seconds": 2.17,
+      "event_types": [],
+      "case": "gemini36-off",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 16,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 19,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 16
+            }
+          ],
+          "serviceTier": "standard",
+          "costUsd": 2.4e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 2.4e-05,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 42.33,
+      "event_types": [],
+      "case": "gemini38-schema-baseline",
+      "http": null,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [],
+      "usage": [],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "timeout"
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 40.62,
+      "event_types": [],
+      "case": "gemini38-thinking-baseline",
+      "http": null,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [],
+      "usage": [],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "timeout"
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 2.85,
+      "event_types": [],
+      "case": "gemini36-schema-baseline",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "{\n  \"color\": \"green\"\n}",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 12,
+          "candidatesTokenCount": 11,
+          "totalTokenCount": 158,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ],
+          "thoughtsTokenCount": 135,
+          "serviceTier": "standard",
+          "costUsd": 0.000556
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000556,
+      "error": null
+    },
+    {
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 2.55,
+      "event_types": [],
+      "case": "gemini36-thinking-baseline",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 16,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 165,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 16
+            }
+          ],
+          "thoughtsTokenCount": 146,
+          "serviceTier": "standard",
+          "rawPromptTokenCount": 47,
+          "costUsd": 0.00057
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00057,
+      "error": null
+    }
+  ],
+  "followup_1k": {
+    "date": "2026-10-25",
+    "max_output_tokens": 1024,
+    "reported_cost_usd": 0.00175,
+    "cases": [
+      {
+        "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Return JSON with color green. Do not use red."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingLevel": "LOW"
+            },
+            "responseMimeType": "application/json",
+            "responseJsonSchema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "seconds": 5.09,
+        "case": "gemini36-schema-1k",
+        "http": 200,
+        "models": [
+          "gemini-3.6-flash"
+        ],
+        "text": "{\"color\":\"red\"}",
+        "calls": [],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 12,
+            "candidatesTokenCount": 5,
+            "totalTokenCount": 335,
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 12
+              }
+            ],
+            "thoughtsTokenCount": 318,
+            "serviceTier": "standard",
+            "costUsd": 0.00122
+          }
+        ],
+        "schema_red": true,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 0.00122,
+        "error": null
+      },
+      {
+        "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Return JSON with color green. Do not use red."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingLevel": "LOW"
+            }
+          }
+        },
+        "seconds": 3.64,
+        "case": "gemini36-schema-baseline-1k",
+        "http": 200,
+        "models": [
+          "gemini-3.6-flash"
+        ],
+        "text": "{\n  \"color\": \"green\"\n}",
+        "calls": [],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 12,
+            "candidatesTokenCount": 11,
+            "totalTokenCount": 151,
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 12
+              }
+            ],
+            "thoughtsTokenCount": 128,
+            "serviceTier": "standard",
+            "costUsd": 0.00053
+          }
+        ],
+        "schema_red": false,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 0.00053,
+        "error": null
+      }
+    ]
+  },
+  "gemini38_retry_1k": {
+    "date": "2026-10-25",
+    "reported_cost_usd": 0.00185,
+    "cases": [
+      {
+        "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Return JSON with color green. Do not use red."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingLevel": "LOW"
+            },
+            "responseMimeType": "application/json",
+            "responseJsonSchema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "seconds": 4.67,
+        "case": "gemini38-schema-retry1k",
+        "http": 200,
+        "models": [
+          "gemini-3.8-flash"
+        ],
+        "text": "{\"color\":\"red\"}",
+        "calls": [],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 72,
+            "candidatesTokenCount": 5,
+            "totalTokenCount": 300,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 72
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 5
+              }
+            ],
+            "thoughtsTokenCount": 223,
+            "costUsd": 0.00091
+          }
+        ],
+        "schema_red": true,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 0.00091,
+        "error": null
+      },
+      {
+        "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Call report with color red."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingLevel": "LOW"
+            }
+          },
+          "tools": [
+            {
+              "functionDeclarations": [
+                {
+                  "name": "report",
+                  "description": "Report a color",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "color": {
+                        "type": "string",
+                        "enum": [
+                          "red"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "color"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "seconds": 2.19,
+        "case": "gemini38-tool-retry1k",
+        "http": 200,
+        "models": [
+          "gemini-3.8-flash"
+        ],
+        "text": "",
+        "calls": [
+          {
+            "name": "report",
+            "arguments": {
+              "color": "red"
+            }
+          }
+        ],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 26,
+            "candidatesTokenCount": 14,
+            "totalTokenCount": 40,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 26
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 14
+              }
+            ],
+            "costUsd": 7.2e-05
+          }
+        ],
+        "schema_red": null,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 7.2e-05,
+        "error": null
+      },
+      {
+        "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Calculate 17 * 19. Reply with just the number."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingBudget": 0
+            }
+          }
+        },
+        "seconds": 7.2,
+        "case": "gemini38-off-retry1k",
+        "http": 200,
+        "models": [
+          "gemini-3.8-flash"
+        ],
+        "text": "323",
+        "calls": [],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 15,
+            "candidatesTokenCount": 3,
+            "totalTokenCount": 150,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 15
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 3
+              }
+            ],
+            "thoughtsTokenCount": 132,
+            "costUsd": 0.000518
+          }
+        ],
+        "schema_red": null,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 0.000518,
+        "error": null
+      },
+      {
+        "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Return JSON with color green. Do not use red."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingLevel": "LOW"
+            }
+          }
+        },
+        "seconds": 1.66,
+        "case": "gemini38-schema-baseline-retry1k",
+        "http": 200,
+        "models": [
+          "gemini-3.8-flash"
+        ],
+        "text": "```json\n{\n  \"color\": \"green\"\n}\n```",
+        "calls": [],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 11,
+            "candidatesTokenCount": 16,
+            "totalTokenCount": 27,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 11
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 16
+              }
+            ],
+            "costUsd": 6.8e-05
+          }
+        ],
+        "schema_red": false,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 6.8e-05,
+        "error": null
+      },
+      {
+        "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+        "request": {
+          "contents": [
+            {
+              "role": "user",
+              "parts": [
+                {
+                  "text": "Calculate 17 * 19. Reply with just the number."
+                }
+              ]
+            }
+          ],
+          "generationConfig": {
+            "maxOutputTokens": 1024,
+            "thinkingConfig": {
+              "thinkingLevel": "LOW"
+            }
+          }
+        },
+        "seconds": 2.45,
+        "case": "gemini38-thinking-baseline-retry1k",
+        "http": 200,
+        "models": [
+          "gemini-3.8-flash"
+        ],
+        "text": "323",
+        "calls": [],
+        "finish": [
+          "STOP"
+        ],
+        "usage": [
+          {
+            "promptTokenCount": 15,
+            "candidatesTokenCount": 3,
+            "totalTokenCount": 87,
+            "trafficType": "ON_DEMAND",
+            "promptTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 15
+              }
+            ],
+            "candidatesTokensDetails": [
+              {
+                "modality": "TEXT",
+                "tokenCount": 3
+              }
+            ],
+            "thoughtsTokenCount": 69,
+            "costUsd": 0.000282
+          }
+        ],
+        "schema_red": null,
+        "stream_terminal": null,
+        "event_count": 0,
+        "cost": 0.000282,
+        "error": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,3404 @@
+{
+  "date": "2026-10-25",
+  "timezone": "Asia/Shanghai",
+  "endpoint": "https://api.orcarouter.ai",
+  "max_output_tokens": 1024,
+  "budget_usd": 1,
+  "reported_cost_usd": 0.151,
+  "budget_accounting_usd": 0.151,
+  "fixtures": {
+    "probe-shapes.png": {
+      "sha256": "f3c7db9adb32dece4f444d9b2ec6d3b63ab2e3e4592e8afec66bc33e59b6bdaa",
+      "size_bytes": 1142
+    },
+    "probe-code.pdf": {
+      "sha256": "28041696817c31e3440e913b28b06deb574f9cca45288baee760efa6da587094",
+      "size_bytes": 595
+    }
+  },
+  "cases": [
+    {
+      "id": "MME-1025-001",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "input_image",
+                "image_url": "[fixture:probe-shapes.png]"
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false
+      },
+      "seconds": 2.14,
+      "effort_echo": "low",
+      "thinking_tokens": 0,
+      "case": "sol-image",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 87,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 11,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 98,
+          "cost_usd": 0.000284
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000284,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-002",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.68,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "opus48-image",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 107,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.000786
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000786,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-003",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.15,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "fable5-image",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 107,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00157
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00157,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-004",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 4.59,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "fable51-image",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 109,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00159
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00159,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-005",
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "inlineData": {
+                  "mimeType": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 3.14,
+      "effort_echo": null,
+      "thinking_tokens": 68,
+      "case": "gemini38-image",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 1102,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 1177,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "IMAGE",
+              "tokenCount": 1080
+            },
+            {
+              "modality": "TEXT",
+              "tokenCount": 22
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ],
+          "thoughtsTokenCount": 68,
+          "costUsd": 0.001108
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001108,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-006",
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "inlineData": {
+                  "mimeType": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 3.17,
+      "effort_echo": null,
+      "thinking_tokens": 101,
+      "case": "gemini36-image",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 1103,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 1211,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 23
+            },
+            {
+              "modality": "IMAGE",
+              "tokenCount": 1080
+            }
+          ],
+          "thoughtsTokenCount": 101,
+          "serviceTier": "standard",
+          "costUsd": 0.001232
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001232,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-007",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 2.74,
+      "effort_echo": null,
+      "thinking_tokens": 101,
+      "case": "qwen-image",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 112,
+          "completion_tokens_details": {
+            "reasoning_tokens": 101,
+            "text_tokens": 10
+          },
+          "prompt_tokens": 137,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "image_tokens": 68,
+            "text_tokens": 69
+          },
+          "total_tokens": 249,
+          "cost_usd": 0.000314
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000314,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-008",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 3.5,
+      "effort_echo": null,
+      "thinking_tokens": 114,
+      "case": "obsidian-image",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 125,
+          "completion_tokens_details": {
+            "reasoning_tokens": 114,
+            "text_tokens": 10
+          },
+          "prompt_tokens": 137,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "image_tokens": 68,
+            "text_tokens": 69
+          },
+          "total_tokens": 262,
+          "cost_usd": 0.000582
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000582,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-009",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 2.35,
+      "effort_echo": null,
+      "thinking_tokens": 256,
+      "case": "deepseek-image",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 264,
+          "prompt_tokens": 242,
+          "total_tokens": 506,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 256
+          },
+          "cost_usd": 0.00039
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00039,
+      "error": null,
+      "expected_answer": "red=3,blue=2",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-010",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "input_file",
+                "filename": "probe.pdf",
+                "file_data": "[fixture:probe-code.pdf]"
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false
+      },
+      "seconds": 2.82,
+      "effort_echo": "low",
+      "thinking_tokens": 0,
+      "case": "sol-pdf",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 54,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 63,
+          "cost_usd": 0.000198
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000198,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-011",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "document",
+                "source": {
+                  "type": "base64",
+                  "media_type": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.49,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "opus48-pdf",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 1623,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1623,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.010378
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.010378,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-012",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "document",
+                "source": {
+                  "type": "base64",
+                  "media_type": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.24,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "fable5-pdf",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 1623,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 1623,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.020758
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.020758,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-013",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "document",
+                "source": {
+                  "type": "base64",
+                  "media_type": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 4.39,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "fable51-pdf",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 1627,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.01672
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.01672,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-014",
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "inlineData": {
+                  "mimeType": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 11.3,
+      "effort_echo": null,
+      "thinking_tokens": 52,
+      "case": "gemini38-pdf",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 536,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 595,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "IMAGE",
+              "tokenCount": 520
+            },
+            {
+              "modality": "TEXT",
+              "tokenCount": 16
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7
+            }
+          ],
+          "thoughtsTokenCount": 52,
+          "costUsd": 0.000624
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000624,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-015",
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "inlineData": {
+                  "mimeType": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 2.74,
+      "effort_echo": null,
+      "thinking_tokens": 40,
+      "case": "gemini36-pdf",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 537,
+          "candidatesTokenCount": 7,
+          "totalTokenCount": 584,
+          "promptTokensDetails": [
+            {
+              "modality": "IMAGE",
+              "tokenCount": 520
+            },
+            {
+              "modality": "TEXT",
+              "tokenCount": 17
+            }
+          ],
+          "thoughtsTokenCount": 40,
+          "serviceTier": "standard",
+          "costUsd": 0.00058
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00058,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-016",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "file",
+                "file": {
+                  "filename": "probe.pdf",
+                  "file_data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 5.86,
+      "effort_echo": null,
+      "thinking_tokens": 66,
+      "case": "qwen-pdf",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 77,
+          "completion_tokens_details": {
+            "reasoning_tokens": 66,
+            "text_tokens": 10
+          },
+          "prompt_tokens": 2192,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "image_tokens": 2082,
+            "text_tokens": 110
+          },
+          "total_tokens": 2269,
+          "cost_usd": 0.000908
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000908,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-017",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "file",
+                "file": {
+                  "filename": "probe.pdf",
+                  "file_data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 5.15,
+      "effort_echo": null,
+      "thinking_tokens": 58,
+      "case": "obsidian-pdf",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 69,
+          "completion_tokens_details": {
+            "reasoning_tokens": 58,
+            "text_tokens": 10
+          },
+          "prompt_tokens": 2192,
+          "prompt_tokens_details": {
+            "cached_tokens": 2048,
+            "image_tokens": 2082,
+            "text_tokens": 110
+          },
+          "total_tokens": 2261,
+          "cost_usd": 0.001168
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001168,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-018",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "file",
+                "file": {
+                  "filename": "probe.pdf",
+                  "file_data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 1.88,
+      "effort_echo": null,
+      "thinking_tokens": 36,
+      "case": "deepseek-pdf",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 42,
+          "prompt_tokens": 1028,
+          "total_tokens": 1070,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 36
+          },
+          "cost_usd": 0.000358
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000358,
+      "error": null,
+      "expected_answer": "MANGO-7392",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-019",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false
+      },
+      "seconds": 3.38,
+      "effort_echo": "low",
+      "thinking_tokens": 29,
+      "case": "sol-effort-low",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 35,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 36,
+          "output_tokens_details": {
+            "reasoning_tokens": 29
+          },
+          "total_tokens": 71,
+          "cost_usd": 0.00043
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00043,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-020",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 5.54,
+      "effort_echo": null,
+      "thinking_tokens": 83,
+      "case": "opus48-effort-low",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 86,
+          "output_tokens_details": {
+            "thinking_tokens": 83
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.002386
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.002386,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-021",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 4.61,
+      "effort_echo": null,
+      "thinking_tokens": 67,
+      "case": "fable5-effort-low",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 70,
+          "output_tokens_details": {
+            "thinking_tokens": 67
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00397
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00397,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-022",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 4.2,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "fable51-effort-low",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "n ≡ 3 mod 7: 3, 10, 17, 24, 31, 38, 45, 52, 59, 66, 73...\nn ≡ 5 mod 11: 5, 16, 27, 38...\n\n38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 49,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 76,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00429
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00429,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": false,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-023",
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 7.43,
+      "effort_echo": null,
+      "thinking_tokens": 231,
+      "case": "gemini38-effort-LOW",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 30,
+          "candidatesTokenCount": 2,
+          "totalTokenCount": 263,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 30
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2
+            }
+          ],
+          "thoughtsTokenCount": 231,
+          "costUsd": 0.000896
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000896,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-024",
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 3.0,
+      "effort_echo": null,
+      "thinking_tokens": 230,
+      "case": "gemini36-effort-LOW",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 31,
+          "candidatesTokenCount": 2,
+          "totalTokenCount": 263,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 31
+            }
+          ],
+          "thoughtsTokenCount": 230,
+          "serviceTier": "standard",
+          "costUsd": 0.000894
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000894,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-025",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 5.67,
+      "effort_echo": null,
+      "thinking_tokens": 281,
+      "case": "qwen-effort-low",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 286,
+          "completion_tokens_details": {
+            "reasoning_tokens": 281,
+            "text_tokens": 286
+          },
+          "prompt_tokens": 79,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 79
+          },
+          "total_tokens": 365,
+          "cost_usd": 0.000712
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000712,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-026",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 5.39,
+      "effort_echo": null,
+      "thinking_tokens": 284,
+      "case": "obsidian-effort-low",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 289,
+          "completion_tokens_details": {
+            "reasoning_tokens": 284,
+            "text_tokens": 289
+          },
+          "prompt_tokens": 79,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 79
+          },
+          "total_tokens": 368,
+          "cost_usd": 0.001248
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001248,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-027",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "low"
+      },
+      "seconds": 2.05,
+      "effort_echo": null,
+      "thinking_tokens": 98,
+      "case": "deepseek-effort-low",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 100,
+          "prompt_tokens": 59,
+          "total_tokens": 159,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 98
+          },
+          "cost_usd": 0.000138
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000138,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-028",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "store": false
+      },
+      "seconds": 3.33,
+      "effort_echo": "medium",
+      "thinking_tokens": 29,
+      "case": "sol-effort-medium",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 35,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 36,
+          "output_tokens_details": {
+            "reasoning_tokens": 29
+          },
+          "total_tokens": 71,
+          "cost_usd": 0.00043
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00043,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-029",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      "seconds": 4.96,
+      "effort_echo": null,
+      "thinking_tokens": 120,
+      "case": "opus48-effort-medium",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 123,
+          "output_tokens_details": {
+            "thinking_tokens": 120
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00331
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00331,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-030",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      "seconds": 3.88,
+      "effort_echo": null,
+      "thinking_tokens": 55,
+      "case": "fable5-effort-medium",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 58,
+          "output_tokens_details": {
+            "thinking_tokens": 55
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00337
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00337,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-031",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      "seconds": 5.13,
+      "effort_echo": null,
+      "thinking_tokens": 0,
+      "case": "fable51-effort-medium",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "n ≡ 3 mod 7: 3, 10, 17, 24, 31, 38, 45, 52, 59...\nCheck mod 11: 3→3, 10→10, 17→6, 24→2, 31→9, 38→5. ✓\n\n38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 49,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 85,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00474
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00474,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": false,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-032",
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "MEDIUM"
+          }
+        }
+      },
+      "seconds": 4.29,
+      "effort_echo": null,
+      "thinking_tokens": 257,
+      "case": "gemini38-effort-MEDIUM",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 30,
+          "candidatesTokenCount": 2,
+          "totalTokenCount": 289,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 30
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2
+            }
+          ],
+          "thoughtsTokenCount": 257,
+          "costUsd": 0.000994
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000994,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-033",
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "MEDIUM"
+          }
+        }
+      },
+      "seconds": 3.36,
+      "effort_echo": null,
+      "thinking_tokens": 324,
+      "case": "gemini36-effort-MEDIUM",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 31,
+          "candidatesTokenCount": 2,
+          "totalTokenCount": 357,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 31
+            }
+          ],
+          "thoughtsTokenCount": 324,
+          "serviceTier": "standard",
+          "costUsd": 0.001246
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001246,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-034",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "medium"
+      },
+      "seconds": 5.36,
+      "effort_echo": null,
+      "thinking_tokens": 297,
+      "case": "qwen-effort-medium",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 302,
+          "completion_tokens_details": {
+            "reasoning_tokens": 297,
+            "text_tokens": 302
+          },
+          "prompt_tokens": 53,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 53
+          },
+          "total_tokens": 355,
+          "cost_usd": 0.000742
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000742,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-035",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "medium"
+      },
+      "seconds": 5.07,
+      "effort_echo": null,
+      "thinking_tokens": 312,
+      "case": "obsidian-effort-medium",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 317,
+          "completion_tokens_details": {
+            "reasoning_tokens": 312,
+            "text_tokens": 317
+          },
+          "prompt_tokens": 53,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 53
+          },
+          "total_tokens": 370,
+          "cost_usd": 0.001356
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001356,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-036",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "high"
+      },
+      "seconds": 1.63,
+      "effort_echo": null,
+      "thinking_tokens": 90,
+      "case": "deepseek-effort-high",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 91,
+          "prompt_tokens": 59,
+          "total_tokens": 150,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 90
+          },
+          "cost_usd": 0.000126
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000126,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-037",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "high"
+        },
+        "store": false
+      },
+      "seconds": 3.34,
+      "effort_echo": "high",
+      "thinking_tokens": 35,
+      "case": "sol-effort-high",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 35,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 42,
+          "output_tokens_details": {
+            "reasoning_tokens": 35
+          },
+          "total_tokens": 77,
+          "cost_usd": 0.00049
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00049,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-038",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "high"
+        }
+      },
+      "seconds": 6.6,
+      "effort_echo": null,
+      "thinking_tokens": 127,
+      "case": "opus48-effort-high",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 130,
+          "output_tokens_details": {
+            "thinking_tokens": 127
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.003486
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.003486,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-039",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "high"
+        }
+      },
+      "seconds": 3.89,
+      "effort_echo": null,
+      "thinking_tokens": 55,
+      "case": "fable5-effort-high",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 58,
+          "output_tokens_details": {
+            "thinking_tokens": 55
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00337
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00337,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-040",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "high"
+        }
+      },
+      "seconds": 6.6,
+      "effort_echo": null,
+      "thinking_tokens": 172,
+      "case": "fable51-effort-high",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 49,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 175,
+          "output_tokens_details": {
+            "thinking_tokens": 172
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00924
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00924,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-041",
+      "path": "/v1beta/models/google/gemini-3.8-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "HIGH"
+          }
+        }
+      },
+      "seconds": 3.98,
+      "effort_echo": null,
+      "thinking_tokens": 271,
+      "case": "gemini38-effort-HIGH",
+      "http": 200,
+      "models": [
+        "gemini-3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 30,
+          "candidatesTokenCount": 2,
+          "totalTokenCount": 303,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 30
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2
+            }
+          ],
+          "thoughtsTokenCount": 271,
+          "costUsd": 0.001046
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001046,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-042",
+      "path": "/v1beta/models/google/gemini-3.6-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 1024,
+          "thinkingConfig": {
+            "thinkingLevel": "HIGH"
+          }
+        }
+      },
+      "seconds": 4.6,
+      "effort_echo": null,
+      "thinking_tokens": 491,
+      "case": "gemini36-effort-HIGH",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 31,
+          "candidatesTokenCount": 2,
+          "totalTokenCount": 524,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 31
+            }
+          ],
+          "thoughtsTokenCount": 491,
+          "serviceTier": "standard",
+          "costUsd": 0.001872
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001872,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-043",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "xhigh"
+      },
+      "seconds": 3.6,
+      "effort_echo": null,
+      "thinking_tokens": 134,
+      "case": "qwen-effort-xhigh",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 139,
+          "completion_tokens_details": {
+            "reasoning_tokens": 134,
+            "text_tokens": 139
+          },
+          "prompt_tokens": 91,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 91
+          },
+          "total_tokens": 230,
+          "cost_usd": 0.000364
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000364,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-044",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "xhigh"
+      },
+      "seconds": 5.19,
+      "effort_echo": null,
+      "thinking_tokens": 129,
+      "case": "obsidian-effort-xhigh",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 134,
+          "completion_tokens_details": {
+            "reasoning_tokens": 129,
+            "text_tokens": 134
+          },
+          "prompt_tokens": 91,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 91
+          },
+          "total_tokens": 225,
+          "cost_usd": 0.0006
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.0006,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-045",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "reasoning_effort": "max"
+      },
+      "seconds": 2.27,
+      "effort_echo": null,
+      "thinking_tokens": 114,
+      "case": "deepseek-effort-max",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 115,
+          "prompt_tokens": 59,
+          "total_tokens": 174,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 114
+          },
+          "cost_usd": 0.000156
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000156,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-046",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "xhigh"
+        },
+        "store": false
+      },
+      "seconds": 2.86,
+      "effort_echo": "xhigh",
+      "thinking_tokens": 52,
+      "case": "sol-effort-xhigh",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 35,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 59,
+          "output_tokens_details": {
+            "reasoning_tokens": 52
+          },
+          "total_tokens": 94,
+          "cost_usd": 0.00066
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00066,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-047",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "xhigh"
+        }
+      },
+      "seconds": 5.64,
+      "effort_echo": null,
+      "thinking_tokens": 152,
+      "case": "opus48-effort-xhigh",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 155,
+          "output_tokens_details": {
+            "thinking_tokens": 152
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00411
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00411,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-048",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "xhigh"
+        }
+      },
+      "seconds": 5.45,
+      "effort_echo": null,
+      "thinking_tokens": 78,
+      "case": "fable5-effort-xhigh",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 81,
+          "output_tokens_details": {
+            "thinking_tokens": 78
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00452
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00452,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-049",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "xhigh"
+        }
+      },
+      "seconds": 5.31,
+      "effort_echo": null,
+      "thinking_tokens": 194,
+      "case": "fable51-effort-xhigh",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 49,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 197,
+          "output_tokens_details": {
+            "thinking_tokens": 194
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.01034
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.01034,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-050",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "input_text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_output_tokens": 1024,
+        "reasoning": {
+          "effort": "max"
+        },
+        "store": false
+      },
+      "seconds": 3.56,
+      "effort_echo": "max",
+      "thinking_tokens": 71,
+      "case": "sol-effort-max",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 35,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 78,
+          "output_tokens_details": {
+            "reasoning_tokens": 71
+          },
+          "total_tokens": 113,
+          "cost_usd": 0.00085
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00085,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-051",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "max"
+        }
+      },
+      "seconds": 6.11,
+      "effort_echo": null,
+      "thinking_tokens": 126,
+      "case": "opus48-effort-max",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 129,
+          "output_tokens_details": {
+            "thinking_tokens": 126
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00346
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00346,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-052",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "max"
+        }
+      },
+      "seconds": 4.93,
+      "effort_echo": null,
+      "thinking_tokens": 62,
+      "case": "fable5-effort-max",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 65,
+          "output_tokens_details": {
+            "thinking_tokens": 62
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00372
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00372,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    },
+    {
+      "id": "MME-1025-053",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "max"
+        }
+      },
+      "seconds": 6.77,
+      "effort_echo": null,
+      "thinking_tokens": 225,
+      "case": "fable51-effort-max",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 49,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 228,
+          "output_tokens_details": {
+            "thinking_tokens": 225
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.01189
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.01189,
+      "error": null,
+      "expected_answer": "38",
+      "exact_output_match": true,
+      "answer_correct": true
+    }
+  ]
+}
