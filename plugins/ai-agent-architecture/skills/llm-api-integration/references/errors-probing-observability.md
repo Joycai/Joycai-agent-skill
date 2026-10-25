@@ -496,3 +496,14 @@ Step 3  deep(opt-in) 从声明值开始的二分搜索找真实接受上限（�
 - 非流式的观察**不能**代替流式：非流式时 Chat 两个字段都有、流式只有一个；应用只发流式就只测流式。
 - 流式里取**最后一个**带报价的块；一段内只以收尾那块的数为准（对应 Anthropic：`message_delta` 直接赋值，不保留旧值）。
 - 同一台网关上，某条线路（这里是 Responses 原样线路）一分不报：确认应用发的请求走不到它，写进文档；走得到就按「没报」回落。
+
+<a id="kimi-k31-ark"></a>
+## Kimi K3.1 Pro：火山套餐用量与错误观测
+
+**FACT-KIMI-OBS-001**（火山 `/api/plan/v3`，①②，【实测 2026-10-26】）。② usage 为 `input_tokens/output_tokens/total_tokens`、`input_tokens_details.cached_tokens`、`output_tokens_details.reasoning_tokens`；①为 `prompt_tokens/completion_tokens/total_tokens` 及对应 details。两面输出总数已含 reasoning，不能再加一次；缓存命中是输入的一部分。67 次远端请求中 62 个 200、5 个预期/诊断性 400，成功响应累计输入 41,044、输出 5,369 token。没有金额字段，未对账，不能套用 Moonshot 官方价格宣称火山套餐实扣成本。
+
+非流式与流式客户端均将 socket 等待设为 900 秒，无自动重试，最多双并发；这是本轮客户端配置，不是服务 SLA 或整体墙钟时限。成功请求耗时 1.756–7.668 秒，仅为小样本，不证明长任务也快。首次沙箱 DNS/网络错误独立保留，未获得 HTTP 状态，不能算模型失败。
+
+①② `temperature:0.2` 各 1/1 为 400 `InvalidParameter`，原文主体为 `` `temperature` only 1 is allowed for this model ``；接入默认省略采样参数。Kimi 官方固定的其他采样值仅属[官方契约](model-versions.md#kimi-k31)，本轮未逐一验证。非法 effort 的协议差异见 [reasoning](reasoning.md#kimi-k31-ark)，具名工具错误见 [tools](tools-and-server-tools.md#kimi-k31-ark)。字段、状态与每案计数均在 [脱敏证据](volcengine-kimi-k31-evidence.json)。
+
+**FACT-KIMI-OBS-002 — Chat SSE usage 是快照。**【追加实测 2026-10-26】17 条带 `stream_options:{include_usage:true}` 的有效 SSE，各在 finish 块和随后 `choices:[]` 的 usage 块重复同一份统计；省略选项的 1 条 finish 块仍含 usage。按最后非空快照取值，不逐块相加，支持空 choices。追加 24 次请求输入 14,140 / 输出 1,950 token；两轮累计输入 55,184 / 输出 7,319，无金额字段、未对账。2 个 HTTP 200 的 length/incomplete 是预期截断，不算完整生成成功；详见 [流式补测](volcengine-kimi-k31-stream-verification.md)。

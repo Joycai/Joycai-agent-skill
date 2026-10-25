@@ -60,8 +60,8 @@ def main():
     manifest = json.loads((BASE / '.claude-plugin/plugin.json').read_text())
     market = json.loads((ROOT / '.claude-plugin/marketplace.json').read_text())
     listing = next(p for p in market['plugins'] if p['name'] == manifest['name'])
-    if listing['version'] != manifest['version'] or manifest['version'] != '4.0.0':
-        errors.append('Plugin and marketplace must both declare 4.0.0')
+    if listing['version'] != manifest['version'] or not re.fullmatch(r'\d+\.\d+\.\d+', manifest['version']):
+        errors.append('Plugin and marketplace must declare the same semantic version')
     files = list(BASE.rglob('*.md')) + [ROOT / 'README.md']
     edges = {}
     links = 0
@@ -97,7 +97,7 @@ def main():
     if errors:
         print('\n'.join(errors))
         return 1
-    print(f'PASS: {len(entries)} skills, {len(moves)} migration targets, {links} local links; all references reachable; version 4.0.0')
+    print(f'PASS: {len(entries)} skills, {len(moves)} migration targets, {links} local links; all references reachable; version {manifest["version"]}')
     return 0
 
 

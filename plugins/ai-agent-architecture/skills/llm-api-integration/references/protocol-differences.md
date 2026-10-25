@@ -362,3 +362,18 @@ response.created → response.in_progress
 - [ ] 查某族的字段形状先看 §1 总对照表（行 = 功能维度，格 = 结论记号 + 关键字段名 + 证据 + 指针）；平台／渠道／模型级差异不在本表展开，按「详见」去 20／22／23；没有证据的格子写 `—`，不从相邻族类推。
 - [ ] 非对话面（出图 route／视频 submit-poll／ASR 三种线格式）与厂商私有扩展按 §1.1 的判定标准分发到 13／14／16 与 [reasoning](reasoning.md)／[tools-and-server-tools](tools-and-server-tools.md)，不当作 ①–④ 的变体；Ⓓ 私有键（`enable_search`、`enable_thinking`、`video_url`…）按平台放行、只放行 compat，不因「这是 ① 族」就发。
 - [ ] 新增／修正协议族通用事实：正文改 02–06 一处，§1 表对应格同步记号 + 证据 + 指针；推翻旧结论移入结论历史，格内保留当前判断与历史链接（[knowledge-ingestion](knowledge-ingestion.md)流程）。
+
+<a id="kimi-k31-ark"></a>
+## Kimi K3.1 Pro：火山套餐输入、SSE 与会话
+
+**FACT-KIMI-INPUT-001**（火山 `/api/plan/v3`，①②，`kimi-k3.1-pro`，【实测 2026-10-26】）。内联 PNG：② `input_image.image_url` 为 data URL；① `image_url.url` 为 data URL。内联 PDF：② `input_file:{filename,file_data}`；① `file:{filename,file_data}`，file_data 为 `data:application/pdf;base64,...`。复用 [PNG](../assets/api-probes/probe-shapes.png) 与 [PDF](../assets/api-probes/probe-code.pdf)，提示不含答案，实际直接发送文件字节，未抽文或将答案注入提示。
+
+两种输入均②非流式、②流式、①非流式、①流式各 1/1 成功，分别读取 `red=3,blue=2` 与 `MANGO-7392`。PDF 每次输入计数 10,967 token；不可由文件小推断 token 成本小。[火山多模态文档](https://docs.volcengine.com/docs/ark/multimodal-understanding?lang=zh)（核对 2026-10-26、页面更新 2026-10-09）说明 PDF 会按页转图输入；本轮只证明该线路能读单页文本 PDF，不证明模型原生 PDF 解码、扫描件、长文件、URL 或 Files API。未测 Kimi 官方直连 PDF。
+
+**FACT-KIMI-PROTOCOL-001** — ② 11 条 SSE 请求均获得 `response.completed` 和 `[DONE]`。文本及函数参数 delta 重建与 completed 一致；思考由 `response.reasoning_summary_text.delta` 单独返回，usage 从 completed 读取。HTTP 200 不可代替终态检查。追加流式测试见下文；首轮 11 条记录保留为该轮样本数。
+
+**FACT-KIMI-PROTOCOL-002** — 【追加实测 2026-10-26】①18 条实际 SSE 均收到 `finish_reason` 和 `[DONE]`，17 条正常终止（stop/tool_calls），1 条预算截断（length）。按 `delta.content` / `delta.reasoning_content` 分开累积；工具按 `delta.tool_calls[].index` 合并 `id`、函数名与 arguments，再校验 JSON 和调用关联。追加②4 条 SSE 中 3 条 completed、1 条 incomplete，文本和工具参数 delta 与终态一致。双面将输出预算限制为 16 时均 HTTP 200、输出 16 token、空正文；②终态 `response.incomplete`，`incomplete_details.reason:"length"`；①终态 `finish_reason:"length"`。因此 `[DONE]` 只是流结束，仍须按终态区分正常、调用工具、截断和失败。证据见 [流式补测](volcengine-kimi-k31-stream-verification.md)。
+
+**FACT-KIMI-STATE-001** — ②本轮省略 store 的成功响应回显 `store:false`；把这种响应 ID 用于 `previous_response_id` 的样本 400 `InvalidParameter.PreviousResponseNotFound`。显式 `store:true` 后，下一轮仅凭 `previous_response_id` 正确取回先前校验码（2 次请求）。应选择完整手动历史，或在需要续接的每一轮显式启用 store；不能继承 OpenAI/其他模型的存储默认值，也不能把未存储 ID 的错误当作不支持续接。存储保留期与工具结果通过已存储 ID 续接尚未验证；工具闭环目前验证的是完整手动历史。
+
+输入与 SSE 证据见 [验证记录](volcengine-kimi-k31-verification.md#inputs)，会话样本见 [调用记录](volcengine-kimi-k31-evidence.json) 中 `r-tool-previous-id`、`r-store-true*`。

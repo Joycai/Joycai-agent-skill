@@ -198,3 +198,10 @@
 | Gemini 3.8 工具与两项基线超时 | 已关闭 | 授权重试全部正常 STOP；schema 对照与普通工具成功。预算0仍有132思考token，不能可靠关闭。 |
 | effort 实际映射与质量 | 未证明 | 合法档位可调用，GPT回显匹配；其他型号无回显，单题各一次不证明强度/质量单调。 |
 | 复杂多模态与工具闭环 | 未测 | 仅小PNG/单页文本PDF；扫描件、复杂版面、长文档、公网URL、工具执行及结果回传未验证。 |
+
+<a id="kimi-k31-ark"></a>
+## Kimi K3.1 Pro 火山套餐待复核（2026-10-26）
+
+- **OQ-KIMI-001**：火山文档 Kimi 的 `none/minimal→low` 映射，与套餐省略 thinking 时的 0 reasoning / 正文推导不符。显式 enabled 会恢复 reasoning 通道；应复核模型/线路更新后的组合规则，不能将回显或单题 token 变化解释为实际档位映射。[现有证据](reasoning.md#kimi-k31-ark)。
+- **OQ-KIMI-002**：② `tool_choice` 冲突样本未遵从；①具名拒绝文案还包含已成功的 required。待平台修复后复测，当前接入不要依赖②工具选择约束。[现有证据](tools-and-server-tools.md#kimi-k31-ark)。
+- **OQ-KIMI-003**：Chat SSE、多模态、结构化及工具闭环已完成[追加验证](volcengine-kimi-k31-stream-verification.md)；仍未测复杂/扫描/长 PDF、URL 输入、服务端工具、并行函数、复杂 schema、上下文/输出上限、采样字段 top_p/n/penalties。没有证据的能力保持 unknown，不阻断已验证的 Responses 基本接入。验证计划按实际需要选择，不自动发起新付费测试。

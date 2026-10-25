@@ -409,6 +409,8 @@
 
 | 型号 | 平台·渠道 | 面 | 思考控制 | 取回／回传 | 结构化 | tool_choice | 服务端 | 多模态 | 上限／采样 | 静默要点 | 证据 | 详见 | 坑 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| kimi-k3.1-pro | 火山方舟 · 订阅套餐 `/api/plan/v3` | ② | ✅ 7 档接受；关闭不可靠，bogus→medium | 完整 output 回传 ✅；store 显式开启后续接 ✅ | ✅ strict 枚举 3/3，JSON 1/1 | 🔇 none/required/具名冲突不遵从 | — 未测 | ✅ 内联 PNG/PDF，含流式 | temperature 0.2 ❌ 400；上限未测 | tool_choice 静默；0 reasoning 仍可能正文推导 | 【实测 2026-10-26】 | [FACT-KIMI-PLATFORM-001 与正文索引](platform-matrix.md#kimi-k31-ark) | — |
+| kimi-k3.1-pro | 火山方舟 · 订阅套餐 `/api/plan/v3` | ① | ✅ 7 档接受；bogus ❌ 400 | 完整 assistant + tool 回传 ✅（含 SSE） | ✅ strict 4/4，JSON 2/2（含 SSE） | required/none 双模式 ✅；具名思考模式 ❌ 400 | — 未测 | ✅ 内联 PNG/PDF（含 SSE） | temperature 0.2 ❌ 400；上限未测 | none 的推导可能进入正文 | 【实测 2026-10-26】 | [FACT-KIMI-PLATFORM-001 与正文索引](platform-matrix.md#kimi-k31-ark) | — |
 | Kimi | Kimi（Moonshot） | ① | — | — | `json_object` ✅ 不查 "json" | — | — | — | — | — | 【实测 2026-09-19】⚠（日期为推断） | [structured-output](structured-output.md) §2 | — |
 | kimi-k2-thinking（托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | `disabled` 🔇 收下**照想**；默认值未测 —（文档：只有思考模式 📄） | — | — | — | — | — | — | 关不掉且不响（[reasoning](reasoning.md) §4.1） | 【实测 2026-09-28，一次】 | [reasoning](reasoning.md) §3.5 | 217 |
 | kimi-k2.6（托管） | 阿里百炼 · ④ `/apps/anthropic` | ④ | 不发与 `disabled` 都回**文本与签名都空**的 thinking 块；显式 `enabled` 才有文本（等不等于「默认关」待核实 OQ-074） | 空块要容忍 | — | — | — | — | — | 空块 ≠ 没想 ≠ 关不掉 | 【实测 2026-09-28，每条一次】 | [reasoning](reasoning.md) §3.5、§4.1 | 218 |

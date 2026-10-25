@@ -512,3 +512,14 @@ Gemini 2.x 在 AI Studio 上与函数工具同发的问题（review 提过、未
 - **CONFLICT-ANT-051**：旧【实测 2026-09-26，经 OrcaRouter】将 Opus 5.5 / Fable 5.1 写成强制工具可用，且与 budget_tokens 同用 schema 成功；当前官方分别拒绝强制工具与手动 thinking。保留旧观测，不认作官方直连能力；未核实网关转换、真实后端及版本，见 [待核实项](open-questions.md)。
 
 模型归属、Gemini 弃用路由和 Qwen 开源/托管边界见 [模型版本](model-versions.md)。
+
+<a id="kimi-k31-ark"></a>
+## Kimi K3.1 Pro：火山套餐函数调用与选择约束
+
+**FACT-KIMI-TOOL-001 — 函数调用闭环可用，选择约束需按协议区分。**（火山 `/api/plan/v3`，①②，`kimi-k3.1-pro`，【实测 2026-10-26】）。② function 定义平铺 `name/parameters/strict`，输出 `function_call` 含 JSON 字符串 `arguments` 和 `call_id`；将完整 `output` 原样放回历史，再追加匹配的 `function_call_output`。非流式与流式各 1 个两轮闭环，均调用 `lookup_probe({label:"cedar"})`，最终读取仅工具返回中存在的 `CEDAR-4826`。流式 `response.function_call_arguments.delta` 拼接与 completed 中参数一致。①使用嵌套 `function` 定义、完整 assistant message（含 reasoning_content 和 tool_calls）及对应 `role:tool/tool_call_id`，1 个闭环通过。工具为本地固定测试值，没有执行模型提供的代码。
+
+**FACT-KIMI-TOOL-002 — ② tool_choice 被接受但未遵从。** `none` 3/3 仍生成调用（含 1 流式）；`required` 对抗“不要调用工具、只答 OK”的样本 1/1 只返回 OK；具名 `lookup_probe` 对抗“只调用 other_probe”的双工具样本 1/1 调用 other_probe。顺向提示下 required/具名返回正确工具不能证明参数生效。后果：不能凭请求中的 none 或具名值决定执行权限；要禁止工具时移除工具定义并在执行端拒绝未授权调用，要限制工具时仅暴露允许的定义并校验返回名称。严格工具路由不能依赖该 Responses 字段。
+
+①相同冲突对照中 required 1/1 产生调用、none 1/1 无调用；具名选择在 `reasoning_effort:low` 下 400 `InvalidParameter`，文案称思考模式不支持 required 或 object，但本轮 required 已多次成功，因此错误文案的 required 部分与观测不符。追加流式也复现上述差异：① required/none 冲突各 1/1 遵从、具名 1/1 建流前 400；② required/none/具名冲突各 1/1 均未遵从。①新增 1 个两轮流式闭环，按 index 合并工具参数，完整 assistant（保留 reasoning_content 和调用 id）回传后得到 CEDAR-4826。累计①工具闭环覆盖非流式与流式各 1 个；见 [流式补测](volcengine-kimi-k31-stream-verification.md)。此处不推广到并行工具或关闭思考后的具名选择。
+
+服务端 web_search/code_interpreter/MCP 未测，不能由 function calling 成功推断支持。存储续接见 [协议条目](protocol-differences.md#kimi-k31-ark)。官方参考：[Kimi K3.1 Pro 工具示例](https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart#custom-tools-and-tool-choice)、[火山 Responses 工具调用](https://docs.volcengine.com/docs/ark/responses-api-tool-calling?lang=zh)（核对 2026-10-26）。完整证据见 [验证记录](volcengine-kimi-k31-verification.md#tools)。

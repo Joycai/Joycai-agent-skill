@@ -519,3 +519,20 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 - **RSN-ANT-052**：Fable 5.1 可读较早 Claude 的 thinking blocks；反向切回旧型号不成立。编辑早期轮次还会使 Fable 5.1 的思考块失效，因此不能仅比较 modelId 判定可回传，也不能机械复用“所有块始终原样回传”。应用做历史摘要或编辑时应按官方迁移指南处理失效块。来源：[新特性](https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1)，thinking blocks breaking changes。
 - **RSN-QWN-038**：Qwen3.8-27B 默认思考；自部署示例通过 `extra_body.chat_template_kwargs.enable_thinking=false` 关闭，Qwen Cloud 使用 `extra_body.enable_thinking=false`。默认保留历史思考；自部署可用 `chat_template_kwargs.preserve_thinking=false` 改成仅保留最新用户轮的思考。不可混用模板参数与托管顶层参数。来源：[官方模型卡](https://huggingface.co/Qwen/Qwen3.8-27B)，Instruct Mode / Disable Preserved Thinking。
 - **RSN-DS-041**：官方 Chat Completions 默认思考、effort high；`thinking.type=disabled` 关闭，`reasoning_effort` 支持 low / high / max（medium、xhigh 映射 high）。带 tools 时要回传所有历史轮的 reasoning_content，包括没有发生工具调用的轮；不带 tools 时该字段无需回传且传入会忽略。思考模式的 temperature、presence_penalty、frequency_penalty 收下但无效；flash 的 top_p 在思考时有效范围 0.95–1，非思考固定 1。来源：[Thinking Mode](https://api-docs.deepseek.com/guides/thinking_mode/)，Toggle / Input and Output / Tool Calls。此为当前别名的文档契约，旧日志不升级为新版本实测。
+
+<a id="kimi-k31-ark"></a>
+## Kimi K3.1 Pro：官方契约与火山套餐观测
+
+**FACT-KIMI-REASON-001**（火山方舟订阅套餐 `/api/plan/v3`，①②，`kimi-k3.1-pro`，【实测 2026-10-26】）。① 使用顶层 `reasoning_effort`；② 使用 `reasoning.effort`。`low/medium/high/xhigh/max` 各面各 1 次均 200、回答 38，并报告非零 reasoning token；② 原值回显。单道简单题不证明五档独立、映射规则或质量差异，不能把 token 数差当作“真分档”。
+
+【官方文档核对 2026-10-26】[Kimi Reasoning Effort](https://platform.kimi.ai/docs/guide/use-reasoning-effort) 与 [K3.1 Pro 指南](https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart) 列 `low/high/max`、默认 `max`、始终思考。[火山 Responses 深度思考](https://docs.volcengine.com/docs/ark/responses-api-deep-thinking?lang=zh)（页面更新 2026-10-24）则列 Kimi 日期版默认 `max`，兼容映射 `none/minimal/low→low`、`medium/high→high`、`xhigh/max→max`。这两份契约不能直接替代下述套餐线路观测。
+
+**FACT-KIMI-REASON-002 — 关闭字段会改变输出通道，但不能认证可靠关闭思考。** ② 单发 `reasoning.effort:none`、`minimal` 或 `thinking.type:disabled`，各 3 次（2 非流式 + 1 流式）均 200，专用 reasoning 项消失、`reasoning_tokens=0`；每组有 1 次把推导写进普通 `output_text`，未遵守只答数字。① `none/minimal` 各 1 次也报告 0，`none` 正文出现推导。副作用是 UI 若只隐藏 reasoning 通道，仍可能显示推导，不能由 0 token 推断模型内部没有推理。
+
+② 同时显式 `thinking.type:enabled` 与 `effort:none/minimal/low` 各 1 次，分别报告 123/120/50 reasoning tokens、答案均为 38；回显仍是所传 effort，并非文档映射后的档位。`disabled+high` 1 次则 200、0 reasoning tokens、答案 38，未按文档的冲突规则拒绝。本样本说明显式 thinking 会改变组合行为，不证明所有组合的优先级。接入默认省略关闭字段，按用途选择 `low/high/max`；若业务要求关闭，单列该线路能力为不可靠并校验最终输出。
+
+**FACT-KIMI-REASON-003 — 非法枚举两面不同。** ② `bogus` 3/3 为 200，回显 `reasoning.effort:medium`，仍有 reasoning tokens；① 同值 1/1 为 400 `InvalidParameter`，`param:reasoning_effort`。不要把 Responses 的 200 当成参数合法或原样透传；客户端应限制枚举。省略 effort 的②样本回显 `thinking:enabled`，没有 effort 回显，默认 `max` 仅属文档结论。
+
+逐案 token、请求与异常正文见 [验证记录](volcengine-kimi-k31-verification.md#efforts) / [脱敏证据](volcengine-kimi-k31-evidence.json)。
+
+追加①流式七档各 1 次，均 `finish_reason:stop`、精确答案 38；low/medium/high/xhigh/max 分别报告 98/104/116/147/141 reasoning tokens，并有 reasoning_content 增量；none/minimal 为 0、该次正文正常。bogus 在建流前 400。一次正常关闭样本不推翻首轮正文推导的反例，映射及可靠关闭仍按前述限制；见 [流式补测](volcengine-kimi-k31-stream-verification.md)。

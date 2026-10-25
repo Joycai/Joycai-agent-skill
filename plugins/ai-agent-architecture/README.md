@@ -20,6 +20,10 @@
 
 入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
 
+## 4.0.1 更新
+
+新增火山套餐 `kimi-k3.1-pro` 接入知识，包含 91 次请求的[协议与能力验证](skills/llm-api-integration/references/volcengine-kimi-k31-verification.md)、[流式补测](skills/llm-api-integration/references/volcengine-kimi-k31-stream-verification.md)、脱敏证据及按阶段运行的探测脚本。LLM skill 内容版本为 2.2.9；重点记录 Responses 工具选择约束、思考字段差异、SSE usage 快照及截断终态。
+
 ## 从 3.x 迁移
 
 | 原调用 | 新调用 |
