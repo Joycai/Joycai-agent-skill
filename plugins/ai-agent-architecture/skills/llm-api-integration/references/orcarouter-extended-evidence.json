@@ -1,0 +1,3286 @@
+{
+  "date": "2026-10-25",
+  "timezone": "Asia/Shanghai",
+  "endpoint": "https://api.orcarouter.ai",
+  "scope": "gateway observations, not official direct API; one request per case; no tools executed",
+  "limits": {
+    "max_output_tokens": 384,
+    "retries": 0,
+    "budget_stop_usd": 0.5
+  },
+  "reported_cost_usd": 0.075768,
+  "missing_cost_cases": [
+    "sol-off",
+    "fable5-off",
+    "fable51-off",
+    "gemini37-availability"
+  ],
+  "cases": [
+    {
+      "id": "ORCA-EXT-001",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": "Reply with exactly STREAM_OK.",
+        "max_output_tokens": 384,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false,
+        "stream": true
+      },
+      "seconds": 2.38,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "response.created",
+        "response.in_progress",
+        "response.output_item.added",
+        "response.content_part.added",
+        "response.output_text.delta",
+        "response.output_text.delta",
+        "response.output_text.done",
+        "response.content_part.done",
+        "response.output_item.done",
+        "response.completed"
+      ],
+      "case": "sol-stream",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [],
+      "usage": [
+        {
+          "input_tokens": 12,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 6,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 18,
+          "cost_usd": 8.4e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 10,
+      "cost": 8.4e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-002",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": "Return JSON with color green. Do not use red.",
+        "max_output_tokens": 384,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false,
+        "text": {
+          "format": {
+            "type": "json_schema",
+            "name": "color",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 2.49,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "sol-schema",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 43,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 26,
+          "output_tokens_details": {
+            "reasoning_tokens": 12
+          },
+          "total_tokens": 69,
+          "cost_usd": 0.000346
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000346,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-003",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": "Call report with color red.",
+        "max_output_tokens": 384,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false,
+        "tools": [
+          {
+            "type": "function",
+            "name": "report",
+            "description": "Report a color",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "seconds": 1.75,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "sol-tool",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 47,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 17,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 64,
+          "cost_usd": 0.000264
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000264,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-004",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": "Calculate 17 * 19. Reply with just the number.",
+        "max_output_tokens": 384,
+        "reasoning": {
+          "effort": "none"
+        },
+        "store": false
+      },
+      "seconds": 1.1,
+      "content_type": null,
+      "event_types": [],
+      "case": "sol-off",
+      "http": 400,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [
+        null
+      ],
+      "usage": [],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "{\"error\":{\"message\":\"The upstream provider rejected this request. Please check the request parameters and content. (request id: 202610250633226958712748268d9d6fzvsXpT6)\",\"type\":\"invalid_request_error\",\"param\":\"\",\"code\":\"upstream_rejected_request\"}}"
+    },
+    {
+      "id": "ORCA-EXT-005",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly STREAM_OK."
+          }
+        ],
+        "max_tokens": 384,
+        "stream": true
+      },
+      "seconds": 2.28,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "message_start",
+        "content_block_start",
+        "ping",
+        "content_block_delta",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop"
+      ],
+      "case": "opus48-stream",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 1,
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard"
+        },
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "cost_usd": 0.00033
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 8,
+      "cost": 0.00033,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-006",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384,
+        "output_config": {
+          "format": {
+            "type": "json_schema",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 7.88,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "opus48-schema",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 222,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00136
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00136,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-007",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call report with color red."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "auto"
+        }
+      },
+      "seconds": 2.35,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "opus48-tool",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "I'll call that for you.",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 385,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 39,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.0029
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.0029,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-008",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384,
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "seconds": 1.84,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "opus48-off",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 25,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 3,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.0002
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.0002,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-009",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly STREAM_OK."
+          }
+        ],
+        "max_tokens": 384,
+        "stream": true
+      },
+      "seconds": 3.64,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "message_start",
+        "content_block_start",
+        "ping",
+        "content_block_delta",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop"
+      ],
+      "case": "fable5-stream",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 1,
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard"
+        },
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "cost_usd": 0.00066
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 8,
+      "cost": 0.00066,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-010",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384,
+        "output_config": {
+          "format": {
+            "type": "json_schema",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 4.97,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "fable5-schema",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 222,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 65,
+          "output_tokens_details": {
+            "thinking_tokens": 55
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00547
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00547,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-011",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call report with color red."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "auto"
+        }
+      },
+      "seconds": 2.98,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "fable5-tool",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 385,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 31,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.0054
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.0054,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-012",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384,
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "seconds": 3.32,
+      "content_type": null,
+      "event_types": [],
+      "case": "fable5-off",
+      "http": 400,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [],
+      "usage": [],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "{\"error\":{\"type\":\"\\u003cnil\\u003e\",\"message\":\"\\\"***.***.disabled\\\" is not supported for this model. Use \\\"***.***.adaptive\\\" and \\\"output_config.effort\\\" to control thinking behavior. (request id: 202610250633502287218198268d9d66VINpxwl)\"},\"type\":\"error\"}"
+    },
+    {
+      "id": "ORCA-EXT-013",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly STREAM_OK."
+          }
+        ],
+        "max_tokens": 384,
+        "stream": true
+      },
+      "seconds": 2.52,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "message_start",
+        "content_block_start",
+        "ping",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop"
+      ],
+      "case": "fable51-stream",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 23,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 8,
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard"
+        },
+        {
+          "input_tokens": 23,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "cost_usd": 0.00068
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 7,
+      "cost": 0.00068,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-014",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384,
+        "output_config": {
+          "format": {
+            "type": "json_schema",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 6.11,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "fable51-schema",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 224,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 77,
+          "output_tokens_details": {
+            "thinking_tokens": 67
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00609
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00609,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-015",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call report with color red."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "auto"
+        }
+      },
+      "seconds": 5.26,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "fable51-tool",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 383,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 45,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00608
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00608,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-016",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384,
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "seconds": 3.79,
+      "content_type": null,
+      "event_types": [],
+      "case": "fable51-off",
+      "http": 400,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [],
+      "usage": [],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "{\"error\":{\"type\":\"\\u003cnil\\u003e\",\"message\":\"\\\"***.***.disabled\\\" is not supported for this model. Use \\\"***.***.adaptive\\\" and \\\"output_config.effort\\\" to control thinking behavior. (request id: 202610250634076822090378268d9d6iXsOKlZ8)\"},\"type\":\"error\"}"
+    },
+    {
+      "id": "ORCA-EXT-017",
+      "path": "/v1beta/models/google/gemini-3.5-flash:streamGenerateContent?alt=sse",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Reply with exactly STREAM_OK."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 2.92,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "chunk",
+        "chunk"
+      ],
+      "case": "gemini35-stream",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 8,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 75,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 8
+            }
+          ],
+          "thoughtsTokenCount": 64,
+          "serviceTier": "standard",
+          "costUsd": 0.000616
+        },
+        {
+          "promptTokenCount": 8,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 75,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 8
+            }
+          ],
+          "thoughtsTokenCount": 64,
+          "serviceTier": "standard",
+          "costUsd": 0.000616
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 2,
+      "cost": 0.000616,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-018",
+      "path": "/v1beta/models/google/gemini-3.5-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          },
+          "responseMimeType": "application/json",
+          "responseJsonSchema": {
+            "type": "object",
+            "properties": {
+              "color": {
+                "type": "string",
+                "enum": [
+                  "red"
+                ]
+              }
+            },
+            "required": [
+              "color"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "seconds": 4.91,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "gemini35-schema",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "MAX_TOKENS"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 12,
+          "candidatesTokenCount": 5,
+          "totalTokenCount": 381,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ],
+          "thoughtsTokenCount": 364,
+          "serviceTier": "standard",
+          "rawPromptTokenCount": 209,
+          "costUsd": 0.00334
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00334,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-019",
+      "path": "/v1beta/models/google/gemini-3.5-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Call report with color red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        },
+        "tools": [
+          {
+            "functionDeclarations": [
+              {
+                "name": "report",
+                "description": "Report a color",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "color": {
+                      "type": "string",
+                      "enum": [
+                        "red"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "color"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "seconds": 2.59,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "gemini35-tool",
+      "http": 200,
+      "models": [
+        "gemini-3.5-flash"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 26,
+          "candidatesTokenCount": 14,
+          "totalTokenCount": 75,
+          "trafficType": "ON_DEMAND",
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 26
+            }
+          ],
+          "candidatesTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 14
+            }
+          ],
+          "thoughtsTokenCount": 35,
+          "costUsd": 0.00048
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00048,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-020",
+      "path": "/v1beta/models/google/gemini-3.5-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingBudget": 0
+          }
+        }
+      },
+      "seconds": 3.9,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "gemini35-off",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 16,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 19,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 16
+            }
+          ],
+          "serviceTier": "standard",
+          "costUsd": 5.2e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 5.2e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-021",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly STREAM_OK."
+          }
+        ],
+        "max_tokens": 384,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "seconds": 2.39,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "DONE"
+      ],
+      "case": "qwen-stream",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 29,
+          "completion_tokens_details": {
+            "reasoning_tokens": 24,
+            "text_tokens": 29
+          },
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 67
+          },
+          "total_tokens": 96,
+          "cost_usd": 9.2e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 12,
+      "cost": 9.2e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-022",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384,
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "color",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 2.97,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "qwen-schema",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "{\n  \"color\": \"red\"\n}",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 72,
+          "completion_tokens_details": {
+            "reasoning_tokens": 58,
+            "text_tokens": 72
+          },
+          "prompt_tokens": 74,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 74
+          },
+          "total_tokens": 146,
+          "cost_usd": 0.000198
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000198,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-023",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call report with color red."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "report",
+              "description": "Report a color",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red"
+                    ]
+                  }
+                },
+                "required": [
+                  "color"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "seconds": 3.51,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "qwen-tool",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_calls"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 53,
+          "completion_tokens_details": {
+            "reasoning_tokens": 26,
+            "text_tokens": 53
+          },
+          "prompt_tokens": 329,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 329
+          },
+          "total_tokens": 382,
+          "cost_usd": 0.000236
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000236,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-024",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384,
+        "enable_thinking": false
+      },
+      "seconds": 2.76,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "qwen-off",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 3,
+          "prompt_tokens": 40,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 40
+          },
+          "total_tokens": 43,
+          "cost_usd": 2e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 2e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-025",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly STREAM_OK."
+          }
+        ],
+        "max_tokens": 384,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "seconds": 2.21,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "DONE"
+      ],
+      "case": "obsidian-stream",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 29,
+          "completion_tokens_details": {
+            "reasoning_tokens": 24,
+            "text_tokens": 29
+          },
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 67
+          },
+          "total_tokens": 96,
+          "cost_usd": 0.000148
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 12,
+      "cost": 0.000148,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-026",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384,
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "color",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 4.64,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "obsidian-schema",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "{\n  \"color\": \"red\"\n}",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 74,
+          "completion_tokens_details": {
+            "reasoning_tokens": 60,
+            "text_tokens": 74
+          },
+          "prompt_tokens": 74,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 74
+          },
+          "total_tokens": 148,
+          "cost_usd": 0.000342
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000342,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-027",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call report with color red."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "report",
+              "description": "Report a color",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red"
+                    ]
+                  }
+                },
+                "required": [
+                  "color"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "seconds": 2.79,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "obsidian-tool",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_calls"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 67,
+          "completion_tokens_details": {
+            "reasoning_tokens": 40,
+            "text_tokens": 67
+          },
+          "prompt_tokens": 329,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 329
+          },
+          "total_tokens": 396,
+          "cost_usd": 0.000414
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000414,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-028",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384,
+        "enable_thinking": false
+      },
+      "seconds": 1.24,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "obsidian-off",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 3,
+          "prompt_tokens": 40,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 40
+          },
+          "total_tokens": 43,
+          "cost_usd": 2.8e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 2.8e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-029",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly STREAM_OK."
+          }
+        ],
+        "max_tokens": 384,
+        "stream": true,
+        "stream_options": {
+          "include_usage": true
+        }
+      },
+      "seconds": 2.52,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "chunk",
+        "DONE"
+      ],
+      "case": "deepseek-stream",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 15,
+          "prompt_tokens": 37,
+          "total_tokens": 52,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 11
+          },
+          "cost_usd": 3e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 10,
+      "cost": 3e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-030",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384,
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "color",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 2.12,
+      "content_type": "application/json; charset=utf-8",
+      "event_types": [],
+      "case": "deepseek-schema",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 124,
+          "prompt_tokens": 93,
+          "total_tokens": 217,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 118
+          },
+          "cost_usd": 0.000176
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000176,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-031",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call report with color red."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "report",
+              "description": "Report a color",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red"
+                    ]
+                  }
+                },
+                "required": [
+                  "color"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto"
+      },
+      "seconds": 2.26,
+      "content_type": "application/json; charset=utf-8",
+      "event_types": [],
+      "case": "deepseek-tool",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_calls"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 49,
+          "prompt_tokens": 302,
+          "total_tokens": 351,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 12
+          },
+          "cost_usd": 0.00015
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00015,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-032",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384,
+        "thinking": {
+          "type": "disabled"
+        }
+      },
+      "seconds": 1.78,
+      "content_type": "application/json; charset=utf-8",
+      "event_types": [],
+      "case": "deepseek-off",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 1,
+          "prompt_tokens": 17,
+          "total_tokens": 18,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "cost_usd": 6e-06
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 6e-06,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-033",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Do not call any tools. Reply with exactly NO_TOOL."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "auto"
+        }
+      },
+      "seconds": 5.87,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "fable51-contrast-auto",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 483,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00528
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00528,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-034",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Do not call any tools. Reply with exactly NO_TOOL."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "tool",
+          "name": "other"
+        }
+      },
+      "seconds": 4.25,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "fable51-contrast-named",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "other",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 608,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 32,
+          "output_tokens_details": {
+            "thinking_tokens": 31
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "cost_usd": 0.00768
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00768,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-035",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Do not call any tools. Reply with exactly NO_TOOL."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "any"
+        }
+      },
+      "seconds": 4.22,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "fable51-contrast-any",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 605,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 8
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "cost_usd": 0.0065
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.0065,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-036",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Reply with exactly OK."
+          }
+        ],
+        "max_tokens": 384,
+        "thinking": {
+          "type": "bogus"
+        }
+      },
+      "seconds": 6.77,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "fable51-invalid-thinking",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "OK",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 18,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 4,
+          "output_tokens_details": {
+            "thinking_tokens": 3
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "cost_usd": 0.00038
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00038,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-037",
+      "path": "/v1beta/models/google/gemini-3.7-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Reply with exactly OK."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 0.74,
+      "content_type": null,
+      "event_types": [],
+      "case": "gemini37-availability",
+      "http": 404,
+      "models": [],
+      "text": "",
+      "calls": [],
+      "finish": [],
+      "usage": [],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": null,
+      "error": "{\"error\":{\"code\":\"model_not_found\",\"message\":\"No available capacity for model google/gemini-3.7-flash right now. Please try again later. Did you mean google/gemini-3.5-flash? Models you can call: https://www.orcarouter.ai/console/models?ref=err_model_unknown (request id: 202610250635173783281538268d9d6eVJ73XDQ)\",\"metadata\":{\"catalog_url\":\"https://www.orcarouter.ai/console/models?ref=err_model_unknown\",\"closest_model\":\"google/gemini-3.5-flash\",\"reason\":\"err_model_unknown\"},\"type\":\"orcarouter_api_error\"}}"
+    },
+    {
+      "id": "ORCA-EXT-038",
+      "path": "/v1/responses",
+      "request": {
+        "model": "openai/gpt-6.1-sol",
+        "input": "Return JSON with color green. Do not use red.",
+        "max_output_tokens": 384,
+        "reasoning": {
+          "effort": "low"
+        },
+        "store": false
+      },
+      "seconds": 3.27,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "sol-schema-baseline",
+      "http": 200,
+      "models": [
+        "gpt-6.1-sol"
+      ],
+      "text": "{\"color\":\"green\"}",
+      "calls": [],
+      "finish": [
+        "completed"
+      ],
+      "usage": [
+        {
+          "input_tokens": 17,
+          "input_tokens_details": {
+            "cache_write_tokens": 0,
+            "cached_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 26,
+          "cost_usd": 0.000124
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000124,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-039",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.8",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 4.74,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "opus48-schema-baseline",
+      "http": 200,
+      "models": [
+        "claude-opus-4-8"
+      ],
+      "text": "{\"color\": \"green\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.000356
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000356,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-040",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 4.29,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "fable5-schema-baseline",
+      "http": 200,
+      "models": [
+        "claude-fable-5"
+      ],
+      "text": "{\"color\": \"green\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 37,
+          "output_tokens_details": {
+            "thinking_tokens": 27
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00206
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00206,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-041",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 4.46,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "fable51-schema-baseline",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "{\"color\": \"green\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 23,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00073
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00073,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-042",
+      "path": "/v1beta/models/google/gemini-3.5-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 5.21,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "gemini35-schema-baseline",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "```json\n{\n  \"color\": \"green\"\n}\n```",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 12,
+          "candidatesTokenCount": 16,
+          "totalTokenCount": 162,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 12
+            }
+          ],
+          "thoughtsTokenCount": 134,
+          "serviceTier": "standard",
+          "costUsd": 0.001368
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001368,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-043",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 5.45,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "qwen-schema-baseline",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "{\n  \"color\": \"green\"\n}",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 76,
+          "completion_tokens_details": {
+            "reasoning_tokens": 62,
+            "text_tokens": 76
+          },
+          "prompt_tokens": 72,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 72
+          },
+          "total_tokens": 148,
+          "cost_usd": 0.000206
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000206,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-044",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 2.54,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "obsidian-schema-baseline",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "{\n  \"color\": \"green\"\n}",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 98,
+          "completion_tokens_details": {
+            "reasoning_tokens": 84,
+            "text_tokens": 98
+          },
+          "prompt_tokens": 72,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 72
+          },
+          "total_tokens": 170,
+          "cost_usd": 0.000442
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000442,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-045",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return JSON with color green. Do not use red."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 3.68,
+      "content_type": "application/json; charset=utf-8",
+      "event_types": [],
+      "case": "deepseek-schema-baseline",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "{\"color\":\"green\"}",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 104,
+          "prompt_tokens": 41,
+          "total_tokens": 145,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 98
+          },
+          "cost_usd": 0.000138
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000138,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-046",
+      "path": "/v1beta/models/google/gemini-3.5-flash:generateContent",
+      "request": {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": 384,
+          "thinkingConfig": {
+            "thinkingLevel": "LOW"
+          }
+        }
+      },
+      "seconds": 3.13,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "gemini35-thinking-baseline",
+      "http": 200,
+      "models": [
+        "gemini-3.6-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "STOP"
+      ],
+      "usage": [
+        {
+          "promptTokenCount": 16,
+          "candidatesTokenCount": 3,
+          "totalTokenCount": 118,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 16
+            }
+          ],
+          "thoughtsTokenCount": 99,
+          "serviceTier": "standard",
+          "costUsd": 0.000942
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000942,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-047",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "qwen/qwen3.8-27b",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 1.91,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "qwen-thinking-baseline",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 47,
+          "completion_tokens_details": {
+            "reasoning_tokens": 41,
+            "text_tokens": 47
+          },
+          "prompt_tokens": 76,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 76
+          },
+          "total_tokens": 123,
+          "cost_usd": 0.000138
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000138,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-048",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "obsidian/Qwen3.8-27B",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 2.39,
+      "content_type": "application/json",
+      "event_types": [],
+      "case": "obsidian-thinking-baseline",
+      "http": 200,
+      "models": [
+        "qwen3.8-flash"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 49,
+          "completion_tokens_details": {
+            "reasoning_tokens": 43,
+            "text_tokens": 49
+          },
+          "prompt_tokens": 76,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "text_tokens": 76
+          },
+          "total_tokens": 125,
+          "cost_usd": 0.000236
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000236,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-049",
+      "path": "/v1/chat/completions",
+      "request": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 17 * 19. Reply with just the number."
+          }
+        ],
+        "max_tokens": 384
+      },
+      "seconds": 2.5,
+      "content_type": "application/json; charset=utf-8",
+      "event_types": [],
+      "case": "deepseek-thinking-baseline",
+      "http": 200,
+      "models": [
+        "deepseek-v4-1-flash-261017"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "stop"
+      ],
+      "usage": [
+        {
+          "completion_tokens": 20,
+          "prompt_tokens": 43,
+          "total_tokens": 63,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 19
+          },
+          "cost_usd": 3.6e-05
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 3.6e-05,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-050",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Do not call any tools. Reply with exactly NO_TOOL."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "none"
+        }
+      },
+      "seconds": 4.59,
+      "content_type": "application/json; charset=UTF-8",
+      "event_types": [],
+      "case": "fable51-contrast-none",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 483,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00528
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00528,
+      "error": null
+    },
+    {
+      "id": "ORCA-EXT-051",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-fable-5.1",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Do not call any tools. Reply with exactly NO_TOOL."
+          }
+        ],
+        "max_tokens": 384,
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "tool",
+          "name": "other"
+        },
+        "stream": true
+      },
+      "seconds": 5.82,
+      "content_type": "text/event-stream",
+      "event_types": [
+        "message_start",
+        "content_block_start",
+        "ping",
+        "content_block_delta",
+        "content_block_delta",
+        "content_block_stop",
+        "content_block_start",
+        "content_block_delta",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop"
+      ],
+      "case": "fable51-contrast-named-stream",
+      "http": 200,
+      "models": [
+        "claude-fable-5-1"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "other",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 608,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 1,
+          "service_tier": "standard",
+          "inference_geo": "global"
+        },
+        {
+          "input_tokens": 608,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 32,
+          "output_tokens_details": {
+            "thinking_tokens": 31
+          },
+          "cost_usd": 0.00768
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 12,
+      "cost": 0.00768,
+      "error": null
+    }
+  ]
+}

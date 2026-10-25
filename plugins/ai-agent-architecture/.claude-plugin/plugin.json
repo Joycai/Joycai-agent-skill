@@ -1,7 +1,7 @@
 {
   "name": "ai-agent-architecture",
-  "version": "3.0.0",
-  "description": "四个按任务选用的 skill：LLM 接入知识库、agent 运行时架构、渠道 → 线路 → 模型配置、API 用量计量与计费",
+  "version": "4.0.0",
+  "description": "五个按任务选用的 skill：聊天 API 接入、媒体 API 接入、Agent 运行时、供应商配置、AI 用量与成本核算",
   "author": {
     "name": "Joycai"
   },

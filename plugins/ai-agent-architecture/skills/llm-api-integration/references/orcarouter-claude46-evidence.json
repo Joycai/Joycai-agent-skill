@@ -1,0 +1,1927 @@
+{
+  "date": "2026-10-25",
+  "endpoint": "https://api.orcarouter.ai",
+  "protocol": "Anthropic Messages",
+  "max_output_tokens": 1024,
+  "n_per_condition": 1,
+  "prior_budget_spend_usd": 0.151,
+  "reported_cost_usd": 0.076024,
+  "budget_accounting_usd": 0.227024,
+  "fixtures": "same SHA-256 fixtures as orcarouter-multimodal-effort-evidence.json",
+  "cases": [
+    {
+      "id": "C46-1025-01",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.0,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "sonnet46-image",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 98,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.000444
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000444,
+      "error": null
+    },
+    {
+      "id": "C46-1025-02",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Count the red squares and blue circles in the attached image. Reply exactly red=N,blue=N."
+              },
+              {
+                "type": "image",
+                "source": {
+                  "type": "base64",
+                  "media_type": "image/png",
+                  "data": "[fixture:probe-shapes.png]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.96,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-image",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "red=3,blue=2",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 98,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 10,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00074
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00074,
+      "error": null
+    },
+    {
+      "id": "C46-1025-03",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "document",
+                "source": {
+                  "type": "base64",
+                  "media_type": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 3.57,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "sonnet46-pdf",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 1610,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.004966
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.004966,
+      "error": null
+    },
+    {
+      "id": "C46-1025-04",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Read the DOC-CODE in the attached PDF. Reply with only its value."
+              },
+              {
+                "type": "document",
+                "source": {
+                  "type": "base64",
+                  "media_type": "application/pdf",
+                  "data": "[fixture:probe-code.pdf]"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.83,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-pdf",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "MANGO-7392",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 1610,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.008276
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.008276,
+      "error": null
+    },
+    {
+      "id": "C46-1025-05",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.9,
+      "thinking_tokens": 86,
+      "event_types": [],
+      "case": "sonnet46-effort-low",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 92,
+          "output_tokens_details": {
+            "thinking_tokens": 86
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.001498
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.001498,
+      "error": null
+    },
+    {
+      "id": "C46-1025-06",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.41,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-effort-low",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 5,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00032
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00032,
+      "error": null
+    },
+    {
+      "id": "C46-1025-07",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      "seconds": 3.02,
+      "thinking_tokens": 124,
+      "event_types": [],
+      "case": "sonnet46-effort-medium",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 130,
+          "output_tokens_details": {
+            "thinking_tokens": 124
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.002068
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.002068,
+      "error": null
+    },
+    {
+      "id": "C46-1025-08",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "medium"
+        }
+      },
+      "seconds": 7.45,
+      "thinking_tokens": 345,
+      "event_types": [],
+      "case": "opus46-effort-medium",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 350,
+          "output_tokens_details": {
+            "thinking_tokens": 345
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.008946
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.008946,
+      "error": null
+    },
+    {
+      "id": "C46-1025-09",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "high"
+        }
+      },
+      "seconds": 5.71,
+      "thinking_tokens": 225,
+      "event_types": [],
+      "case": "sonnet46-effort-high",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "**38**\n\n**Verification:**\n- 38 = 5 × 7 + 3 → 38 mod 7 = **3** ✓\n- 38 = 3 × 11 + 5 → 38 mod 11 = **5** ✓",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 302,
+          "output_tokens_details": {
+            "thinking_tokens": 225
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.004648
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.004648,
+      "error": null
+    },
+    {
+      "id": "C46-1025-10",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "high"
+        }
+      },
+      "seconds": 3.34,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-effort-high",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 5,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00032
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00032,
+      "error": null
+    },
+    {
+      "id": "C46-1025-11",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "max"
+        }
+      },
+      "seconds": 7.2,
+      "thinking_tokens": 363,
+      "event_types": [],
+      "case": "sonnet46-effort-max",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "**38**\n\n**Verification:**\n- 38 = 5 × 7 + 3 → 38 mod 7 = 3 ✓\n- 38 = 3 × 11 + 5 → 38 mod 11 = 5 ✓",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 440,
+          "output_tokens_details": {
+            "thinking_tokens": 363
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.006718
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.006718,
+      "error": null
+    },
+    {
+      "id": "C46-1025-12",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Find the smallest positive integer n such that n mod 7 = 3 and n mod 11 = 5. Reply only with n."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "max"
+        }
+      },
+      "seconds": 8.64,
+      "thinking_tokens": 626,
+      "event_types": [],
+      "case": "opus46-effort-max",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "38",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 39,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 631,
+          "output_tokens_details": {
+            "thinking_tokens": 626
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.01597
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.01597,
+      "error": null
+    },
+    {
+      "id": "C46-1025-13",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Reply with exactly STREAM_OK."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "stream": true
+      },
+      "seconds": 2.51,
+      "thinking_tokens": 0,
+      "event_types": [
+        "message_start",
+        "content_block_start",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop"
+      ],
+      "case": "sonnet46-stream",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 15,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 7,
+          "service_tier": "standard"
+        },
+        {
+          "input_tokens": 15,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 7,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "cost_usd": 0.00015
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 6,
+      "cost": 0.00015,
+      "error": null
+    },
+    {
+      "id": "C46-1025-14",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low",
+          "format": {
+            "type": "json_schema",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 16.44,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "sonnet46-schema",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 174,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 8,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.000642
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000642,
+      "error": null
+    },
+    {
+      "id": "C46-1025-15",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 1.78,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "sonnet46-schema-baseline",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "```json\n{\n  \"color\": \"green\"\n}\n```",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 18,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 19,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.00034
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00034,
+      "error": null
+    },
+    {
+      "id": "C46-1025-16",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Call report with color red."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "auto"
+        }
+      },
+      "seconds": 3.81,
+      "thinking_tokens": 26,
+      "event_types": [],
+      "case": "sonnet46-tool",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "Sure! I'll call the `Report` function with the color **red** right away!",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 572,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 99,
+          "output_tokens_details": {
+            "thinking_tokens": 26
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.003202
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.003202,
+      "error": null
+    },
+    {
+      "id": "C46-1025-17",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "disabled"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 1.83,
+      "thinking_tokens": null,
+      "event_types": [],
+      "case": "sonnet46-off",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 5,
+          "service_tier": "standard",
+          "cost_usd": 0.000138
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000138,
+      "error": null
+    },
+    {
+      "id": "C46-1025-18",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Do not call any tools. Reply with exactly NO_TOOL."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "tool",
+          "name": "other"
+        }
+      },
+      "seconds": 3.09,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "sonnet46-forced-named",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 642,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 7,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.002032
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.002032,
+      "error": null
+    },
+    {
+      "id": "C46-1025-19",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-sonnet-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Do not call any tools. Reply with exactly NO_TOOL."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "any"
+        }
+      },
+      "seconds": 2.24,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "sonnet46-forced-any",
+      "http": 200,
+      "models": [
+        "claude-sonnet-4-6"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 642,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 7,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "cost_usd": 0.002032
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.002032,
+      "error": null
+    },
+    {
+      "id": "C46-1025-20",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Reply with exactly STREAM_OK."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "stream": true
+      },
+      "seconds": 3.04,
+      "thinking_tokens": 0,
+      "event_types": [
+        "message_start",
+        "content_block_start",
+        "ping",
+        "content_block_delta",
+        "content_block_delta",
+        "content_block_stop",
+        "message_delta",
+        "message_stop"
+      ],
+      "case": "opus46-stream",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "STREAM_OK",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 15,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 1,
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard"
+        },
+        {
+          "input_tokens": 15,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 7,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "cost_usd": 0.00025
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": true,
+      "event_count": 8,
+      "cost": 0.00025,
+      "error": null
+    },
+    {
+      "id": "C46-1025-21",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low",
+          "format": {
+            "type": "json_schema",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "seconds": 2.57,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-schema",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "{\"color\":\"red\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 174,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 8,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00107
+        }
+      ],
+      "schema_red": true,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00107,
+      "error": null
+    },
+    {
+      "id": "C46-1025-22",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Return JSON with color green. Do not use red."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 2.48,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-schema-baseline",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "{\"color\": \"green\"}",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 18,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 9,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.000316
+        }
+      ],
+      "schema_red": false,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.000316,
+      "error": null
+    },
+    {
+      "id": "C46-1025-23",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Call report with color red."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "auto"
+        }
+      },
+      "seconds": 3.38,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-tool",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "",
+      "calls": [
+        {
+          "name": "report",
+          "arguments": {
+            "color": "red"
+          }
+        }
+      ],
+      "finish": [
+        "tool_use"
+      ],
+      "usage": [
+        {
+          "input_tokens": 572,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 43,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.003936
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.003936,
+      "error": null
+    },
+    {
+      "id": "C46-1025-24",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Calculate 17 * 19. Reply with just the number."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "disabled"
+        },
+        "output_config": {
+          "effort": "low"
+        }
+      },
+      "seconds": 3.58,
+      "thinking_tokens": null,
+      "event_types": [],
+      "case": "opus46-off",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "323",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 21,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 5,
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.00023
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.00023,
+      "error": null
+    },
+    {
+      "id": "C46-1025-25",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Do not call any tools. Reply with exactly NO_TOOL."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "tool",
+          "name": "other"
+        }
+      },
+      "seconds": 2.32,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-forced-named",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 642,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 7,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.003386
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.003386,
+      "error": null
+    },
+    {
+      "id": "C46-1025-26",
+      "path": "/v1/messages",
+      "request": {
+        "model": "anthropic/claude-opus-4.6",
+        "messages": [
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Do not call any tools. Reply with exactly NO_TOOL."
+              }
+            ]
+          }
+        ],
+        "max_tokens": 1024,
+        "thinking": {
+          "type": "adaptive"
+        },
+        "output_config": {
+          "effort": "low"
+        },
+        "tools": [
+          {
+            "name": "report",
+            "description": "Report a color",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          },
+          {
+            "name": "other",
+            "description": "Alternative color report",
+            "input_schema": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "enum": [
+                    "red"
+                  ]
+                }
+              },
+              "required": [
+                "color"
+              ],
+              "additionalProperties": false
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "any"
+        }
+      },
+      "seconds": 2.34,
+      "thinking_tokens": 0,
+      "event_types": [],
+      "case": "opus46-forced-any",
+      "http": 200,
+      "models": [
+        "claude-opus-4-6"
+      ],
+      "text": "NO_TOOL",
+      "calls": [],
+      "finish": [
+        "end_turn"
+      ],
+      "usage": [
+        {
+          "input_tokens": 642,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          },
+          "output_tokens": 7,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "service_tier": "standard",
+          "inference_geo": "global",
+          "speed": "standard",
+          "cost_usd": 0.003386
+        }
+      ],
+      "schema_red": null,
+      "stream_terminal": null,
+      "event_count": 0,
+      "cost": 0.003386,
+      "error": null
+    }
+  ]
+}

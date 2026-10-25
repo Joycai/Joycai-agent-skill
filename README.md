@@ -1,6 +1,6 @@
 # Joycai-agent-skill
 
-Joycai 自用的 Claude 插件市场（marketplace）。架构相关的四个 skill 合在 `ai-agent-architecture` 插件中，按任务选用；`dev-workflow` 和 `reference-image-studio` 是独立插件。
+Joycai 自用的 Claude 插件市场（marketplace）。架构相关的五个 skill 合在 `ai-agent-architecture` 插件中，按任务选用；`dev-workflow` 和 `reference-image-studio` 是独立插件。
 
 ## 添加市场
 
@@ -27,10 +27,11 @@ claude plugin install reference-image-studio@joycai-agent-skill
 
 | 插件 | skill | 用途 |
 | --- | --- | --- |
-| `ai-agent-architecture` | `ai-agent-architecture` | 平台 × 协议 × 模型 的 LLM 端点事实矩阵、供应商分层架构、知识吸收协议 |
-| `ai-agent-architecture` | `agent-runtime-architecture` | agent 层架构：工具循环、审批与写安全、子代理、上下文压缩与会话持久化 |
-| `ai-agent-architecture` | `channel-route-model` | LLM 接入配置三层架构：渠道 → 线路 → 模型 |
-| `ai-agent-architecture` | `llm-billing-model` | LLM / 出图 / 视频 API 计量与计费设计标准 |
+| `ai-agent-architecture` | `llm-api-integration` | 聊天 API 协议、能力事实、接入审查与排错 |
+| `ai-agent-architecture` | `ai-media-api-integration` | 图片、视频、ASR API 的上传、异步任务与产物处理 |
+| `ai-agent-architecture` | `agent-runtime-architecture` | Agent 工具循环、执行权限、子代理、上下文与会话 |
+| `ai-agent-architecture` | `llm-provider-config` | 供应商、凭据、线路与模型配置及迁移 |
+| `ai-agent-architecture` | `ai-usage-accounting` | 用量记录、价格快照、成本核算与结算 |
 | `dev-workflow` | `dev-workflow` | 标准化的需求实现 / bug 修复流程（定位 → 设计 → 计划 → 分片提交 → review → PR） |
 | `reference-image-studio` | `reference-image-workspace` | 初始化参考创作工作区与 Dashboard，维护图片、文字设定、可信来源与适用范围 |
 | `reference-image-studio` | `reference-image-dashboard` | 浏览可信参考、任务逐次输入输出与 prompt、保留结果，缩略图筛选与并排对比 |
@@ -59,15 +60,6 @@ plugins/<plugin>/
 
 ## 从旧版迁移
 
-`ai-agent-architecture` 从 3.0.0 起包含四个架构 skill。已有用户更新市场后，将该插件更新到 3.0.0 或更高版本；原先单独安装的 `agent-runtime-architecture`、`channel-route-model`、`llm-billing-model` 插件请卸载，避免重复加载。`dev-workflow` 保持独立。
+`ai-agent-architecture` 4.0.0 包含五个 skill：新增媒体 API 接入，重命名聊天接入、供应商配置与成本核算入口。插件安装名保持不变，旧 skill 调用名需更新，见 [插件迁移说明](plugins/ai-agent-architecture/README.md#从-3x-迁移) 与 [文件迁移清单](plugins/ai-agent-architecture/MIGRATION.md)。
 
-四个 skill 的名称不变，显式调用统一使用 `ai-agent-architecture` 插件前缀：
-
-```text
-/ai-agent-architecture:ai-agent-architecture
-/ai-agent-architecture:agent-runtime-architecture
-/ai-agent-architecture:channel-route-model
-/ai-agent-architecture:llm-billing-model
-```
-
-开发工作流仍使用 `/dev-workflow:dev-workflow`。
+若从 3.0.0 之前升级，原先独立安装的 `agent-runtime-architecture`、`channel-route-model`、`llm-billing-model` 插件应卸载，避免重复加载。`dev-workflow` 保持独立，调用仍为 `/dev-workflow:dev-workflow`。

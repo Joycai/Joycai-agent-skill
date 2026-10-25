@@ -1,37 +1,38 @@
 # ai-agent-architecture
 
-一个插件，四个按任务选用的 skill。安装一次即可使用 LLM 接入、agent 运行时、接入配置与计费设计的知识和规范。
+一个插件，五个按任务加载的 skill。插件安装名不变，4.0.0 调整了三个 skill 名称，并拆出媒体 API 接入。
 
-| 任务 | skill / 显式调用 |
+| 任务 | 显式调用 |
 | --- | --- |
-| 查模型能力、审查 API 接入、接入新厂商、排查协议问题、记录实测结果 | `/ai-agent-architecture:ai-agent-architecture` |
-| 搭建 agent、工具循环、审批与写安全、子代理、上下文压缩与会话持久化 | `/ai-agent-architecture:agent-runtime-architecture` |
-| 设计渠道 → 线路 → 模型配置、多协议切换、迁移与合并供应商、设置 UI | `/ai-agent-architecture:channel-route-model` |
-| 设计 token / 按次 / 按规格计费、用量快照、上游报价、视频结算与用量 UI | `/ai-agent-architecture:llm-billing-model` |
+| 聊天 API 接入、协议兼容、模型能力、流式与排错 | `/ai-agent-architecture:llm-api-integration` |
+| 图片/视频生成与 ASR API、上传、轮询、产物与时间码 | `/ai-agent-architecture:ai-media-api-integration` |
+| Agent 工具循环、执行权限、子代理、上下文与会话 | `/ai-agent-architecture:agent-runtime-architecture` |
+| 凭据、端点、线路、模型参数配置及迁移 | `/ai-agent-architecture:llm-provider-config` |
+| 用量、价格快照、成本统计与异步结算 | `/ai-agent-architecture:ai-usage-accounting` |
 
-每个 skill 保留独立的 `SKILL.md`、触发描述与按需加载的 `references/`；按任务读取相应入口。开发流程由独立的 `dev-workflow` 插件提供。
+## 内容归属
 
-目录：
+- 协议字段、原始 usage 与厂商行为归 API 接入；媒体专有行为归媒体接入。
+- 平台/模型能力矩阵给简明结论与正文链接；厂商按平台索引定位，不新增厂商 skill。
+- 配置实体和画像结构归供应商配置；用量归一化后的价格和核算规则归成本核算。
+- 工具执行、审批、取消与会话生命周期归 runtime。
+- 知识维护规范由聊天 API skill 保存，媒体 skill 引用；只有维护请求才写回知识库。
 
-```text
-skills/
-├── ai-agent-architecture/
-├── agent-runtime-architecture/
-├── channel-route-model/
-└── llm-billing-model/
-```
+入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
 
-其中 LLM 接入知识库的资料组织：
+## 从 3.x 迁移
 
-```
-skills/ai-agent-architecture/
-├── SKILL.md                 入口：三个坐标轴、四种用法、五层文件地图、证据记法、六条原则
-└── references/
-    流程   00-audit-playbook.md · 12-migration-roadmap.md · 30-knowledge-ingestion.md
-    结论表 20-platform-matrix.md（平台，含各家正文索引）· 22-model-capability-matrix.md（模型 × 平台 × 面，核心）
-           23-media-matrix.md（出图 / 视频 / ASR）· 31-open-questions.md（待核实）
-    正文   01 架构分层 · 02 协议差异（含四族总对照表）· 03 思考 · 04 结构化 · 05 工具与服务端工具
-           06 错误 / usage / 探测 · 13 出图 · 14 视频 · 16 语音识别
-    反查   11-pitfalls.md（现象 → 对策 → 指针）
-    日志   CHANGELOG.md
-```
+| 原调用 | 新调用 |
+| --- | --- |
+| `ai-agent-architecture:ai-agent-architecture` | `ai-agent-architecture:llm-api-integration`；媒体任务改用 `ai-agent-architecture:ai-media-api-integration` |
+| `ai-agent-architecture:channel-route-model` | `ai-agent-architecture:llm-provider-config` |
+| `ai-agent-architecture:llm-billing-model` | `ai-agent-architecture:ai-usage-accounting` |
+| `ai-agent-architecture:agent-runtime-architecture` | 不变 |
+
+更新自定义提示词、工作流与引用；旧入口不保留重复别名。原参考文件去掉历史编号，完整路径对应见 [迁移清单](MIGRATION.md)。已有问题编号与证据日期保留，文件迁移不刷新实测日期。
+
+## 检查
+
+在仓库根运行 `python3 plugins/ai-agent-architecture/scripts/validate_structure.py`，检查五个入口、清单版本、内部文件与锚点链接、迁移目标和参考资料可达性。再运行 `claude plugin validate plugins/ai-agent-architecture` 与 `claude plugin validate .` 检查插件格式。
+
+路由场景和人工检查结果见 [验证记录](VALIDATION.md)。结构检查不能证明实际模型的自动选择效果，也不重新验证厂商 API。
