@@ -17,6 +17,8 @@
 
 ## 1 出图
 
+GPT Image 2/2.5 官方 Images 与 Responses 图像工具：📄【文档 2026-10-27】分模态 token 计费，缓存适用范围与回包可见性不同；唯一正文见 [FACT-OPENAI-IMAGE-BILLING-001–003](image-generation.md#gpt-image-token-accounting)，未新增付费验证。
+
 ### 1.1 route 速览
 
 route 按**端点**分发、不按供应商；L3 可声明，默认按协议族推导（gemini 族 → `gemini`，其余 → `images-api`），显式声明永远赢。surface 由用户声明；chat 兜底路由起名 `chat-image`。中转不提供厂商原生出图协议，例外是路径本身就是 `{base}/images/generations` 的（`ark`、`xai-images`）。端点、编辑表达、响应形状总表见 [image-generation](image-generation.md) §2。

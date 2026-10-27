@@ -3,8 +3,8 @@ name: ai-usage-accounting
 description: >-
   Design or review usage metering and cost accounting for LLM, image, and video APIs: normalized usage, price snapshots, reported costs, async settlement, and usage dashboards. Use for cost tracking and reconciliation, not subscription payments, invoicing, or collecting money from customers.
 metadata:
-  version: "1.1.0"
-  updated: "2026-10-25"
+  version: "1.2.0"
+  updated: "2026-10-27"
 ---
 
 # AI 用量与成本核算
@@ -16,7 +16,7 @@ metadata:
 | 任务 | 资料 |
 | --- | --- |
 | 用量行、价格与规格快照、计费组 | [数据模型](references/data-model.md) |
-| token / 按次 / 按规格计算、报价优先级 | [核算规则](references/pricing-rules.md) |
+| 分模态 token / 输入输出视频秒数 / 图片张数、报价优先级 | [核算规则](references/pricing-rules.md) |
 | 流式取消、异步结算、幂等与失败处理 | [记录与结算](references/recording.md) |
 | 持久化、迁移、币种与汇总缓存 | [存储与迁移](references/storage-and-migration.md) |
 | 价格编辑与用量展示 | [UI 参考方案](references/ui.md) |
@@ -29,7 +29,8 @@ metadata:
 3. 使用统一核算逻辑，明确规格匹配、舍入、币种与报价信任规则；金额来源可追溯。
 4. 供应商原始字段由协议适配层提取并规范化，不能让上游任意同名字段覆盖内部可信值。字段位置查 [聊天 API 用量](../llm-api-integration/references/errors-probing-observability.md) 或 [媒体 API](../ai-media-api-integration/SKILL.md)。
 5. 记录失败不得遮蔽已取得的生成结果或任务 id；同时必须可观测、可重试且防重复，不能仅吞掉异常。
-6. 视频提交先记录任务与预估，不自动认定已收费；按供应商计费规则及实际结果确认、调整或冲销。取消和失败是否收费需要证据。
+6. 多模态费用按独立计费项表达：输入视频与输出视频分别计秒、匹配单价；文本与图像 token 分桶，缓存只从所属桶扣除。总量与明细不重复收费；缺失明细不伪装成零。
+7. 视频提交先记录任务与预估，不自动认定已收费；按供应商计费规则及实际结果确认、调整或冲销。取消和失败是否收费需要证据。
 
 ## 按范围设计
 

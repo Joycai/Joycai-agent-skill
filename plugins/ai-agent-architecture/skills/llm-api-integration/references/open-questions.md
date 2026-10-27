@@ -205,3 +205,10 @@
 - **OQ-KIMI-001**：火山文档 Kimi 的 `none/minimal→low` 映射，与套餐省略 thinking 时的 0 reasoning / 正文推导不符。显式 enabled 会恢复 reasoning 通道；应复核模型/线路更新后的组合规则，不能将回显或单题 token 变化解释为实际档位映射。[现有证据](reasoning.md#kimi-k31-ark)。
 - **OQ-KIMI-002**：② `tool_choice` 冲突样本未遵从；①具名拒绝文案还包含已成功的 required。待平台修复后复测，当前接入不要依赖②工具选择约束。[现有证据](tools-and-server-tools.md#kimi-k31-ark)。
 - **OQ-KIMI-003**：Chat SSE、多模态、结构化及工具闭环已完成[追加验证](volcengine-kimi-k31-stream-verification.md)；仍未测复杂/扫描/长 PDF、URL 输入、服务端工具、并行函数、复杂 schema、上下文/输出上限、采样字段 top_p/n/penalties。没有证据的能力保持 unknown，不阻断已验证的 Responses 基本接入。验证计划按实际需要选择，不自动发起新付费测试。
+
+
+<a id="gpt-image-billing-verification"></a>
+## GPT Image 2/2.5 计费待核对（2026-10-27）
+
+- **OQ-GPT-IMAGE-BILLING-001**：官方 Images 的 2/2.5 同步、流式终态 usage 完整性与 output_tokens_details 的实际形状；API 参考保留旧模型限定文字，本轮仅文档审查。需要已授权样本后再提升证据等级。
+- **OQ-GPT-IMAGE-BILLING-002**：Responses 图像工具缓存账单、主模型与工具范围及 partial 是否已含在终态 usage 中；官方明确工具缓存计数不回报，不能设计依赖该缺失字段的精确结算。对照账单时保留调用 id、模型、档位、partial 数量与原始 usage。正文见 [图像 token 计量](../../ai-media-api-integration/references/image-generation.md#gpt-image-token-accounting)。

@@ -148,3 +148,8 @@ OrcaRouter Messages 上 Sonnet/Opus 4.6 在 adaptive+low、反向提示下，具
 ## HIST-MEDIA-003 · Grok 初代下线与统一单价
 
 旧正文和矩阵写“初代 `grok-imagine-video` 已下线（2026-09-22），不再追”，来源 Joycai，原始日志待补。2026-10-27 核对官方总览仍列初代及其编辑/延长能力，因此不能继续作为全平台下线结论；本轮未实测初代账号可用性。旧 1.5 $0.080/s 仅来自 480p 样本，当前文档已列分辨率分档价格。历史样本保留，当前结论见 [FACT-XAI-VIDEO-001–005](../../ai-media-api-integration/references/video-generation.md#grok-imagine-video)。
+
+
+## 2026-10-27：计费参考实现的适用范围修正
+
+旧文保留了“视频不收输入图片费”“未交付即输入免费”，并将 GPT Image 文本/图像输入差价列为未覆盖且可忽略。前两项与已有视频观测及入口原则冲突，后者不能精确覆盖当前官方分模态定价。原 request 公式遗漏输入图项亦已修正（笔误）。当前规则见 [核算规则](../../ai-usage-accounting/references/pricing-rules.md)、[视频独立结算](../../ai-usage-accounting/references/recording.md)；GPT Image 官方来源与证据边界见 [FACT-OPENAI-IMAGE-BILLING-001–003](../../ai-media-api-integration/references/image-generation.md#gpt-image-token-accounting)。本次为文档审查和参考模型修正，未新增实扣验证。

@@ -378,6 +378,18 @@ data: [DONE]
 （**底图像素**，不是输入图像素）与 `.normalized`（0–1000）。自动拆时整个人物是**一层**，不会再拆
 头发、衣服。`usage.generated_images` = 实出张数（2），不是超时预算用的 17。落库与还原见 §8。
 
+
+<a id="gpt-image-token-accounting"></a>
+### GPT Image 2/2.5 的 token 计量
+
+**FACT-OPENAI-IMAGE-BILLING-001** — 📄 OpenAI 官方 Images API 与 Responses 图像工具，`gpt-image-2`、`gpt-image-2.5-sunburst`、`gpt-image-2.5-flare`；【文档 2026-10-27，本轮未发付费请求】。文本输入、图像输入、图像输出分别计价。标准处理每百万 token：文本输入 $5、缓存文本 $1.25；图像输入 $8、缓存图像 $2；图像输出 $30。模型/服务档位需独立快照，Batch 价格不能误作 Standard；相同 token 单价不保证相同单图成本。来源：[Flare 模型页](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare)（明确与 GPT Image 2 同价）、[Sunburst 模型页](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst)、[定价](https://developers.openai.com/api/docs/pricing)。
+
+**FACT-OPENAI-IMAGE-BILLING-002** — 📄 原始字段提取【文档 2026-10-27】。Images `usage.input_tokens_details.text_tokens/image_tokens` 为输入模态明细，`input_tokens` 是合计；`output_tokens_details` 可含图像/文本明细，缺明细时仅在模型契约确认纯图像输出后使用 `output_tokens`。`total_tokens` 仅校验，不另计费。非流式响应的 `usage` 与 SSE `image_generation.completed.usage` 是采集入口；partial 图片块不是最终汇总。官方参考的 usage 说明仍有“仅 gpt-image-1”旧文字，但同页 2.5 示例已带上述字段；保留这一文档不一致，运行时按回包判定，缺字段标 unknown，不声称本轮已验证所有模型。来源：[Images API 参考](https://developers.openai.com/api/reference/resources/images/methods/generate)。
+
+**FACT-OPENAI-IMAGE-BILLING-003** — 📄 缓存与组合请求边界【文档 2026-10-27】。GPT Image 2/2.5 的缓存价仅适用于 Responses 图像工具，直连 Images（含 edits）不适用；图像工具的缓存命中计数不在 Responses 输出中，不能用响应验证优惠。Responses 还包含主模型费用，二者按独立范围记录。partial 每张额外 100 图像输出 token；最终 usage 是否已包含这部分须核对，不能无条件再加。尺寸/质量估算仅覆盖输出且随模型变化，不沿用旧模型 token 表。来源：[图像生成指南：成本](https://developers.openai.com/api/docs/guides/image-generation#cost-and-latency)。
+
+适配层保留原始 usage、模型、API 路径、服务档位和调用范围，再规范化模态桶；核算公式、缺失缓存的估算口径及报价覆盖规则见 [计费规则](../../ai-usage-accounting/references/pricing-rules.md)。将全部输入 token 乘文本价会少算，额外按参考图张数收费会双算。未验证回包、缓存账单与 partial 包含关系见 [待核实项](../../llm-api-integration/references/open-questions.md#gpt-image-billing-verification)。
+
 ## 4.2 其余几家的逐家事实（按 route）
 
 - **`images-api`（OpenAI / 兼容）**：编辑的 multipart 字段名**跟张数走**——1 张发 `image`、多张发
@@ -498,7 +510,7 @@ data: [DONE]
   不乘输出张数**（1 张参考图 + `n:2` + low = 900 000 000 = 2 × 0.04 + 1 × 0.01【实测 2026-09-22】）；**xAI 视频面同价**（1.5：首帧
   `image` +$0.01、`reference_images` 每张 +$0.01，标价页只写 $0.08/s【实测 2026-09-22】）——按秒计价的组也要有输入图一侧；Seedream 5.0 pro
   0.02 元/张、**每次请求首张免费**，回报 `usage.input_images`（原始张数）。gpt-image / Gemini image 的输入图在 `input_tokens` 里
-  （图像输入单价与文本不同：$8/M vs $5/M，`input_tokens_details.image_tokens` 有明细）。**张数要在组完请求体之后数**：
+  （不能按同一输入价核算；GPT Image 当前模态与缓存规则见 [FACT-OPENAI-IMAGE-BILLING-001–003](#gpt-image-token-accounting)）。**张数要在组完请求体之后数**：
   按上限截断、再丢掉读不出的附件——截断后的长度会为没发出去的图收钱。**一张没交付就不该收输入费**（方舟明说失败免费）。
   失败 / 被审核拦下的请求上游是否仍收输入费：【未验】——失败的回包走不到记账，只能对账单。
 - **计费相关的请求默认值要明发**（与 [video-generation](video-generation.md) §3 第 6 条同一条）：xAI 不带 `quality` 按 Medium 计（$0.06），不是标价表第一格的

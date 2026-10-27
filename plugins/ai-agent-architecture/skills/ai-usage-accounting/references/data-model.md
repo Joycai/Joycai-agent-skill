@@ -3,14 +3,14 @@
 > 适用范围：本篇保留原项目的参考实现与故障记录。接口名、固定字段、阈值、UI 和未实现能力不是通用要求；采用前按 [skill 入口](../SKILL.md) 的约束与目标项目需求裁剪。
 
 
-四个实体、一个值对象、一组中性键。字段名用蛇形写，只是约定。
+下列固定列是兼容旧实现的最小模型；输入视频、分模态 token 使用文末的费用项扩展。字段名用蛇形写，只是约定。
 
 ## 计费组 FeeGroup（`fee_groups`）
 
 | 字段 | 类型 | 归属模式 | 说明 |
 | --- | --- | --- | --- |
 | `name` | text | — | 用户起的名，如「Gemini Pro」「xAI Imagine 2.0」 |
-| `billing_mode` | `token` \| `request` \| `spec` | — | 未知值按 `request` 读（历史上的默认解释） |
+| `billing_mode` | `token` \| `request` \| `spec` | — | 历史未知值曾按 request 读；新实现遇未知模式应标记未支持，不静默套价 |
 | `input_price` | real | token | 每百万输入 token |
 | `cache_input_price` | real **可空** | token | 每百万缓存命中 token；**空 = 同 `input_price`**，`0` = 真免费 |
 | `output_price` | real | token | 每百万输出 token |
@@ -18,7 +18,7 @@
 | `output_unit` | `image` \| `second` \| `clip` | spec | 一次请求数什么：出的张数 / 请求的秒数 / 一条 |
 | `output_rates` | JSON 数组 | spec | 档位表，见下 |
 | `input_unit_price` | real，默认 0 | spec · request | 每张参考图；0 = 不收输入费（多数组） |
-| `input_free_units` | int，默认 0 | spec | 每次请求免费张数（Seedream 5.0 pro「首张免费」） |
+| `input_free_units` | int，默认 0 | spec · request | 每次请求免费张数（Seedream 5.0 pro「首张免费」） |
 | `sort_order` | int | — | 用户拖拽的顺序，有自己的写入口（见 [storage-and-migration](storage-and-migration.md)） |
 
 **三种模式共用一行、字段全保留。** 切模式不清空别的模式的价，切回来还在。
@@ -26,20 +26,20 @@
 派生规则（只在一处定义，所有摘要与解析器共用）：
 - `charges_input_images = mode ∈ {spec, request} && input_unit_price > 0`——单位不参与（2026-09-22 起；此前只有单位为「张」的组收，
   被 xAI 视频实测推翻：首帧 / 参考图 $0.01/张另收）。按 token 不收：它的图在 token 里。
-  只有按张的组收输入费：没有视频面回报它收到的参考图，按秒 / 按条的组即使填了值也不收。
-- `other_specs_at_zero = mode == spec && 没有全空条件的行`。
+  视频输入图片同样适用；输入视频另设秒数费用项，不能复用这里的图片张数。
+- `has_uncovered_specs = mode == spec && 没有全空条件的行`（未覆盖不表示免费）。
 
 ### 档位行 SpecRate
 
 ```
-{ size?: text, quality?: text, seconds?: int, price: real }
+{ size?: text, quality?: text, seconds?: decimal, price: real }
 ```
 
 - 三个条件**都可选**；空条件匹配一切；三个都空 = 兜底行（「其他规格」）。
 - `specificity = 填了几个条件`（0–3），是匹配的平局裁决。
 - 条件**存进去之前先归一化**（见 [pricing-rules](pricing-rules.md)），匹配时是纯相等。
 - 同一张表里两行条件完全相同 = 配置错误，编辑器拒绝保存；只有一行没填价也拒绝。
-- 编码成 JSON 文本存在一列里；空、空白、坏 JSON 都读成**空表**（组按 0 计、用量页标「未覆盖」），不抛。
+- 编码成 JSON 文本存在一列里；空、空白、坏 JSON 都读成**空表**（用量页标「未覆盖/成本不完整」，不按免费显示），不抛。
 
 ## 模型 ↔ 组
 
@@ -51,7 +51,7 @@
 ## 规格 OutputSpec（值对象）
 
 ```
-{ size?: text, quality?: text, seconds?: int }     全空 = 没有规格
+{ size?: text, quality?: text, seconds?: decimal }     全空 = 没有规格
 ```
 
 读取优先级（每个维度独立）：**上游回显 > 请求参数**。
@@ -71,12 +71,12 @@
 
 | 组 | 列 | 说明 |
 | --- | --- | --- |
-| 身份 | `task_id`, `model_id`, `model_pk`, `timestamp` | `task_id` 是标签 + 时间戳（`req_…` / `subagent:…`）或视频作业 id（`video:<op>`，可跨重启找回）；`model_pk` 指向模型行，模型删了仍能按名显示 |
+| 身份 | `task_id`, `model_id`, `model_pk`, `timestamp` | `task_id` 是标签 + 时间戳（`req_…` / `subagent:…`）或视频作业 id（建议包含 provider/account/op，避免不同平台任务号碰撞，可跨重启找回）；`model_pk` 指向模型行，模型删了仍能按名显示 |
 | 计数 | `input_tokens`, `cache_tokens`, `output_tokens`, `request_count` | **输入与缓存不重叠**，二者之和 = 全部 prompt token |
 | token 价快照 | `input_price`, `cache_price`（可空）, `output_price` | 记录**解析后**的价：组没填缓存价时这里写输入价；空只出现在老行上 |
 | 按次快照 | `request_price` | |
 | 规格快照（七列） | `output_units`, `output_unit_price`, `output_unit`, `output_spec`(JSON), `input_images`, `input_units`, `input_unit_price` | 见下 |
-| 上游报价 | `reported_cost`（可空） | 供应商自己报的这次金额，含输入图；空 = 没报 |
+| 上游报价 | `reported_cost`（可空） | 同范围完整可信报价；需币种、来源和覆盖范围，空 = 没报 |
 | 模式 | `billing_mode` | 当时组的模式；决定读哪组列 |
 
 规格快照的七列：
@@ -84,7 +84,7 @@
 - `output_spec` = `{size?, quality?, seconds?, matched: bool}`——**规格 + 有没有命中**，用量页据此数「未覆盖」。
 - `input_images` **实际发出**的参考图张数（给界面看）；`input_units` **计费**张数（免费的已扣）；`input_unit_price` 单价。
   张数与计费张数分开存：「发 1 张免 1 张」与「没发」计费都是 0，只有前者该显示。
-- 「七列全空或全 0」读成没有规格快照（旧行、其它模式的行）。
+- 旧实现将「七列全空或全 0」视作无快照；新行用显式 schema/status 区分缺失与真实零值。
 
 ## 检查点 UsageCheckpoint（`usage_checkpoints`）
 
@@ -113,7 +113,31 @@
 
 - `usage_status`：unknown / reported / estimated，未知计数不伪装成 0。
 - `cost_status`：estimated / reported / reconciled / reversed；reported 只说明上游已报，并不自动表示对账完成。
+- `cost_completeness`：complete / incomplete，独立于金额来源状态；保留缺失费用项与估算假设。
 - `currency`，有换算时另存目标币种、汇率、来源和时间。
 - 请求/任务幂等键、结算版本与待重试状态，防止恢复和重复轮询重复计费。
 
 是否采用事件表、行更新或调整记录由项目决定。历史缺失值只按可证明的信息迁移，不推造币种或实际收费。
+
+
+## 独立费用项（视频与分模态 token）
+
+保留旧列作兼容视图，或采用等价的明细表/JSON；不要同时把旧列与新费用项加进总额。每行显式保存 `accounting_schema_version` 和所用核算路径。
+
+建议费用项快照：
+
+```text
+component_id, scope_id, meter, modality, direction, cache_state,
+quantity, quantity_source, usage_status,
+unit, unit_price, price_basis, currency, matched,
+pricing_dimensions, price_version, price_source
+```
+
+- `scope_id` 标识供应商请求/任务/工具调用；`component_id` 在该范围内稳定，用于去重。
+- `quantity` 是计费数量，可空且支持小数秒；`price_basis` 如 1 秒、1 张、1,000,000 token。原始数量、免费数量和计费数量分开保存；计费粒度/舍入规则需有来源，不能默认向上取整。
+- `meter` 区分 `video_input_seconds`、`video_output_seconds`、`input_images`、`text_input_tokens`、`image_input_tokens`、`image_output_tokens` 等。按 token 的图片输入不再叠加按张费，除非有独立收费证据。
+- token 输入按模态再分 cached / uncached，互不重叠；合计字段仅供校验。仅有总缓存量却不知道文本/图片归属时，不能按比例猜分桶。
+- `pricing_dimensions` 至少能表达平台/渠道、实际模型、任务类型、输出分辨率、API 路径、服务档位及价格生效时间。输入视频的档位可以依赖**输出分辨率**，其单价与输出单价独立。
+- 视频提交保存**整份适用价格规则快照**与预估费用项；终态用同一规则版本匹配最终规格，不能只存最初命中的单价后再读取当前价。
+- `reported_cost` 另带 `currency`、覆盖范围 `scope_id`、来源与完整性。只有同范围的完整可信总价才能替换全部费用项；工具子项报价不能抹掉主模型费用。
+- 缺少数量、单价或必要分桶时保留 unknown / unmatched，并标记成本不完整；已知部分可以展示小计，不展示为完整总价。旧数据缺失的输入视频量或模态明细不能回填为 0。

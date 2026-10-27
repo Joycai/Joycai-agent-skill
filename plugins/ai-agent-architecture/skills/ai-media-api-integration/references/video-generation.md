@@ -92,6 +92,8 @@ MiniMax H3 当前契约与实测见 [§2.1](#minimax-h3-v2)（FACT-MINIMAX-VIDEO
 
 **FACT-XAI-VIDEO-004 — 历史报价观测。**【实测 2026-09-22，来源 Joycai，原始日志待补】1.5 三条 1 s、480p：文生 $0.08，单首帧 $0.09，两张参考图 $0.10；仅支持这些样本中每图增加 $0.01，不能外推全部输入类型。提交只有 request_id；pending 为 HTTP 202，done 为 200，终态 `usage.cost_in_usd_ticks` 报价，1 tick = $10⁻¹⁰。上游总报价替换估算、不叠加。历史目录 `GET /video-generation-models` 无 pricing；这不等于当前官方价格页没有分档价。`video.url` 空且 `respect_moderation:false` 的历史观测为审核拦截，不作为唯一失败形态。
 
+**FACT-XAI-VIDEO-006 — 当前输入费用。** 📄【文档 2026-10-27，官方直连；未新增付费样本】[xAI 定价](https://docs.x.ai/developers/pricing) 列出初代 `grok-imagine-video` 输入视频 $0.01/秒、输入图 $0.002/张；1.5 与 1.5-lite 输入图 $0.01/张，不能将 1.5 历史样本外推为初代图片单价。输入视频与输出分别计量。输入计费秒数的取整、编辑/延长对输入覆盖范围及实际扣费仍需核对，不能只从最终片长推断。统一费用项和终态结算见 [计费规则](../../ai-usage-accounting/references/pricing-rules.md)、[记录与结算](../../ai-usage-accounting/references/recording.md)。
+
 **FACT-XAI-VIDEO-005 — 首尾帧静音样本。**【实测 2026-10-27，xAI 官方，提交 1 次、成功 1 次】用户两张 JPEG 作为 `image/last_frame` data URI，发 `model:"grok-imagine-video-1.5",duration:4,resolution:"720p",generate_audio:false`，省略 aspect_ratio。HTTP 200 接受，轮询 202 pending → 200 done；`respect_moderation:true`、`video.duration:4`、`usage.cost_in_usd_ticks:5800000000`（API 报价 $0.58，未核对账户账单），与 4 × $0.14 + 两图 $0.02 一致。
 
 下载并检查：H.264 720×1088、24 fps、97 帧，容器约 4.041667 s，无音轨，另含 MJPEG 封面。抽查首、中、尾帧，姿态与参考相符；未做逐帧一致性或其他模式验证。勿将容器时长差异直接改算费用。脱敏请求、响应和产物规格见 [实测证据](grok-video-evidence.json)。
@@ -154,7 +156,7 @@ MiniMax H3 当前契约与实测见 [§2.1](#minimax-h3-v2)（FACT-MINIMAX-VIDEO
 - **再生成**：`POST /v2/video_regeneration`，model=`MiniMax-H3`、resolution=`2K`；两种输入必须且只能选一种：① `source_task_id`（需白名单、当前账号、成功且 7 天内的生成任务）；② `content` 原样保留源 768P 视频生成时全部输入（包括 IR 后最终 prompt），追加唯一 `type=video_url/role=base_video`。不是任意视频通用超分。
 - base_video 模式源片必须有音轨、24 fps、宽高均为 32 的倍数、面积 589824–1032192 px、总帧数 107–362 且以 17 帧递增。再生成 text 上限 40000 字符，与创建上限不同。
 
-**FACT-MINIMAX-VIDEO-004 — 用量不等于额外计费项。** 查询中的 `usage.total_seconds=input_seconds+output_seconds`；`input_image_count` 包含首帧、尾帧、参考图；`input_audio_seconds` 为音频时长取和四舍五入。视频的 token 字段是素材/视频用量折算，**不能把同一视频的秒数费用与折算 token 费用重复相加**。Context-IR 才按实际输入/输出 tokens 单独计费。原始 usage 完整保存，价格匹配 task_type、model、resolution 与时间快照。
+**FACT-MINIMAX-VIDEO-004 — 用量不等于额外计费项。** 查询中的 `usage.total_seconds=input_seconds+output_seconds`；`input_image_count` 包含首帧、尾帧、参考图；`input_audio_seconds` 为音频时长取和四舍五入。视频的 token 字段是素材/视频用量折算，**不能把同一视频的秒数费用与折算 token 费用重复相加**。Context-IR 才按实际输入/输出 tokens 单独计费。原始 usage 完整保存，价格匹配 task_type、model、resolution 与时间快照。计费层将输入视频秒数、输出秒数、超额图片独立结算，不能仅更新输出四列；见 [核算规则](../../ai-usage-accounting/references/pricing-rules.md)。
 
 价格快照（人民币，2026-10-27，使用前复核）：
 

@@ -3,7 +3,7 @@ name: ai-media-api-integration
 description: >-
   Integrate or debug image, video, and speech-transcription APIs: request formats, uploads, async jobs, polling, cancellation, downloads, and timestamps. Use for API engineering, not media creation with existing tools.
 metadata:
-  version: "1.1.1"
+  version: "1.1.2"
   updated: "2026-10-27"
 ---
 
