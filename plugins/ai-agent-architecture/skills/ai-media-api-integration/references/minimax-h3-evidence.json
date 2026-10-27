@@ -1,0 +1,188 @@
+{
+  "verification_date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "sources": [
+    {
+      "url": "https://platform.minimax.cn/docs/guides/video-generation.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "94602e998a06129ad2d23ec8d6c5b2fc8a154aec6d8689745c9fd283f6f918ce"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "238be3add02890d1bb561d2ab13aada0d0049ac30020988c88aab70fc4bfd16f"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-query.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "ba7a03558de9e9cbff113afd5e372f209251976f4dbca9a6e12583040f0d1aea"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-list.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "003ec658d2122cb8e11f8511631db8a63f1ef638a1c6f5a47444ae8adeebd220"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-delete.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "23164f2f8cadcf03ded43723b6f7ac9185e938966ef60d46840fe8a44190a8bd"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-h3-context-ir.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "1e05aeff6e06762ddd2ad44760108ff399e02550a7b3fb3d6bdc60d1b7ae9897"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/api-reference/video-generation-v2-regeneration.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "d94dd5422c89a24214c75db641203b5945010c62170ee9200e554efef0e06ba3"
+    },
+    {
+      "url": "https://platform.minimaxi.com/docs/pricing/overview.md",
+      "retrieved_date": "2026-10-27",
+      "sha256": "4e761390e9f6e0371d59c3595efcdd0d74b91a488b93a5837126f912102a4d1d"
+    }
+  ],
+  "test": {
+    "base_url": "https://api.minimax.cn",
+    "endpoint": "POST /v2/video_generation",
+    "submission_count": 1,
+    "request": {
+      "model": "MiniMax-H3",
+      "content": [
+        {
+          "type": "text",
+          "text": "固定镜头，保持同一人物的面部、粉色服装与森林环境一致。人物轻轻转身并微笑，从首帧姿态自然过渡到尾帧姿态，头发和裙摆随微风轻动。自然环境声音，无对白。"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "[user-provided JPEG data URI redacted]"
+          },
+          "role": "first_frame"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "[user-provided JPEG data URI redacted]"
+          },
+          "role": "last_frame"
+        }
+      ],
+      "duration": 4,
+      "resolution": "768P",
+      "ratio": "adaptive"
+    },
+    "submission": {
+      "http_status": 200,
+      "body": {
+        "task_id": "456814046007907"
+      }
+    },
+    "scope": "One H3 768P 4-second first/last-frame request. No negative probes, other models, cancellation, IR or regeneration tests.",
+    "billing": {
+      "estimated_cny": 2.0,
+      "basis": "4 output seconds × 0.50 CNY; two input images within five free images per task",
+      "actual_charge": "not_verified"
+    },
+    "inputs": [
+      {
+        "source": "user attachment",
+        "bytes": 2625901,
+        "sha256": "4dd4ebe748f6f0b24a142381c2d62cc9c0aa93cd613e5c721a5561862310f109",
+        "width": 1696,
+        "height": 2528
+      },
+      {
+        "source": "user attachment",
+        "bytes": 2578318,
+        "sha256": "ec6cb403b946e077357ddf681c178c940ea9382371e7a8e68d64d84a7d87766b",
+        "width": 1696,
+        "height": 2528
+      }
+    ],
+    "terminal_response": {
+      "observed_at": "2026-10-27T05:49:50.348052+00:00",
+      "http_status": 200,
+      "body": {
+        "task": {
+          "id": "456814046007907",
+          "model": "MiniMax-H3",
+          "status": "succeeded",
+          "created_at": 1793079764,
+          "updated_at": 1793080131,
+          "content": {
+            "url": "[signed CDN URL redacted]"
+          },
+          "resolution": "768P",
+          "duration": 4,
+          "usage": {
+            "total_seconds": 4,
+            "input_seconds": 0,
+            "output_seconds": 4,
+            "input_image_count": 2,
+            "total_tokens": 156236,
+            "prompt_tokens": 26040,
+            "completion_tokens": 130196
+          },
+          "ratio": "adaptive",
+          "task_type": "generation"
+        }
+      }
+    },
+    "artifact": {
+      "content_type": "video/mp4",
+      "mp4_ftyp_verified": true,
+      "sha256": "1ef64fb45f95d86c50be274bf8b882d0e16e4dcc49e26f180cb8f54ababacab3",
+      "ffprobe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 768,
+            "height": 1152,
+            "r_frame_rate": "24/1",
+            "nb_frames": "107"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "r_frame_rate": "0/0",
+            "nb_frames": "141"
+          }
+        ],
+        "format": {
+          "duration": "4.458333",
+          "size": "1362782"
+        }
+      },
+      "visual_review": "First/middle/last frames show the supplied first and last poses and a transitional middle pose. This is a three-frame inspection, not a guarantee of temporal consistency or audio quality."
+    },
+    "observations": [
+      {
+        "observed_at": "2026-10-27T05:46:02.036921+00:00",
+        "http_status": 200,
+        "status": "running"
+      },
+      {
+        "observed_at": "2026-10-27T05:47:18.558730+00:00",
+        "http_status": 200,
+        "status": "running"
+      },
+      {
+        "observed_at": "2026-10-27T05:48:35.733008+00:00",
+        "http_status": 200,
+        "status": "running"
+      },
+      {
+        "observed_at": "2026-10-27T05:49:50.348052+00:00",
+        "http_status": 200,
+        "status": "succeeded"
+      }
+    ],
+    "observations_note": "Early running checks occurred before append-only logging was enabled; this list is not the full polling history."
+  },
+  "source_note": "Hashes identify reviewed page bytes; source pages are not bundled."
+}

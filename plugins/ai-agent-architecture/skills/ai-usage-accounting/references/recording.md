@@ -87,3 +87,5 @@ vendor 自己的用量块（方舟按像素的「output_tokens」）**嵌在子�
 - 中转协议（走 OpenAI Images 形状的中转）不翻报价：**中转的价在用户填的表里。** 例外只有平台表里声明过、且地址对得上的网关（[pricing-rules](pricing-rules.md)）。
 - 新增一个协议时的自查：它铺了上游 map 吗 → 走 `upstream_usage`；它带参考图吗 → 发 `input_image_count`；
   它自己造图片块吗 → 每块带两个键；它把上游 body 当信封原样返回吗 → 返回前剔保留键。
+
+MiniMax H3：视频 token 是用量折算，不与秒数/图片重复收费；Context-IR 单独按 tokens 核算。型号、任务类型与原始字段映射见 [FACT-MINIMAX-VIDEO-004](../../ai-media-api-integration/references/video-generation.md#minimax-h3-v2)。

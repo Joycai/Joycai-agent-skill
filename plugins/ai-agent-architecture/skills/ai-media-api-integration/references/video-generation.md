@@ -3,8 +3,8 @@
 > 阅读边界：带日期的厂商行为只适用于所记录组合；类名、路由表、存储格式与 UI 属于参考实现。付费验证与失败重试遵循 [媒体接入入口](../SKILL.md)，不将历史“零成本”描述当作当前保证。
 
 
-> 本篇解决的问题：在多协议 AI 层里加一条视频生成管线。视频没有同步形态——
-> 全行业一律是「提交拿 task_id → 轮询 → 结果 URL」的异步任务协议，但五家的
+> 本篇解决的问题：在多协议 AI 层里接入视频生成。
+> 本篇覆盖的是「提交拿 task_id → 轮询 → 结果 URL」的异步任务协议，但五家的
 > 提交 body、状态词表、结果位置、保留期、取消语义各不相同。
 > 不读会踩的坑：失败任务装在 HTTP 200 里被通用错误检查放行，轮询循环把
 > FAILED 当 PENDING 转到天荒地老；结果直链过期后入库，图库/画廊静默腐烂；
@@ -62,18 +62,7 @@
 火山方舟 Seedance：订阅套餐 base 上 `/contents/generations/tasks` 对 `doubao-seedance-1-0-pro-250528`、`-1.0-pro`、`-2.0`、
 `-1-0-lite-t2v-250428` 全回 `404 UnsupportedModel`【实测 2026-09-18】——要按量 key，协议形状本库未覆盖。
 
-MiniMax v2 提交 body：`content[]`（至少一个 text 项 ≤7000 字符，媒体项
-`image_url`/`video_url`/`audio_url` + `role`）；**`resolution`（768P/2K）与
-`duration`（4–15s）必填、无服务端默认**——客户端必须自带缺省值。
-
-**MiniMax v2 实测**（2026-08-29，`api.minimaxi.com`，`MiniMax-H3`，首帧 + 尾帧，创建 → 轮询 → 取结果全链路，来源 Joycai）：
-- 媒体项是**嵌套**形状：`{"type":"image_url","image_url":{"url":…},"role":"first_frame"}`，`role` 与 `type` 平级，
-  拼写 `first_frame` / `last_frame`，两个媒体项放在同一个 `content[]` 里。**写成平铺的 `"url"` 是静默失败**：解析器照收、任务照样成功、
-  照样计费，只是当作没附图生成——「跑通」的判据是出片确实遵守首尾帧，不是 HTTP 200（坑 113）。
-- 媒体项旁边**必须有一个 text 项**，纯图生视频也要给。带媒体时 `ratio:"adaptive"` 原样被接受；`resolution:"2K"` 被接受并正常出片。
-- 结果直链可直接下载。未实测：纯文生视频的 `ratio` 替换、帧与参考素材的互斥、`reference_image` role、取消（DELETE）、`768P`。可选
-`callback_url` webhook（注册时 3 秒内回显 challenge）。创建响应极简
-`{"task_id": "…"}`。usage 报秒数 + token 双口径。
+MiniMax H3 当前契约与实测见 [§2.1](#minimax-h3-v2)（FACT-MINIMAX-VIDEO-001–005）；不要把 H3 的参数范围套用到整个家族。
 
 **xAI `grok-imagine-video-1.5` 实测**（2026-09-22，`POST /v1/videos/generations` → `GET /v1/videos/{request_id}`，三条 1 s · 480p，来源 Joycai）：
 - 提交回包只有 `{"request_id"}`；轮询 pending 是 **HTTP 202** + `{status: pending, progress}`，done 是 200 +
@@ -86,12 +75,91 @@ MiniMax v2 提交 body：`content[]`（至少一个 text 项 ≤7000 字符，�
 - `GET /v1/video-generation-models` 只列 id / 模态 / 别名，**没有 `pricing`**（出图面的同名端点有）；1.5 的 `input_modalities` 是
   text / image / audio（`reference_audios`），初代是 text / image / video（`/videos/edits`、`/videos/extensions`）。
 
+<a id="minimax-h3-v2"></a>
+### 2.1 MiniMax H3 v2：模型、素材与任务类型
+
+**FACT-MINIMAX-VIDEO-001–004** 为【文档 2026-10-27】；实测见 005。官方来源：[使用指南](https://platform.minimax.cn/docs/guides/video-generation.md)、[创建](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-create.md)、[查询](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-query.md)、[列表](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-list.md)、[取消/删除](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-delete.md)、[Context-IR](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-h3-context-ir.md)、[再生成](https://platform.minimaxi.com/docs/api-reference/video-generation-v2-regeneration.md)、[定价](https://platform.minimaxi.com/docs/pricing/overview.md)。指南列 H3 / Max；创建页另列 Highspeed / Lite。账户可用性以实测为准。
+
+**FACT-MINIMAX-VIDEO-001 — 创建契约。** 官方文档 base 为 `https://api.minimax.cn`，使用 `Authorization: Bearer <API_KEY>` 和 JSON；`POST /v2/video_generation` 返回 `task_id`。v2 直接返回视频 URL，不走 v1 的 file_id → retrieve；错误处理见 003。
+
+| model | resolution | duration（整数秒） | 证据 |
+| --- | --- | --- | --- |
+| `MiniMax-H3` | `768P`、`2K` | 4–15 | 📄 创建页；历史 2K 首尾帧实测见下 |
+| `MiniMax-H3-Highspeed` | `768P` | 4–15 | 📄 未实测 |
+| `MiniMax-H3-Lite` | `480P`、`768P` | 4–15 | 📄 未实测 |
+| `MiniMax-H3-Max` | `480P`、`768P` | 5–15 | 📄 未实测；不支持 4 秒 |
+
+- schema 必填 `model/content/resolution/duration`。Lite/Max 的 resolution 描述同时写“默认 768P”，与 required 列表不一致：客户端显式发送，勿依赖省略（OQ-041）。
+- `content` 必须有非空 `{"type":"text","text":"…"}`，单项最多 7000 字符。媒体使用嵌套 `{"type":"image_url","image_url":{"url":"…"},"role":"first_frame"}`；`video_url/audio_url` 同形，不能平铺 `url`。
+- 图片 role：`first_frame/last_frame/reference_image`；仅一张图片不填 role 默认首帧。文档组合列表支持单尾帧，但 role 说明又要求尾帧与首帧成对；单尾帧保留文档冲突，不标为已验证支持。
+- 首尾帧模式与参考模式互斥：出现任一 `reference_image/reference_video/reference_audio` 就不能混入 `first_frame/last_frame`。发送前校验。
+- `ratio`：`adaptive/21:9/16:9/4:3/1:1/3:4/9:16`。纯文本必填具体比例，不能 adaptive；首尾帧模式恒按图片自适应，其他合法值会被忽略；参考模式可省略为 adaptive，但 **Lite 参考模式必须显式指定具体比例**。
+- Max 独有 `extra.prompt_expansion_mode`：`disabled/balanced/quality`，默认 balanced，不能拼成 balance；`extra` 不接受未声明字段。`aigc_watermark` 默认 false；这些字段本轮未测。
+
+最小首尾帧请求示例（素材 URL 为占位符；调用会创建付费任务）：
+
+```json
+{
+  "model": "MiniMax-H3",
+  "content": [
+    {"type": "text", "text": "固定镜头，人物轻轻转身，从首帧自然过渡到尾帧。"},
+    {"type": "image_url", "image_url": {"url": "https://your-cdn.example/first.jpg"}, "role": "first_frame"},
+    {"type": "image_url", "image_url": {"url": "https://your-cdn.example/last.jpg"}, "role": "last_frame"}
+  ],
+  "resolution": "768P",
+  "duration": 4,
+  "ratio": "adaptive"
+}
+```
+
+**FACT-MINIMAX-VIDEO-002 — 输入边界。** 支持公网 URL、`mm_file://{file_id}`、对应 MIME 的 base64 data URI；文件上传未测。请求体 ≤64 MB，base64 增大约 33%，本地文件路径不能直接作为 URL 发给服务端。
+
+| 素材 | 数量与时长 | 尺寸、格式、大小 |
+| --- | --- | --- |
+| 图片 | 首帧/尾帧各 ≤1；参考图 ≤9 | 宽高各 256–5760 px，宽/高 0.4–2.5；JPG/JPEG/PNG/WEBP/HEIC/HEIF；单文件 ≤30 MB |
+| 参考视频 | ≤3 段，每段 2–15 s，合计 ≤15 s | 同上尺寸与比例；23.976–60 fps；MP4/MOV，H.264/H.265，内部音频 AAC/MP3；单文件 ≤50 MB |
+| 参考音频 | ≤3 段，每段 2–15 s，合计 ≤15 s | WAV/MP3；单文件 ≤15 MB |
+
+混合素材总数 ≤12（指南）；音视频的时长总上限分别校验。
+
+**FACT-MINIMAX-VIDEO-003 — 共用任务生命周期与新任务。** 查询 `GET /v2/query/video_generation/{task_id}`，列表 `GET /v2/query/video_generation`，最近 7 天可查；列表支持 `page_num/page_size` 及 `filter.status/task_ids/model/task_type`。每约 10 秒轮询，客户端另设总 deadline；超时保留 task_id，恢复时查询而不是重新提交。
+
+- `queued/running` 非终态；`succeeded/failed/cancelled` 终态。HTTP 请求错误使用真实 400/401/402/422/429/500 等状态与 `error`，任务失败还可能在 HTTP 200 的 `task.error.code/message` 中。两层都必须检查。
+- 成功后按 `task_type/modality` 解析：generation、regeneration → `task.content.url`；h3_context_ir → `task.content.prompt`。后者没有视频 URL 不代表失败。
+- 视频 URL 有时效，立即下载校验；文档称过期可重新查询获取，仍受任务 7 天窗口约束，不能把任务保留期当直链有效期。
+- `DELETE /v2/video_generation/{id}`：queued → `action=cancelled`（无扣费，文档）；succeeded/failed → `action=deleted`；running/cancelled 返回错误。取消和删除不同，不能无条件重试 DELETE；也不能把本地停止轮询显示成上游取消。
+- `callback_url` 验证需在 3 秒内原样返回 challenge，状态回调与查询响应同形；未做 webhook 实测。
+- **Context-IR**：`POST /v2/h3_context_ir`，目前 model 为 `MiniMax-H3`，必填 `model/content/duration`（4–15 整数秒）；ratio 按纯文本/首尾帧/参考模式分别处理，返回 task_id；仅生成增强提示词，不自动创建视频。将结果用于后续生成是另一次请求与费用，须保留实际使用的最终 prompt。
+- **再生成**：`POST /v2/video_regeneration`，model=`MiniMax-H3`、resolution=`2K`；两种输入必须且只能选一种：① `source_task_id`（需白名单、当前账号、成功且 7 天内的生成任务）；② `content` 原样保留源 768P 视频生成时全部输入（包括 IR 后最终 prompt），追加唯一 `type=video_url/role=base_video`。不是任意视频通用超分。
+- base_video 模式源片必须有音轨、24 fps、宽高均为 32 的倍数、面积 589824–1032192 px、总帧数 107–362 且以 17 帧递增。再生成 text 上限 40000 字符，与创建上限不同。
+
+**FACT-MINIMAX-VIDEO-004 — 用量不等于额外计费项。** 查询中的 `usage.total_seconds=input_seconds+output_seconds`；`input_image_count` 包含首帧、尾帧、参考图；`input_audio_seconds` 为音频时长取和四舍五入。视频的 token 字段是素材/视频用量折算，**不能把同一视频的秒数费用与折算 token 费用重复相加**。Context-IR 才按实际输入/输出 tokens 单独计费。原始 usage 完整保存，价格匹配 task_type、model、resolution 与时间快照。
+
+价格快照（人民币，2026-10-27，使用前复核）：
+
+| 生成模型/档位 | 输出元/秒 | 输入视频元/秒 | 超额图片元/张 | 每任务免费图片 |
+| --- | --- | --- | --- | --- |
+| H3 768P / 2K | 0.50 / 0.80 | 0.50 / 0.80 | 0.20 | 5 |
+| Highspeed 768P | 0.40 | 0.40 | 0.20 | 5 |
+| Lite 480P / 768P | 0.16 / 0.26 | 0.16 / 0.26 | 0.13 | 5 |
+| Max 480P / 768P | 0.33 / 0.50 | 0.37 / 0.97 | 0.50 | 2 |
+
+音频输入免费；图片只对 `max(0, input_image_count - 免费张数)` 计费。Context-IR 输入/输出为 ¥5.80/¥23.00 每百万 tokens。再生成输出/输入视频 ¥0.30/秒、超额图 ¥0.15/张（前5张免费），原任务输入素材重新计费，费用在原生成之外；不要仅据“升到2K”推断总价或 base_video 的结算方式。Hailuo 视频资源包当前不适用于 H3；标价和推算均不是账单实扣证明。
+
+**历史实测范围**（2026-08-29，`api.minimaxi.com`，MiniMax-H3，来源 Joycai；原始日志位置待补）：首尾帧创建→轮询→下载 2K 跑通；平铺媒体 url 被收下却忽略图片（坑113）；带媒体 ratio=adaptive 接受，text 必须存在；旧矩阵记录缺 resolution/duration 返回 400，仍限当时 H3 组合。旧计费推断已移入[结论历史](../../llm-api-integration/references/conclusion-history.md#minimax-h3-billing-history)。
+
+**FACT-MINIMAX-VIDEO-005 — 本轮首尾帧成功样本。**【实测 2026-10-27，官方 `api.minimax.cn`，MiniMax-H3，生成提交 1 次、成功 1 次】将用户提供的两张 1696×2528 JPEG 作为嵌套 data URI 的 first_frame/last_frame，与非空文本、`duration:4/resolution:"768P"/ratio:"adaptive"` 一起提交：HTTP 200 返回 task_id；轮询经过 running → succeeded，最后无认证头下载 MP4。脱敏请求、终态原始字段、图片/视频哈希和官方页面哈希见 [实测证据](minimax-h3-evidence.json)。
+
+- `task.usage`：`total_seconds:4/input_seconds:0/output_seconds:4/input_image_count:2`；同时返回 `total_tokens:156236/prompt_tokens:26040/completion_tokens:130196`。计费解释见 004。
+- 返回 `task.resolution:"768P"/duration:4/ratio:"adaptive"`。本样本 ratio 没有回显数值比例，不能仅从该字段获得真实尺寸；需读取视频元数据。
+- 下载 1,362,782 bytes，Content-Type=`video/mp4`，ftyp 检查通过；ffprobe：H.264、768×1152、24 fps、107 帧，AAC 音轨，容器时长 **4.458333 s**。API 时长与媒体播放时长不是同一量；计费保存原始 output_seconds，不擅自用容器时长改账。
+- 抽查首帧/中间帧/尾帧：首尾人物姿态对应两张输入，中间出现转身过渡。仅三个采样帧，不能保证整段动作一致性或音频质量。
+- 按当日标价估算 **¥2.00**（4×0.50，2 张图在免费5张内）；**实际扣费未核实**。未测其他型号、参考模式、取消、webhook、Context-IR 与再生成；待核实项见 OQ-041。
+
 ## 3. 横切不变量（每家都适用，漏一条就是一类静默失败）
 
 1. **失败装在 HTTP 200 里。** `task_status: FAILED` + 错误码嵌在 body
-   （千问在 `output.code/message`，MiniMax 在 `task.error`）。通用错误信封
-   检查抢不到它——轮询面**必须跳过信封检查**，由自己的状态机负责报错，
-   且把结构化 code 带上（内容审核类 code 丢了会被误判成别的失败）。
+   （千问在 `output.code/message`，MiniMax 在 `task.error`）。HTTP 成功不能替代任务状态检查。先处理 HTTP 错误，再检查任务状态；保留结构化 code，避免丢失审核等失败原因。
 2. **状态词表逐家归一化，未知状态当"仍在跑"处理有上限。** 词表各不相同且
    随时增补；未知值先当 in-progress 容忍，但要受总 deadline 罩住——否则
    一个新终态（如千问的 `UNKNOWN`、xAI 的 `expired`）会让轮询永不停止。
@@ -105,13 +173,11 @@ MiniMax v2 提交 body：`content[]`（至少一个 text 项 ≤7000 字符，�
    下载校验 content-type + magic bytes，规则同[image-generation](image-generation.md) §6。
 5. **取消要分两层语义。** 本地放弃轮询 ≠ 上游停止计费。有取消端点的
    （MiniMax）作为可选能力接上：用户取消时先试上游取消（仅排队态有效），
-   失败静默降级为本地放弃；没有取消端点的家，UI 文案别承诺"已取消"。
+   失败时明确告知上游仍可能继续执行，再停止本地轮询；没有取消端点的家，UI 文案别承诺"已取消"。
 6. **计费相关的默认值显式下发。** `audio: true`（千问）、`n: 4`（wan 图片，
    见 [image-generation](image-generation.md)）这类服务端默认直接乘在账单上——不吃默认，全部显式发。
-7. **必填且无默认的参数是 L3 参数表的责任。** MiniMax 的 resolution/duration
-   不发就 400；缺省值由模型能力表声明，adapter 只读不编。
-8. **usage 两套口径并存**（按秒/按张 vs token），与[image-generation](image-generation.md)同规则：相加
-   记账，不二选一。例外是**上游直接报钱**的面（[image-generation](image-generation.md) §7 的 `cost_in_usd_ticks`）：报价含全部（含参考图），替换不叠加。
+7. **必填参数由模型能力表声明。** MiniMax H3 缺 resolution/duration 的 400 为历史观测；当前各型号按 §2.1 校验并显式发送，adapter 不猜测服务端默认。
+8. **usage 多种计量并存时先辨明是否独立收费**，只相加独立计费项；MiniMax H3 视频 token 是折算展示，不与秒数重复收费（FACT-MINIMAX-VIDEO-004）。例外是**上游直接报钱**的面（[image-generation](image-generation.md) §7 的 `cost_in_usd_ticks`）：报价含全部（含参考图），替换不叠加。
    xAI 视频面也报它，但**只在 done 的轮询回包里**【实测 2026-09-22】——提交时按请求的秒数先记一行，终态再用报价改写；
    只改写秒数的结算会把参考图那 $0.01/张 漏掉（坑 129）。
 
@@ -129,7 +195,7 @@ grok-imagine、wan2.5、kling、hailuo…同一张脸）。**同一个模型 id 
 
 - [ ] submit/poll 分离，task_id 暴露给调用方持久化；失败以抛错送达。
 - [ ] 首帧/尾帧/参考素材用 role 标注的统一形状，adapter 内转各家拼写。
-- [ ] 轮询面跳过通用错误信封检查，状态机自己报错并保留结构化 code。
+- [ ] 分别检查 HTTP 错误和任务失败，保留结构化 code。
 - [ ] 每家状态词表显式归一化；未知状态容忍但受总 deadline 罩住；已知终态
       （含 CANCELED/expired/UNKNOWN 类）全部在抛错分支里。
 - [ ] 「任务已过期/查无此任务」是独立错误，不重试、不报成 FAILED。

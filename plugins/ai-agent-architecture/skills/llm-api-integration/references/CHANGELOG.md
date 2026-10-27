@@ -80,3 +80,7 @@
 ## 2026-10-26：插件 4.0.1 发布准备
 
 同步插件清单与市场清单为 4.0.1，纳入上述 Kimi 接入及流式知识更新（LLM skill 2.2.9）。结构验证改为检查两个清单的语义版本一致，不再锁死历史 4.0.0；历史实测与版本记录保持原样。
+
+## 2026-10-27：MiniMax H3 视频知识更新（入口 C + A）
+
+核对官方指南及创建/查询/列表/取消/Context-IR/再生成/定价页，更新 [视频正文 FACT-MINIMAX-VIDEO-001–005](../../ai-media-api-integration/references/video-generation.md#minimax-h3-v2)、媒体矩阵、平台矩阵、OQ-041、核算 recording 与结论历史；新增 [脱敏证据](../../ai-media-api-integration/references/minimax-h3-evidence.json)。补齐 H3/Highspeed/Lite/Max、素材与比例约束，标记单尾帧及 resolution 默认值文档冲突；纠正视频秒数与折算 tokens 重复计费推断。唯一一次 H3 768P 4秒首尾帧任务成功，下载并检查107帧/4.458333秒MP4，API计量4秒、输入图2张；估价¥2，实扣未核。精简媒体 skill 入口与证据说明；统一 HTTP/任务双层错误检查，取消失败明确提示；删除“全行业视频均异步”的无依据概括。媒体 skill 更新至1.1.0，插件清单仍4.0.1。

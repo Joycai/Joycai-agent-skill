@@ -138,3 +138,8 @@ OrcaRouter Messages 上 Sonnet/Opus 4.6 在 adaptive+low、反向提示下，具
 ### Gemini 3.8 超时项重试结论
 
 工具、schema 无约束基线、思考 LOW 基线已在授权重试中完成，关闭这三个“未取得结果”的缺口。预算 0 仍返回 132 思考 token；保留前次缺失字段观测，不能认定稳定关闭。见 [重试证据](orcarouter-extended-verification.md#gemini38-retry)。
+
+<a id="minimax-h3-billing-history"></a>
+## 2026-10-27：MiniMax H3 视频计量与计费分离
+
+旧视频正文、媒体矩阵及横切规则将 H3“秒数 + token 双口径”解释为相加计费。旧记录标注 2026-08-29 Joycai 实测，但未提供该计费推断的账单或原始日志位置。2026-10-27 官方查询 schema 明确视频 token 由用量折算；定价页以输入/输出视频秒数与超额图片收费，Context-IR 才单独按 tokens 定价。当前结论与官方来源见 [FACT-MINIMAX-VIDEO-004](../../ai-media-api-integration/references/video-generation.md#minimax-h3-v2)。这是纠正计费推断，不是否定历史任务返回过 token 字段。
