@@ -64,16 +64,37 @@
 
 MiniMax H3 当前契约与实测见 [§2.1](#minimax-h3-v2)（FACT-MINIMAX-VIDEO-001–005）；不要把 H3 的参数范围套用到整个家族。
 
-**xAI `grok-imagine-video-1.5` 实测**（2026-09-22，`POST /v1/videos/generations` → `GET /v1/videos/{request_id}`，三条 1 s · 480p，来源 Joycai）：
-- 提交回包只有 `{"request_id"}`；轮询 pending 是 **HTTP 202** + `{status: pending, progress}`，done 是 200 +
-  `{status: done, video: {url, duration, respect_moderation}, model, usage: {cost_in_usd_ticks}, progress: 100}`——
-  **报价只在终态回包里**，提交时没有；`video.duration` 报实际渲染秒数（可用于结算）。OpenAPI：`VideoResponse.usage` 是
-  `MediaUsage`（`cost_in_usd_ticks` 必有，token 字段视频一律省略）；`video.url` 为空且 `respect_moderation: false` = 被审核拦下。
-- **参考图另收钱，标价页没写**（页面只写 $0.080/s）：文生 800 000 000 = $0.08；首帧 `image` 900 000 000 = +$0.01；
-  `reference_images` 两张 1 000 000 000 = +$0.02——**$0.01/张、线性**，与出图面同价。`duration: 1` 按 1 s 计，没有最低计费秒数。
-  720p / 1080p 是否加价：【未验】。初代 `grok-imagine-video`（$0.050/s）已下线（2026-09-22），不再追。
-- `GET /v1/video-generation-models` 只列 id / 模态 / 别名，**没有 `pricing`**（出图面的同名端点有）；1.5 的 `input_modalities` 是
-  text / image / audio（`reference_audios`），初代是 text / image / video（`/videos/edits`、`/videos/extensions`）。
+<a id="grok-imagine-video"></a>
+### xAI Grok Imagine Video
+
+**FACT-XAI-VIDEO-001 — 模型与模式。**【官方文档核对 2026-10-27】基础地址 `https://api.x.ai/v1`，Bearer 鉴权；生成用 `POST /videos/generations`，返回 `request_id` 后通过 `GET /videos/{request_id}` 轮询。参数与能力按模型、模式区分：
+
+| 模型 | 模式与上限 | 输出视频单价（USD/s，480p / 720p / 1080p） |
+| --- | --- | --- |
+| `grok-imagine-video-1.5` | 文生、图生最高原生 1080p；参考模式最高 720p，14 张参考图、3 个预设音色；支持首尾帧与关键帧 | 0.08 / 0.14 / 0.25 |
+| `grok-imagine-video-1.5-lite` | 文生、图生；1080p 由 720p 放大；不支持参考模式、帧锚点、编辑或延长 | 0.02 / 0.03 / 0.14 |
+| `grok-imagine-video` | 文生、图生最高 720p；参考图最多 7 张、参考模式最长 10 s；编辑与延长用此模型 | 0.05 / 0.07 / — |
+
+生成时长 1–15 s，默认 8 s；默认 480p、16:9。比例枚举：`1:1/16:9/9:16/4:3/3:4/3:2/2:3/21:9/5:2`。普通图生 `image` 用作首帧，输出匹配输入比例、忽略 `aspect_ratio`。默认生成音轨，`generate_audio:false` 请求静音。价格使用前重新核对；不要把 480p 历史单价用于所有分辨率。来源：[官方总览](https://docs.x.ai/developers/model-capabilities/video/overview)、[生成指南](https://docs.x.ai/developers/model-capabilities/video/generation)。旧“初代已下线”结论已[归档](../../llm-api-integration/references/conclusion-history.md#grok-video-retirement)。
+
+**FACT-XAI-VIDEO-002 — 参考与帧锚点。**【官方文档核对 2026-10-27】REST 图片使用 `{url:"https://…"}` 或 `{url:"data:image/jpeg;base64,…"}`；官方还提供 Files API 的 `file_id` 输入方式，接入时按其对象结构发送。
+
+- 1.5 的 `last_frame` 固定尾帧；与 `image` 同发固定首尾帧。`keyframes` 最多 4 项，形如 `{image:{url:"…"},timestamp_s:2}`；时间严格处于 `(0,duration)`，按 1/3 秒网格取整，同一槽位不可重复。
+- 1.5 可将帧锚点与 `reference_images` / `reference_audios` 组合；仅尾帧或仅关键帧也合法。带图片、参考图或帧锚点时 prompt 可省；纯文生必填。初代拒绝 `last_frame/keyframes`，也拒绝 `image` 与参考输入混用。
+- `reference_images:[{url:"…"}]` 从 `<IMAGE_0>` 编号；同时固定首帧时，首帧占 `<IMAGE_0>`，参考图从 `<IMAGE_1>` 开始。`reference_audios:[{voice_id:"eve"}]` 使用预设音色，提示词以 `<AUDIO_0>` 等引用；自有音频文件仅向获准合作伙伴开放，不能从字段名推断普遍可用。
+- REST、Python 与 AI SDK 字段不同。专题页列明 `@ai-sdk/xai >= 5.0.8` 用 `frameImages`、`providerOptions.xai.keyframes`；用户提供的总览称无专用 AI SDK 帧字段，与专题页不同，按版本核对，勿直接搬用 REST 字段。
+
+来源：[参考视频专题](https://docs.x.ai/developers/model-capabilities/video/reference-to-video)。以上未逐项实测；首尾帧样本见 FACT-XAI-VIDEO-005。
+
+**FACT-XAI-VIDEO-003 — 编辑、延长与任务错误。**【官方文档核对 2026-10-27】编辑用 `POST /videos/edits` + `video`；源视频最长 8.7 s，不支持自定义 duration、aspect_ratio、resolution，保留源时长与比例，分辨率最高 720p。延长用 `POST /videos/extensions` + `video`，新增 2–10 s。均为初代模式，不能套用 1.5 的生成参数。来源：[编辑](https://docs.x.ai/developers/model-capabilities/video/editing)、[延长](https://docs.x.ai/developers/model-capabilities/video/extension)。
+
+生成指南列 `pending/done/failed`；本库历史另记录 `expired`，解析时保留终态处理，不将其当作持续等待。失败回包检查 `error.code/message`：`invalid_argument`（含内容审核）、`permission_denied`、`failed_precondition` 需要处理输入或权限；`service_unavailable/internal_error` 可考虑受控重试。鉴权、模型不存在和限流可能在创建任务前同步失败。结果 URL 临时有效；SDK 默认轮询超时 10 min，Python 间隔 1 s、AI SDK 5 s。超时或 AbortSignal 终止本地等待不等于服务端取消；本次文档未确认远端取消接口。
+
+**FACT-XAI-VIDEO-004 — 历史报价观测。**【实测 2026-09-22，来源 Joycai，原始日志待补】1.5 三条 1 s、480p：文生 $0.08，单首帧 $0.09，两张参考图 $0.10；仅支持这些样本中每图增加 $0.01，不能外推全部输入类型。提交只有 request_id；pending 为 HTTP 202，done 为 200，终态 `usage.cost_in_usd_ticks` 报价，1 tick = $10⁻¹⁰。上游总报价替换估算、不叠加。历史目录 `GET /video-generation-models` 无 pricing；这不等于当前官方价格页没有分档价。`video.url` 空且 `respect_moderation:false` 的历史观测为审核拦截，不作为唯一失败形态。
+
+**FACT-XAI-VIDEO-005 — 首尾帧静音样本。**【实测 2026-10-27，xAI 官方，提交 1 次、成功 1 次】用户两张 JPEG 作为 `image/last_frame` data URI，发 `model:"grok-imagine-video-1.5",duration:4,resolution:"720p",generate_audio:false`，省略 aspect_ratio。HTTP 200 接受，轮询 202 pending → 200 done；`respect_moderation:true`、`video.duration:4`、`usage.cost_in_usd_ticks:5800000000`（API 报价 $0.58，未核对账户账单），与 4 × $0.14 + 两图 $0.02 一致。
+
+下载并检查：H.264 720×1088、24 fps、97 帧，容器约 4.041667 s，无音轨，另含 MJPEG 封面。抽查首、中、尾帧，姿态与参考相符；未做逐帧一致性或其他模式验证。勿将容器时长差异直接改算费用。脱敏请求、响应和产物规格见 [实测证据](grok-video-evidence.json)。
 
 <a id="minimax-h3-v2"></a>
 ### 2.1 MiniMax H3 v2：模型、素材与任务类型

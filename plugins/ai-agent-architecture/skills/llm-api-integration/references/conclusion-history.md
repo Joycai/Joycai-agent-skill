@@ -143,3 +143,8 @@ OrcaRouter Messages 上 Sonnet/Opus 4.6 在 adaptive+low、反向提示下，具
 ## 2026-10-27：MiniMax H3 视频计量与计费分离
 
 旧视频正文、媒体矩阵及横切规则将 H3“秒数 + token 双口径”解释为相加计费。旧记录标注 2026-08-29 Joycai 实测，但未提供该计费推断的账单或原始日志位置。2026-10-27 官方查询 schema 明确视频 token 由用量折算；定价页以输入/输出视频秒数与超额图片收费，Context-IR 才单独按 tokens 定价。当前结论与官方来源见 [FACT-MINIMAX-VIDEO-004](../../ai-media-api-integration/references/video-generation.md#minimax-h3-v2)。这是纠正计费推断，不是否定历史任务返回过 token 字段。
+
+<a id="grok-video-retirement"></a>
+## HIST-MEDIA-003 · Grok 初代下线与统一单价
+
+旧正文和矩阵写“初代 `grok-imagine-video` 已下线（2026-09-22），不再追”，来源 Joycai，原始日志待补。2026-10-27 核对官方总览仍列初代及其编辑/延长能力，因此不能继续作为全平台下线结论；本轮未实测初代账号可用性。旧 1.5 $0.080/s 仅来自 480p 样本，当前文档已列分辨率分档价格。历史样本保留，当前结论见 [FACT-XAI-VIDEO-001–005](../../ai-media-api-integration/references/video-generation.md#grok-imagine-video)。

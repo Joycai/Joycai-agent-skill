@@ -1,0 +1,66 @@
+{
+  "observed_at": "2026-10-27T05:59:06.967418+00:00",
+  "http_status": 200,
+  "body": {
+    "status": "done",
+    "video": {
+      "url": "[temporary URL omitted]",
+      "duration": 4,
+      "respect_moderation": true
+    },
+    "model": "grok-imagine-video-1.5",
+    "usage": {
+      "cost_in_usd_ticks": 5800000000
+    },
+    "progress": 100
+  },
+  "request": {
+    "model": "grok-imagine-video-1.5",
+    "prompt": "Fixed camera. The person gently turns from the starting pose to the ending pose and smiles. Preserve the face, pink costume and forest setting. Hair moves softly in the breeze.",
+    "image": {
+      "url": "[first supplied JPEG data URI]"
+    },
+    "last_frame": {
+      "url": "[second supplied JPEG data URI]"
+    },
+    "duration": 4,
+    "resolution": "720p",
+    "generate_audio": false
+  },
+  "sha256": "072fdc2a3da5477e9d33b1ee1cbe3b9f9cd45821ccc012c09bee63c08ca7f97d",
+  "artifact": {
+    "codec": "h264",
+    "width": 720,
+    "height": 1088,
+    "fps": 24,
+    "frames": 97,
+    "container_duration_seconds": 4.041667,
+    "audio_streams": 0,
+    "additional_stream": "mjpeg cover",
+    "download_bytes": 2752358,
+    "inspection": "First/middle/near-last frames sampled; no full temporal validation"
+  },
+  "scope": "One successful official xAI generation; API-reported price USD 0.58; account billing not reconciled.",
+  "submission": {
+    "observed_at": "2026-10-27T05:58:04.548295+00:00",
+    "http_status": 200,
+    "body": {
+      "request_id": "50f22682-7878-949f-a19c-0660373e4f6a"
+    }
+  },
+  "pending_observation": {
+    "observed_at": "2026-10-27T05:58:16.153723+00:00",
+    "http_status": 202,
+    "body": {
+      "status": "pending",
+      "progress": 1
+    },
+    "source": "Captured test tool output; later poll replaced temporary poll.json"
+  },
+  "documentation_sources": [
+    "https://docs.x.ai/developers/model-capabilities/video/overview",
+    "https://docs.x.ai/developers/model-capabilities/video/reference-to-video",
+    "https://docs.x.ai/developers/model-capabilities/video/editing",
+    "https://docs.x.ai/developers/model-capabilities/video/extension"
+  ]
+}
