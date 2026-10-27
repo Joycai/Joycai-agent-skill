@@ -1,5 +1,7 @@
 # 思考/推理的统一处理
 
+> Gemini 4 Argon 的档位、预算参数与渠道差异见 [专节](#gemini-4-argon)；旧 Flash 的实测不能外推。
+
 ## 当前结果（2026-10-25，OrcaRouter）
 
 已验证的合法档位与开关按 [当前汇总](model-support-status.md) 查询；逐档 usage 在 [53 条输入/effort 记录](orcarouter-multimodal-effort-verification.md) 和 [Claude 4.6 记录](orcarouter-claude46-verification.md)。
@@ -536,3 +538,18 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 逐案 token、请求与异常正文见 [验证记录](volcengine-kimi-k31-verification.md#efforts) / [脱敏证据](volcengine-kimi-k31-evidence.json)。
 
 追加①流式七档各 1 次，均 `finish_reason:stop`、精确答案 38；low/medium/high/xhigh/max 分别报告 98/104/116/147/141 reasoning tokens，并有 reasoning_content 增量；none/minimal 为 0、该次正文正常。bogus 在建流前 400。一次正常关闭样本不推翻首轮正文推导的反例，映射及可靠关闭仍按前述限制；见 [流式补测](volcengine-kimi-k31-stream-verification.md)。
+
+<a id="gemini-4-argon"></a>
+## Gemini 4 Argon：档位与渠道差异
+
+**FACT-ARGON-REASONING-001** — 📄【官方文档；核对 2026-10-27；无 API 实测】`gemini-4-argon` 支持 low / medium / high，默认 medium。Interactions 使用 `generation_config.thinking_level`；Developer API GenerateContent 使用 `generationConfig.thinkingConfig.thinkingLevel`（官方示例值为小写）。具体外层结构见 [协议正文](protocol-differences.md#gemini-4-argon)。不从 Gemini 3.x 的预算 0 或参考实现 off→LOW 推导 Argon 可关闭思考，也不把 `includeThoughts:true` 当成 Argon 开启思考的文档前提。
+
+| 渠道 / 协议面 | 旧预算参数的文档行为 | 适配决策 |
+| --- | --- | --- |
+| Google Developer API · GenerateContent | `thinking_budget` 仍接受，映射到最近档位并警告 | 迁移为 level，移除旧预算字段 |
+| Google Cloud · Argon 文档 | `thinking_budget`、`thinking_level="MINIMAL"` 为 HTTP 400 | 使用 LOW / MEDIUM / HIGH，不照搬 Developer API 的兼容行为 |
+| Google Developer API · Interactions | 主指南使用 level，未由本轮来源确认 budget 的兼容行为 | 不从另一接口推断 |
+
+思考和正文共用 `max_output_tokens`，低上限可能使答案在思考结束前截断；需要节省消耗时优先降低档位，并用自身任务评估质量。`temperature`、`top_p`、`top_k` 自定义采样值被忽略，移除这些参数，不能以 HTTP 成功判断温度生效；GenerateContent 迁移清单还要求移除 `candidate_count`，本轮不推断其独立报错行为。
+
+来源：[Developer API GenerateContent 指南](https://ai.google.dev/gemini-api/docs/generate-content/latest-model)，Understanding thinking levels / Migration checklist；[Interactions 主指南](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)，Understanding thinking levels；[Google Cloud 模型页](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon)，页首差异说明。

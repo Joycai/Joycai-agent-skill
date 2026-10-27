@@ -1,6 +1,6 @@
 {
   "name": "ai-agent-architecture",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "description": "五个按任务选用的 skill：聊天 API 接入、媒体 API 接入、Agent 运行时、供应商配置、AI 用量与成本核算",
   "author": {
     "name": "Joycai"

@@ -20,6 +20,10 @@
 
 入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
 
+## 4.0.5 更新
+
+新增 Gemini 4 Argon [官方型号与能力](skills/llm-api-integration/references/model-versions.md#gemini-4-argon)及[协议迁移](skills/llm-api-integration/references/protocol-differences.md#gemini-4-argon)知识，区分 Developer API / Google Cloud、Interactions / GenerateContent、长输出与思考预算规则。均为 2026-10-27 核对的官方文档，未做 Argon API 实测。LLM skill 内容版本为 2.2.10。
+
 ## 4.0.1 更新
 
 新增火山套餐 `kimi-k3.1-pro` 接入知识，包含 91 次请求的[协议与能力验证](skills/llm-api-integration/references/volcengine-kimi-k31-verification.md)、[流式补测](skills/llm-api-integration/references/volcengine-kimi-k31-stream-verification.md)、脱敏证据及按阶段运行的探测脚本。LLM skill 内容版本为 2.2.9；重点记录 Responses 工具选择约束、思考字段差异、SSE usage 快照及截断终态。

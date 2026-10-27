@@ -158,7 +158,9 @@
 
 > 【官方文档 2026-10-25】`gemini-3.5-flash` / `gemini-3.7-flash` 已弃用，分别转至 3.6 / 3.8；[规格、能力与路由](model-versions.md#gemini-versions)。没有本库新增实测。
 
-### 家族固有特性（跨平台一致）
+### Gemini 3.x GenerateContent 的既有记录
+
+以下为旧型号及所列线路的参考实现/实测，不能套用到 Argon 或 Interactions；Argon 见本节新增文档表。
 
 - 思考 `thinkingLevel: LOW／MEDIUM／HIGH`（小写也收、`"lowest"` 400【实测 2026-09-28，仅 AI Studio】）；必带 `includeThoughts: true`；`thinkingBudget` 与 `thinkingLevel` 只发一代。【文档】【参考实现】[reasoning](reasoning.md) §2、§3
 - `MINIMAL` 不是每个型号都有，缺时 400 非降级；「关闭」映射到 `LOW`。参考实现 off 映射为 `LOW`（2026-09-26）。（[历史](conclusion-history.md#hist-capability-005)）【实测 2026-09-26】【文档】坑 170；[reasoning](reasoning.md) §2
@@ -189,6 +191,18 @@
 - **缺签名报法**：旧型号 200 + `MISSING_THOUGHT_SIGNATURE`；3.8 Flash（Vertex 经 OrcaRouter）HTTP 400。坑 173
 - **网关特有**：`:countTokens` 当生成计费、`{text:""}` 回灌 400、`thinkingBudget:0` 关不掉、报价需请求头——只对 OrcaRouter 成立。【实测 2026-09-26】坑 171、172、176、186
 - **AI Studio 直连 vs Vertex 经 OrcaRouter**：直连只证实档位不分大小写、`lowest` 400；网关上的 `MINIMAL` 400、缺签名 400、`thinkingBudget:0` 照想未直验。【实测 2026-09-28】坑 222；OQ-021
+
+### Gemini 4 Argon（官方文档，未实测）
+
+主键均为 `gemini-4-argon`；📄【核对 2026-10-27】。不加入 OrcaRouter 已验证目标，不继承旧 Flash 的 ✅。
+
+| 平台·渠道 | 协议面 | 文档摘要 | 正文与稳定事实 ID |
+| --- | --- | --- | --- |
+| Google Developer API | Interactions | 📄 后台 long decode、服务端会话；能力按模型页，具体工具组合未验 | [FACT-ARGON-PROTOCOL-001](protocol-differences.md#gemini-4-argon)、[FACT-ARGON-MODEL-001](model-versions.md#gemini-4-argon) |
+| Google Developer API | ③ GenerateContent | 📄 continuation；budget 映射并警告；采样忽略 | [FACT-ARGON-PROTOCOL-002](protocol-differences.md#gemini-4-argon)、[FACT-ARGON-REASONING-001](reasoning.md#gemini-4-argon) |
+| Google Cloud | GenerateContent / Interactions / ① 兼容面 | 📄 渠道声明分别保留，不能推断跨面功能等价；预算参数 400 | [FACT-ARGON-PLATFORM-001](platform-matrix.md#gemini-4-argon)、[FACT-ARGON-REASONING-001](reasoning.md#gemini-4-argon) |
+
+缓存见 [FACT-ARGON-CACHE-001](platform-matrix.md#gemini-4-argon)，空正文与阶段价格见 [错误与计费](errors-probing-observability.md#gemini-4-argon)。
 
 ## 6 Grok
 

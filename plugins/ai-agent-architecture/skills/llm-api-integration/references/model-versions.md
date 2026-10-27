@@ -7,6 +7,7 @@
 - [GPT 6.1 Sol](#gpt-sol)
 - [Claude Opus 4.8、Fable 5 和 5.1](#claude-versions)
 - [Gemini 3.5 和 3.7 Flash](#gemini-versions)
+- [Gemini 4 Argon](#gemini-4-argon)
 - [Qwen3.8-27B](#qwen-27b)
 - [DeepSeek V4.1 Flash](#deepseek-flash)
 - [Kimi K3.1 Pro](#kimi-k31)
@@ -73,3 +74,12 @@ Opus 4.8 和 Fable 5 均为文字、图像输入，文字输出；不是图像�
 **VER-KIMI-001** — 【官方文档，核对 2026-10-26】[Kimi K3.1 Pro 指南](https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart) 使用 `kimi-k3.1-pro`，高速版 `kimi-k3.1-pro-highspeed` 是独立 ID。官方列 1M 上下文，`max_completion_tokens` 默认 131072、上限 1048576；采样固定 `temperature:1.0`、`top_p:0.95`、`n:1`、两项 penalty 为 0。接入通常省略采样字段。上述官方上限未在火山套餐压测，高速版也未测。
 
 【火山套餐实测 2026-10-26】请求 `kimi-k3.1-pro`，两面共 62 个成功响应均回显 `kimi-k3-1-pro-261024`，不是请求 ID 拼写错误。分别保存请求名和响应版本，不能据此认证权重或自行替换配置中的请求名。范围及来源见 [平台条目](platform-matrix.md#kimi-k31-ark)；官方思考契约与套餐差异见 [reasoning](reasoning.md#kimi-k31-ark)。
+
+<a id="gemini-4-argon"></a>
+## Gemini 4 Argon
+
+**FACT-ARGON-MODEL-001** — Google Developer API，`gemini-4-argon` 为稳定型号。📄【官方文档；核对 2026-10-27；模型页更新 2026-10-14；无 API 实测】输入支持文字、图片、视频、音频、PDF，输出文字；统一上下文为 1,048,576 token，输入、思考和输出共同占用，不能将 1M 输入与 1M 输出相加。常规同步与 long decode 的不同上限见 [协议正文](protocol-differences.md#gemini-4-argon)。
+
+模型页列明函数调用、结构化输出、Google Search / Maps grounding、代码执行、URL context、File search、Computer use（Preview）、agentic video understanding（默认 static）；不支持图片生成、音频生成、Live API。支持 Batch、Flex、Priority。这里只记录模型能力声明，不保证任意工具组合或每个协议面的字段均可用，亦不认证第三方网关。
+
+来源：[模型页](https://ai.google.dev/gemini-api/docs/models/gemini-4-argon)，`gemini-4-argon` 规格表；Google Cloud 的能力与协议声明独立见 [平台索引](platform-matrix.md#gemini-4-argon)。没有继承 Gemini 3.6 / 3.8 的网关实测。

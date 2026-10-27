@@ -438,3 +438,14 @@ Kimi／Moonshot（本表 Kimi 行仅一条 `json_object` 事实）；智谱 GLM 
 **FACT-KIMI-PLATFORM-001** — 2026-10-26 的精确测试组合为 `https://ark.cn-beijing.volces.com/api/plan/v3` + Bearer + `kimi-k3.1-pro`；② `/responses` 为首选，① `/chat/completions` 用于对照。没有调用 `/models`，按用户提供 ID 直接补全；目录不可用不应阻断接入。这里不覆盖 `/api/coding/v3`、按量 `/api/v3` 或 Moonshot 官方直连。响应日期版见 [VER-KIMI-001](model-versions.md#kimi-k31)。
 
 正文所在：[思考参数与文档差异](reasoning.md#kimi-k31-ark)、[函数工具与 tool_choice 静默失效](tools-and-server-tools.md#kimi-k31-ark)、[结构化](structured-output.md#kimi-k31-ark)、[图片/PDF/SSE/存储](protocol-differences.md#kimi-k31-ark)、[用量与错误](errors-probing-observability.md#kimi-k31-ark)。汇总与可复现请求见 [首轮 67 次验证记录](volcengine-kimi-k31-verification.md) 和 [追加 24 次流式验证](volcengine-kimi-k31-stream-verification.md)。这些差异仅属于本次模型×套餐×协议，不归因为所有火山模型共有行为。
+
+<a id="gemini-4-argon"></a>
+## Gemini 4 Argon：官方渠道补充
+
+**FACT-ARGON-PLATFORM-001** — 📄【官方文档；核对 2026-10-27；无 API 实测】主键必须区分 Google Developer API 与 Google Cloud。Developer API 的 Interactions / GenerateContent 地址与鉴权见 [协议正文](protocol-differences.md#gemini-4-argon)，Cloud 不使用该 host 作为默认地址。
+
+Cloud 模型页声明 GenerateContent、Interactions（Preview）、OpenAI Chat Completions 兼容面、Count Tokens 支持；不由此推断 Chat Completions 也有全部长输出或原生工具能力。该页注明 GenerateContent long decode 仅在 `v1beta1` 可用（known issue）；不能拿 Developer API 的 `v1beta` 路径套用。思考预算参数的渠道差异见 [Reasoning](reasoning.md#gemini-4-argon)。
+
+**FACT-ARGON-CACHE-001** — Argon 仅支持隐式缓存，最低 4,096 token，不能创建或引用显式 `cachedContents` / `cached_content`；Developer API GenerateContent 指南称显式缓存会报错，未在本轮材料指定状态码。迁移时移除显式缓存调用及配置，否则原先正常的缓存流程会失败。Cloud 还注明 durable caching 默认启用，不扩展为所有渠道的缓存保存承诺。
+
+来源：[Cloud 模型页](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-argon)，页首差异与 APIs 表；[Developer API 迁移清单](https://ai.google.dev/gemini-api/docs/generate-content/latest-model)。能力、统一窗口、长输出与参数的正文分别见 [版本](model-versions.md#gemini-4-argon)、[协议](protocol-differences.md#gemini-4-argon)、[思考](reasoning.md#gemini-4-argon)。

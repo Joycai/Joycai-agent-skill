@@ -6,6 +6,8 @@
 
 Responses 以 response.completed、Messages 以 message_stop、Chat Completions 以 [DONE]、Gemini 以 finishReason 检查结束；流式 usage 为快照，不能逐块求和。成功读文件不证明模型原生解析，可能由网关转图/抽文。GPT 6.1 工具仅在 Responses 本轮验证，官方 Chat Completions 工具限制见 [版本记录](model-versions.md#gpt-sol)。
 
+> Argon 的 Interactions / 长输出不在下方四族表内，先读 [Argon 协议补充](#gemini-4-argon)。
+
 > 本篇解决的问题：把 OpenAI Chat Completions（①）、OpenAI Responses（②）、Google GenAI generateContent（③）、Anthropic Messages（④）四族的 wire 差异一次性列全——消息容器、角色、工具、流式机制、鉴权、URL 约定——并给出适配器里必须做的结构性修补；② OpenAI Responses 族单列在 §7。
 > 不读会踩的坑：Anthropic 的交替律 400、连续 tool 消息拆开发送被拒、Gemini 把 SSE chunk 当 delta 拼接导致内容重复、baseURL 归一化"修复对称"后中继路由全断、Gemini key 走查询串泄进代理日志。
 
@@ -377,3 +379,24 @@ response.created → response.in_progress
 **FACT-KIMI-STATE-001** — ②本轮省略 store 的成功响应回显 `store:false`；把这种响应 ID 用于 `previous_response_id` 的样本 400 `InvalidParameter.PreviousResponseNotFound`。显式 `store:true` 后，下一轮仅凭 `previous_response_id` 正确取回先前校验码（2 次请求）。应选择完整手动历史，或在需要续接的每一轮显式启用 store；不能继承 OpenAI/其他模型的存储默认值，也不能把未存储 ID 的错误当作不支持续接。存储保留期与工具结果通过已存储 ID 续接尚未验证；工具闭环目前验证的是完整手动历史。
 
 输入与 SSE 证据见 [验证记录](volcengine-kimi-k31-verification.md#inputs)，会话样本见 [调用记录](volcengine-kimi-k31-evidence.json) 中 `r-tool-previous-id`、`r-store-true*`。
+
+<a id="gemini-4-argon"></a>
+## Gemini 4 Argon：Interactions 与 GenerateContent
+
+📄【官方文档；核对 2026-10-27；无 API 实测】本节仅描述 Google Developer API 的 `gemini-4-argon`；本篇四族表中的③仍指 GenerateContent。Interactions 是另一协议面，不能套用③的消息、事件或结束字段。
+
+**FACT-ARGON-PROTOCOL-001** — 当前主指南使用 `POST https://generativelanguage.googleapis.com/v1beta/interactions`，鉴权 `x-goog-api-key`。请求为 `model` + `input`，参数放 `generation_config`，如 `thinking_level`、`max_output_tokens`。多轮及函数调用使用 `previous_interaction_id` 保存服务端上下文；不能把 OpenAI 的 `previous_response_id` 或 GenerateContent 的 `contents` 直接替换进来。
+
+超过 65,536 token 的输出用 `background:true`，同时显式设置更高的 `generation_config.max_output_tokens`；单开 background 仍默认止于 64K。轮询 interaction ID，`queued` / `in_progress` 尚未结束，退出等待后仍须判断最终状态。完成后按顺序合并 `steps` 中全部 `type:model_output` 的 text content，避免漏掉中间续接结果。该指南目前将 Interactions 客户端 continuation 标为尚未提供，不复制 GenerateContent 的续接字段。超时建议至少 15 分钟，或使用后台执行。
+
+来源：[Argon 主指南](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)，Quickstart、Larger output and long decode、Migration checklist。这只是 Argon 迁移要点，不是 Interactions 所有事件/工具格式的完整参考。
+
+**FACT-ARGON-PROTOCOL-002** — 旧接口仍可使用 `POST https://generativelanguage.googleapis.com/v1beta/models/gemini-4-argon:generateContent`。REST 参数为 `generationConfig.maxOutputTokens`、`generationConfig.thinkingConfig.thinkingLevel`，不能混用 Interactions 的嵌套字段。
+
+- 单次直接 HTTP 非流式上限 32,768，单次流式 65,536；思考与正文均占输出预算。模型页的同步 65,536 摘要须结合此协议与调用方式阅读。
+- Python `google-genai>=2.30.1` / JS `@google/genai>=2.29.1` 默认自动 continuation；高于单次上限的输出可跨请求合并。REST 与旧 SDK 需自管 `continuation_token`，不能仅提高输出上限就认为会拿到完整结果。
+- 总预算耗尽后以 checkpoint 续接，须携带最新 token、原请求并提高 `max_output_tokens`；不提高上限，文档规定 `400 INVALID_ARGUMENT`。空正文与续接状态见 [错误正文](errors-probing-observability.md#gemini-4-argon)。
+- 多轮及函数调用须保留完整历史与 thought signatures；这是 GenerateContent 的客户端回传规则，与 Interactions 的服务端会话指针分开处理。
+- 迁移指南建议 HTTP 每次调用超时至少 20 分钟。此值与 Interactions 主指南的 15 分钟分别记录，不写成统一平台常量。
+
+来源：[GenerateContent Argon 指南](https://ai.google.dev/gemini-api/docs/generate-content/latest-model)，Quickstart、Larger output and long decode、Migration checklist。Google Cloud 的 API 版本限制见 [平台正文](platform-matrix.md#gemini-4-argon)。

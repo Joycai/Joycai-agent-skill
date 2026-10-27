@@ -66,3 +66,9 @@
 - 4 份证据文件及 Gemini 两组嵌套补测共 149 条归档记录，逐组费用求和与报告一致，图片/PDF 原始字节与记录哈希一致。早期 8 次探测另有文字报告，不计入此 JSON 条数。
 - Gemini 3.8 最后 5 次重试结果已纳入当前支持表，旧超时保留为历史；Qwen 身份和 Fable 强制工具差异继续标为未决。
 - PDF 的 xref 行包含格式所需空格，添加局部 Git 二进制属性以保留样本和哈希；清理文档末尾多余空行后，暂存区 diff 格式检查通过。
+
+## 2026-10-27 Gemini 4 Argon 官方知识
+
+按官方模型页、Developer API 主指南与 GenerateContent 迁移指南、Google Cloud 模型页核对 FACT-ARGON 系列。人工走读覆盖：Interactions 不套用③消息/终态字段；后台执行须显式提高预算；直接 HTTP 的 32K / 64K 上限与 SDK 自动续接分开；budget 的渠道差异；签名回传、隐式缓存、空正文状态及价格日期边界。官方文档均标 📄，未发起 Argon API 或付费请求，未扩大原 OrcaRouter 实测范围。
+
+已运行并通过：结构校验（5 skills、40 个迁移目标、2447 条本地链接、全部引用可达、插件版本 4.0.5）、系统 skill-creator 的 quick_validate.py（llm-api-integration）、Claude 插件与市场清单校验、git diff --check。结构校验不证明 API 实际可用性。

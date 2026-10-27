@@ -507,3 +507,21 @@ Step 3  deep(opt-in) 从声明值开始的二分搜索找真实接受上限（�
 ①② `temperature:0.2` 各 1/1 为 400 `InvalidParameter`，原文主体为 `` `temperature` only 1 is allowed for this model ``；接入默认省略采样参数。Kimi 官方固定的其他采样值仅属[官方契约](model-versions.md#kimi-k31)，本轮未逐一验证。非法 effort 的协议差异见 [reasoning](reasoning.md#kimi-k31-ark)，具名工具错误见 [tools](tools-and-server-tools.md#kimi-k31-ark)。字段、状态与每案计数均在 [脱敏证据](volcengine-kimi-k31-evidence.json)。
 
 **FACT-KIMI-OBS-002 — Chat SSE usage 是快照。**【追加实测 2026-10-26】17 条带 `stream_options:{include_usage:true}` 的有效 SSE，各在 finish 块和随后 `choices:[]` 的 usage 块重复同一份统计；省略选项的 1 条 finish 块仍含 usage。按最后非空快照取值，不逐块相加，支持空 choices。追加 24 次请求输入 14,140 / 输出 1,950 token；两轮累计输入 55,184 / 输出 7,319，无金额字段、未对账。2 个 HTTP 200 的 length/incomplete 是预期截断，不算完整生成成功；详见 [流式补测](volcengine-kimi-k31-stream-verification.md)。
+
+<a id="gemini-4-argon"></a>
+## Gemini 4 Argon：空正文、续接与价格边界
+
+**FACT-ARGON-ERROR-001** — Google Developer API · GenerateContent · `gemini-4-argon`，📄【官方文档；核对 2026-10-27；无 API 实测】一跳可以全部用于思考，正文为空但带 `continuation_token`；这是待续接状态，不能只凭空 text 判为失败或完成。总预算耗尽的 `MAX_TOKENS` 也不能当作完整答案。续接时提高预算的要求见 [FACT-ARGON-PROTOCOL-002](protocol-differences.md#gemini-4-argon)。
+
+来源：[GenerateContent 指南](https://ai.google.dev/gemini-api/docs/generate-content/latest-model)，Larger output and long decode。这里只保留指南的语义描述；SSE / REST 实际字段拼写及终态组合未实测，不把指南中的 `finish_reason` 擅自当成③原生回包字段。
+
+**FACT-ARGON-PRICE-001** — Google Developer API · `gemini-4-argon`，📄【官方文档；核对 2026-10-27；非账单实测】主指南价格（USD / 百万 token）：
+
+| 生效区间 | 输入 | 隐式缓存命中输入 | 输出（含思考） |
+| --- | --- | --- | --- |
+| 截至 2026-11-30 的介绍价 | 2.00 | 0.10 | 10.00 |
+| 自 2026-12-01 起的文档计划价 | 4.00 | 0.20 | 20.00 |
+
+grounding 使用的内部工具 system instructions、函数声明也计入处理与计费；Google Search 还按查询计费。不能把旧网关美元字段或 Cloud 报价混成此价，也不能把缓存命中当免费。使用前复核当前价与实际渠道；历史记录保留当时价格快照，归一化规则由 [用量核算](../../ai-usage-accounting/SKILL.md) 维护。
+
+来源：[Argon 主指南](https://ai.google.dev/gemini-api/docs/latest-model?hl=en)，Pricing / Migration checklist。缓存限制正文见 [FACT-ARGON-CACHE-001](platform-matrix.md#gemini-4-argon)。
