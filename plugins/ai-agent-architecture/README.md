@@ -20,6 +20,10 @@
 
 入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
 
+## 4.0.6 更新
+
+依据 2026-11-03 查阅的千问AI平台官方文档，修正并补齐 [Qwen 文生图与编辑、Wan 2.7／Pro、Z-Image](skills/ai-media-api-integration/references/image-generation.md)的请求约束、默认参数、同步／异步响应及用量字段，同步媒体矩阵与待核实项，归档被替代的结论。媒体 skill 内容版本为 1.1.7；本次仅文档审查，无新增 API 实测。
+
 ## 4.0.5 更新
 
 新增 Gemini 4 Argon [官方型号与能力](skills/llm-api-integration/references/model-versions.md#gemini-4-argon)及[协议迁移](skills/llm-api-integration/references/protocol-differences.md#gemini-4-argon)知识，区分 Developer API / Google Cloud、Interactions / GenerateContent、长输出与思考预算规则。均为 2026-10-27 核对的官方文档，未做 Argon API 实测。LLM skill 内容版本为 2.2.10。

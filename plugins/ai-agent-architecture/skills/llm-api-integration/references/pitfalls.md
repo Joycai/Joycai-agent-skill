@@ -161,7 +161,7 @@
 | 坑 | 现象 | 平台·面·模型 | 一句对策 | 详见 | 备注 |
 | --- | --- | --- | --- | --- | --- |
 | 101 | ❗🖼 wan2.7 每次 400 `input.messages` | 百炼 wan2.7 | 只保留一种信封；单测断言顶层无 `messages` | [image-generation](../../ai-media-api-integration/references/image-generation.md) §4 | 【实测 2026-09-19】 |
-| 102 | 🔇💰🖼 贵一倍、图 2048² | 百炼 qwen / wan | 有 `size` 控件永远显式发；按参数表定 | [image-generation](../../ai-media-api-integration/references/image-generation.md) §4 | 【外部实测 2026-09-04】 |
+| 102 | 🔇💰🖼 贵一倍、图 2048² | 百炼 qwen / wan | 固定画幅时显式发合法尺寸；旧观测不代表通用默认值，Qwen 当前契约见正文 | [image-generation](../../ai-media-api-integration/references/image-generation.md) §4 | 【外部实测 2026-09-04】 |
 | 103 | ❗🖼 换模型 / 重试 400 尺寸格式 | 百炼 qwen-image | 发前按目标模型规则校验；规则写成数据 | [image-generation](../../ai-media-api-integration/references/image-generation.md) §4 | — |
 | 104 | 🖼 官方 16:9 显示「自定义比例」 | 百炼 wan | 反查比例留容差（3%），认出后用芯片值 | [image-generation](../../ai-media-api-integration/references/image-generation.md) §4 | — |
 

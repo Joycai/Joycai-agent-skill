@@ -80,7 +80,7 @@ Gemini/Flux 图像模型挂在 `/chat/completions` 上，它们的 `/images/gene
 | `images-api` | `POST /images/generations`；编辑另走 `/images/edits`（**multipart**） | 不同 URL + 不同编码 | `data[].b64_json / url` |
 | `chat` | `POST /chat/completions` | 多模态 user 消息 | `message.images[]` / content parts / 正文里的 `![](…)` markdown——中继各放各的，全都要接 |
 | `gemini` | `POST /models/{id}:generateContent` + `responseModalities:["TEXT","IMAGE"]` | 输入图就是额外 parts | `candidates[].content.parts[].inlineData` |
-| `dashscope` | 原生 `/api/v1`（见 §4） | 输入图是 content parts | `output.choices[].message.content[].{image}` 或 `output.results[].url` |
+| `dashscope` | 原生 `/api/v1`（见 §4） | 输入图是 content parts | Qwen／Wan 2.7 同步及 Wan 异步读 choices；Qwen 文生图异步读 results，见 §4 |
 | `ark` | `POST {base}/images/generations`（与 `images-api` 同路径，见 §4.1） | JSON 的 `image` 字段（URL / data URL，单张或数组） | `data[].{url\|b64_json, size}`，组图里单项可以是 `{error}`；`stream:true` 时是 SSE 逐张事件 |
 | `imagen` | `POST /models/{id}:predict`（**不是** `:generateContent`） | 无——纯文生图 | `predictions[].bytesBase64Encoded`，无 usage |
 | `xai-images` | `/images/generations`；编辑 `/images/edits`（**JSON**，不是 multipart） | 1 张 `image:{url}`，2–3 张 `images:[{url}…]`（互斥），提示词里用 `<IMAGE_0>` 指代 | OpenAI 形 `data[]` |
@@ -125,52 +125,133 @@ route 下拉加一项 + 对应 i18n + 测试文件里一个新 describe 块。ro
 
 ## 4. DashScope 原生协议（千问/万相出图）
 
-qwen-image / wan / z-image **不走 compatible-mode**——出图只有原生 `/api/v1`
-协议，body 形状与 OpenAI images API 完全不同，按 [provider-layering](../../llm-api-integration/references/provider-layering.md)的标准配得上一个 route
+<a id="qwen-text-to-image-qianwen"></a>
+### 千问AI平台 Qwen 无参考图文生图（FACT-QWEN-T2I-001）
+
+📄【文档 2026-11-03 查阅；页面未标发布日期；无 API 实测】依据[同步](https://platform.qianwenai.com/docs/api-reference/image-generation/qwen-text-to-image)、[异步提交](https://platform.qianwenai.com/docs/api-reference/image-generation/qwen-text-to-image-30-async)、[结果查询](https://platform.qianwenai.com/docs/api-reference/image-generation/qwen-text-to-image-task-query)。本节只覆盖千问AI平台原生无参考图请求，不将编辑、旧百炼或兼容接口规则外推到此处。
+
+**请求与能力选择**：base 为 `https://maas.qianwenaiapi.com/api/v1`，Bearer API Key；POST 使用 JSON `{model,input:{messages:[{role:"user",content:[{text:prompt}]}]},parameters}`。必须单条 user、单个文本对象，不含 image。同步型号为 `qwen-image-3.0-pro`、`qwen-image-3.0`、`qwen-image-2.1-pro`、`qwen-image-2.1-turbo`、`qwen-image-2.0-pro`、`qwen-image-2.0` 及页面枚举的 2.0 日期版；异步仅前四款。异步页提示词段提到 2.0／其他型号，不构成扩大 model 枚举的依据。
+
+| 参数 | 文生图约束 |
+| --- | --- |
+| text | 中英文；3.0／2.1 推荐 ≤4500 Token，2.0 上限 1300 Token，超出截断；不能按字符数代替 Token 校验 |
+| size | `宽*高`，面积 512²–2048²；3.0／2.1 比例 1:8–8:1，省略时按提示词推荐；2.0 默认 `2048*2048`，页面未单列其比例范围。不是输入图比例，也不使用初代五档枚举 |
+| n | 1–6，默认 1 |
+| negative_prompt | 最多 500 字符，超出截断；2.1 不支持，按型号省略 |
+| prompt_extend / prompt_extend_mode | 前者默认 true；3.0／2.1 支持后者，默认 direct，也支持 agent。编辑不支持 agent 的限制不能套到文生图 |
+| enable_thinking | 默认 true，仅 prompt_extend=true 生效；文生图 direct／agent 均适用，开启可能增加耗时；页面未逐型号展开其适用范围 |
+| watermark / seed | 水印默认 false；种子 0–2147483647，省略时随机，相同种子不保证完全相同结果 |
+
+**响应必须按操作解析**（FACT-QWEN-T2I-002）：
+
+| 操作 | 路径／请求差异 | 响应契约 |
+| --- | --- | --- |
+| 同步 | POST `/services/aigc/multimodal-generation/generation`；无需异步头 | `output.choices[].message.content[].image`，PNG URL 24h；保留 finish_reason（stop 表示正常结束）及 assistant role |
+| 提交 | POST `/services/aigc/image-generation/generation`；必须 `X-DashScope-Async: enable` | `output.task_id/task_status`、request_id；初态通常 PENDING，HTTP 200 不是生成完成。缺异步头会报不支持同步调用 |
+| 查询 | GET `/tasks/{task_id}`，Bearer；无需重发生成 body | 成功读取 `output.results[].url`，并保留 orig_prompt／actual_prompt；**不是同步的 choices，也不是 Wan 2.7 的查询结构** |
+
+同步 `output.rewrite_status` 仅 3.0 返回；`output.task_metric`（单数）的 TOTAL／SUCCEEDED／FAILED 在 2.0 和 3.0 不返回。同步 usage 仅统计成功结果：3.0 使用 output_width／output_height、output_image_count、input_image_count（文生图为 0）及 input_image_type／output_image_type；其他系列使用 image_count／width／height。3.0 分档规则与[编辑计量](#qwen-image-editing-qianwen)相同；输入档位字段存在不代表有输入图片费用。
+
+查询页另列 `output.task_metrics`（复数）的 TOTAL／SUCCEEDED／FAILED 和 `usage.image_count`，没有展开 3.0 同步的计量档位字段。按该查询契约读取并保留原始 usage，不能保证查询一定补齐同步字段，也不能由文档未列断言永不返回。记录实际成功数和失败数，不能仅凭任务成功或请求 n 认定全部图片成功。
+
+异步提交页建议每 **10 秒**查询一次；PENDING／RUNNING 继续，SUCCEEDED／FAILED／CANCELED／UNKNOWN 结束轮询，UNKNOWN 的原文含义为任务不存在或状态未知。FAILED 才要求读取 output.code/message；成功才读取 results。查询保留 request_id、task_id、submit_time／scheduled_time／end_time；任务结果和 URL 24h 后过期，及时保存。查询失败或客户端取消不自动重发生成请求；状态枚举中的 CANCELED 不证明存在取消接口。查询 usage 缺失不等于免费；不要只凭路径相同复用 Wan 的结果解析器。
+
+<a id="qwen-image-editing-qianwen"></a>
+### 千问AI平台 Qwen 图像编辑（FACT-QWEN-IMAGE-EDIT-001）
+
+📄【文档 2026-11-03 查阅；页面未标发布日期；无 API 实测】[官方参考](https://platform.qianwenai.com/docs/api-reference/image-generation/qwen-image-editing)。范围：千问AI平台原生接口、Qwen 3.0／2.1／2.0 系列；具体模型 ID 使用时复核页面枚举，不套用到旧 `qwen-image-edit*` 或中继。
+
+- JSON POST `https://maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation`，Bearer API Key。请求结构为 `model`、`input.messages`、`parameters`；单条 `user` 消息，content 中恰好一个 `{text}`，参考图用 `{image}`。2.1 支持 1–10 图，其余所列模型 1–3 图；保留输入顺序。
+- 图片支持公网 URL 或 MIME data URI；JPG/JPEG、PNG、BMP、TIFF、WEBP、GIF（首帧）；单图 ≤10 MB、边长 1–8000（建议 384–2048）、长短边比 ≤10。输出 `n` 为 1–6，默认 1。
+- `size` 使用 `宽*高`，面积 512²–2048²；3.0／2.1 比例 1:8–8:1，缺省自动推荐；2.0 缺省跟随输入，多图取末图。页面 content 段另泛称末图决定比例，与 size 段存在表述差异；需确定画幅时显式指定，不据此推断未测行为。
+- 编辑指令支持中英文：3.0／2.1 推荐 ≤4500 Token，2.0 上限 1300 Token，超出截断；缺少文本或多个文本对象会报错。
+- 2.1 不支持 `negative_prompt`；其他所列系列该字段最多 500 字符，超出截断。3.0／2.1 编辑使用 `prompt_extend_mode: "direct"`，`agent` 会返回 400。`prompt_extend` 与 `enable_thinking` 默认 true，后者仅在前者开启时生效；页面未逐型号说明 thinking 能力，不额外推断。`watermark` 默认 false；`seed` 范围 0–2147483647，相同值不保证完全相同结果。
+- 结果读取 `output.choices[].message.content[].image`（URL 24 小时有效）。3.0 usage 使用 `output_image_count/output_width/output_height` 及输入计量字段；其他系列使用 `image_count/width/height`。保留原始 usage，不能统一只读 `image_count`。3.0 的输入／输出 `qima_*_1k` 与 `qima_*_2k` 均按**输出面积**分档：≤2,250,000 为 1k，大于为 2k；这些是计量档位，不是价格表。保留 `request_id`、`rewrite_status` 和 `finish_reason` 供排障。
+
+适配边界：本节是所列 Qwen 系列图像编辑的当前文档依据；以下通用说明按此修正。旧推断已移至结论历史。其他平台或旧型号仍需核对自身契约，不能自动替换主机。
+
+<a id="z-image-turbo-qianwen"></a>
+### 千问AI平台 Z-Image 文生图（FACT-Z-IMAGE-001）
+
+📄【文档 2026-11-03 查阅；页面未标发布日期；无 API 实测】[官方参考](https://platform.qianwenai.com/docs/api-reference/image-generation/z-image)。原有条目仅列模型名，本节补齐 `z-image-turbo` 的独立契约；不继承 Qwen 参数能力。
+
+- 同步 JSON POST `https://maas.qianwenaiapi.com/api/v1/services/aigc/multimodal-generation/generation`，Bearer Key；body 为 model、input.messages、parameters。单条 user 的 content 恰好一个 text，无参考图；文本支持中英文，最多 **800 字符**，超出截断，不是 800 Token。零个或多个内容对象报错。
+- `size` 为 `宽*高`，默认 `1024*1536`。页面给出范围 512×512–2048×2048、推荐 1024×1024–1536×1536，并列多种比例的推荐值；这些推荐值不是穷尽枚举。文档未明确范围按面积还是单边校验，也未声明 16 倍数或独立比例上限；不要套用 Qwen 面积校验。需确定合法值时使用页面推荐尺寸，例如方图 `1024*1024`、竖图 `1024*1536`、横图 `1536*1024`，其他边界待澄清。
+- `prompt_extend` 默认 **false**；关闭时返回原提示词，开启后返回优化提示词和推理内容，并增加耗时与费用。“关闭无额外费用”仅指改写，不代表生成免费。`seed` 为 0–2147483647，缺省随机，相同值不保证完全复现。
+- 参数表仅列 size、prompt_extend、seed；不主动发送 Qwen 的 n、negative_prompt、watermark、prompt_extend_mode 或 enable_thinking。该页只说明同步文生图，不能据此宣称异步／编辑受支持；未列参数的实际拒绝或忽略行为未测。
+- 结果为单个 choice，提图读 `output.choices[].message.content[].image`（PNG URL，24h），同一 content 另含 text；保留 `message.reasoning_content`，改写关闭时为空字符串。读取 finish_reason、request_id，不将文本项当作图像，也不依赖 content 的固定顺序。示例返回文字与输入猫的提示词不一致；以字段说明为契约，不把示例内容当作实际改写行为。
+- usage 仅统计成功结果：width、height、image_count（固定 1），以及 input_tokens、output_tokens、total_tokens；关闭改写时三项 token 为 0，不能据此认定没有图片用量。开启时还可返回 `output_tokens_details.reasoning_tokens`。保留图像与改写用量，单价及计价算法另查，不从字段猜测。
+- 页面列出 400／401／429 响应；具体错误码和未列参数行为尚未核实，不将别的模型报错当作本模型实测。
+
+### 原生协议接入与历史观测
+
+本节讨论 qwen-image / wan / z-image 的原生 `/api/v1` 协议，不能据此断言平台没有其他兼容入口。
+原生 body 与 OpenAI images API 不同，按 [provider-layering](../../llm-api-integration/references/provider-layering.md)的标准配得上一个 route
 枚举值：
 
 - **原生 base 从既有供应商行推导**（剥 `/compatible-mode/v1` 拼 `/api/v1`，见[provider-layering](../../llm-api-integration/references/provider-layering.md) §8.4）：同一供应商行、同一个密钥同时服务文本与出图——不要让作者为出图建第二个供应商（那意味着同一个 key 存两份）。
-- **同步端点**（qwen-image-3.0\*、qwen-image-edit\*、z-image-turbo、wan 改图）：
+- **同步端点**（当前 Qwen 3.0／2.1／2.0、历史 qwen-image-edit\*、z-image-turbo、wan 改图）：
   `POST /services/aigc/multimodal-generation/generation`。
 - **body 两段式**：`input.messages[].content` 是 `{image}`/`{text}` part 数组
-  （改图 = image part 在前、指令在后；image 收公网 URL 或 data URL），旋钮全在
-  `parameters`（`n`、`size`、`negative_prompt`（wan2.7 不支持）、`seed`、
+  （image 收公网 URL 或 data URL；保留多图相对顺序），旋钮全在
+  `parameters`（`n`、`size`、`negative_prompt`（仅声明支持的模型）、`seed`、
   `watermark`、`prompt_extend`…）。**`extraBody` 要并进 `parameters` 而非顶层**
-  ——顶层只有 `model` 和 `input`，放错位置整个逃生口失效。
-  **qwen 与 wan 的信封完全相同**，区别只在 content 里 part 的顺序：qwen 图在前、
-  文在后，wan 文在前、图在后。【实测 2026-09-19】wan2.7-image-pro 把 `messages`
+  ——顶层为 `model`、`input`、`parameters`，不要把参数平铺到顶层。
+  qwen 与 wan 使用相似信封，但参数能力不同；示例中的 qwen 图前文后、wan 文前图后
+  不构成服务端强制文本顺序的证据。Qwen 多张图片的相对顺序必须保留。【实测 2026-09-19】wan2.7-image-pro 把 `messages`
   放在顶层会得到 `400 InvalidParameter: Field required: input.messages`。
   这个顶层写法来自一份二手文档镜像，官方页没有这么写（坑 101）。
 - **尺寸拼写是 `宽*高`**（如 `1024*1024`）。**只有 wan** 另收 `"1K"/"2K"/"4K"` 预设；
   qwen-image-3.0 收到 `"1K"` 会回 400 `Expected format: '<width>*<height>'`。
   通用侧的尺寸解析分隔符放宽为 `/[x*×]/`，发出前把作者写的 `1024x1024`
-  归一成端点拼写。`"2K"` 这类预设没有宽高比信息（关键字本身出方图），
+  归一成端点拼写。`"2K"` 这类预设本身不编码宽高比（Wan Pro 编辑跟随末图），
   不参与按 aspect 挑选，只作兜底。
-- **`size` 永远显式发**：【外部实测 2026-09-04】qwen-image-3.0-pro 与
-  wan2.7-image-pro 省略 `size` 都出 2048²，并按 2K 档计费（qwen 是 1K 档的两倍价）。
-  qwen 改图省略 `size` 时画幅跟随输入，但同样放大到 2K 面积（768×1376 的输入
-  出 1520×2736）。默认值的合理写法：qwen 文生图发 `1024*1024`；qwen 改图按第一张
-  输入图的比例在 1K 面积内重算（16 的倍数，面积 ≤1024²，比例夹在规则上限内）；
-  wan 发 `"1K"`。唯一不发的是基础版 `qwen-image-edit`，它没有 `size`（坑 102）。
+- **`size` 可选，不强制首图比例或 16 倍数**：Qwen 按上方文生图／编辑各自契约处理缺省尺寸。
+  产品要求固定画幅时显式发送合法尺寸；不要将历史单次 2K 输出推广为省略参数的保证，
+  也不要默默按第一张图裁定输出比例。旧默认尺寸推断见 [结论历史](../../llm-api-integration/references/conclusion-history.md#hist-qwen-image-edit-001)。
+  Wan 当前默认尺寸和场景限制见 [FACT-WAN27-IMAGE-001](#wan27-image-editing)。
 - **发之前先按目标模型的规则校验 `size`**：任务参数会比选它的模型活得久，比如重试
   时换了模型，或者值是从别的厂商那边留下来的（`auto`、另一家的像素值）。
-  不合当前模型规则的值要换成该模型的默认值，不要原样转发出去吃 400。
+  不合当前模型规则时给出校验错误或让调用方明确选择合法值，避免静默改掉用户要求的画幅。
 - **响应里的图是 URL 且 24 小时过期**——拿到立刻下载内联（§6）。
 - **错误是顶层 `{code, message}`**（不是 OpenAI 的 `{error:{…}}`；任务失败时
   嵌在 `output` 里）。错误解析必须兼容两种形状，否则 `DataInspectionFailed`
   （内容审核拒绝）丢掉结构化 code，掉进 prose 正则被误读（§5）。
   `Throttling`/429 = 限流；HTTP 200 带 `code` = body 里送达的错误，照常抛。
 
-### 逐模型参数档（2026-08 官方文档核对，坑都在档位差里）
+<a id="wan27-image-editing"></a>
+### Wan 2.7 图像生成与编辑（FACT-WAN27-IMAGE-001）
 
-- `wan2.7-image(-pro)`：参考图 0–9 张（≤20MB，单边 240–8000px）；`n` **默认
-  4 且按张计费**——不显式发 `n:1` 的客户端每次请求花四倍的钱；size 收
-  `1K`/`2K`（pro 另有 `4K`）或 `宽*高`；特有旋钮 `enable_sequential`（组图，
-  n 上限变 12）、`bbox_list`（编辑选区）、`color_palette`、`thinking_mode`；
-  **不支持 `negative_prompt`**（qwen 系才有）。
-- qwen-image 系：参考图 1–3 张（≤10MB）；`n` 1–6，**但 `qwen-image-edit`
-  基础版固定 1 且不支持 `size`**——同家族行为不同，参数表必须逐模型建档，
-  填错即 400。
+📄【文档 2026-11-03 查阅；页面未标发布日期；无新增实测】千问AI平台 `wan2.7-image`、`wan2.7-image-pro`：[创建任务](https://platform.qianwenai.com/docs/api-reference/image-generation/wan27-image-gen-edit/create-task)、[同步调用](https://platform.qianwenai.com/docs/api-reference/image-generation/wan27-image-gen-edit/synchronous)。两种调用共享请求体，端点与响应处理分开。
+
+- 输入：单条 `user`，恰好一个 `text`（中英文 ≤5000 字符，超出截断），0–9 个 `image`；编辑至少一图，顺序保留。图片为公开 HTTP(S) URL 或 MIME data URI，JPEG/JPG、PNG（无 Alpha）、BMP、WEBP；单图 ≤20 MB、边长 240–8000、比例 1:8–8:1。
+- `enable_sequential` 默认 false：普通模式 `n` 为 1–4、默认 1；图像集模式为 1–12、默认 12，表示输出上限而非保证张数。按成功图片数计费，不按请求上限直接结算。
+- `size` 默认 `2K`。编辑时两款都仅支持 `1K`／`2K`，或面积 768²–2048²、比例 1:8–8:1 的 `宽*高`。Pro 的 `4K` 预设仅限无图且非图像集的文生图；其文生图自定义面积上限 4096²，其他场景为 2048²。标准版所有场景上限 2048²。预设按像素面积定义；Pro 有图时跟随末图比例，无图时文档称正方形，标准版段落未单独说明比例来源。实际输出像素可能略有偏差，读取 usage 和产物，不能保证逐像素相等。
+- `thinking_mode` 默认 true，仅无图且非图像集时生效，不能当作图像编辑的思考开关。`bbox_list` 若传入，长度与输入图数相等；每图最多两组原图绝对像素 `[x1,y1,x2,y2]`，无需选区的位置填 `[]`。
+- `color_palette` 仅非图像集可用，3–10 个 `{hex,ratio}`；ratio 为两位小数百分比字符串，总和 100.00%。`watermark` 默认 false；`seed` 为 0–2147483647，不保证复现完全相同图片。
+- 当前参数表未列 `negative_prompt`／`prompt_extend`，适配器不主动发送；未实测其拒绝或忽略行为，不能直接写成必然 400。
+- 同步解析 `output.choices[].message.content[].image` 与 `output.finished`；usage 保留 `image_count`、`size`、`input_tokens`、`output_tokens`、`total_tokens`。token 字段存在不等于按 token 计费。输出 URL 24 小时有效。
+
+<a id="wan27-response-contract"></a>
+### Wan 同步／查询响应边界（FACT-WAN27-IMAGE-002）
+
+📄【文档 2026-11-03】来源：[同步接口](https://platform.qianwenai.com/docs/api-reference/image-generation/wan27-image-gen-edit/synchronous)、[查询接口](https://platform.qianwenai.com/docs/api-reference/image-generation/wan27-image-gen-edit/query-result)。
+
+| 项目 | 同步 POST | 异步结果 GET |
+| --- | --- | --- |
+| 路径（相对原生 base） | `/services/aigc/multimodal-generation/generation` | `/tasks/{task_id}` |
+| 请求 | Bearer 鉴权、JSON 请求体；无需异步提交头 | Bearer 鉴权、路径 task_id；无需再次发送生成请求体或异步提交头 |
+| 完成判据 | 单次响应直接含结果；检查 `output.finished`、choices 和图像产物 | 先判 `output.task_status`；`finished` 仅表示结束，不能替代成功状态 |
+| 产物 | 遍历所有 choices 的 message.content 图像项 | 文档仅在 SUCCEEDED 给出 choices；与同步共用提图逻辑 |
+| 诊断 | 顶层 `request_id`，每个 choice 的 `finish_reason` | 另有任务 ID 和提交／调度／结束时间；每次查询的 request_id 与任务 ID 分开记录 |
+
+实现建议：保留 `message.role`、`content.type` 等原始字段，不能把示例的 `stop` 当作穷尽枚举；HTTP 200 或 `finished:true` 都不足以独立证明交付成功。非成功状态不强读 choices／usage，成功响应缺少可用图片时报告异常，不自动重发生成请求。
+
+文档内部仍有两点不能过度推断：同步示例在无图、`size:"2K"` 时展示 `2985*1405`，与 size 字段“无图正方形”的描述不一致；Pro 自定义尺寸段落没有像预设段落那样明确展开“无图图像集”条件。需要确定画幅时显式设置合法尺寸；无图图像集不借自定义尺寸绕过已明确的 4K 预设限制，具体自定义上限仍待澄清。两者均未做 API 验证。
+
+### 其他模型参数与解析边界
+
+- 当前 Qwen 3.0／2.1／2.0 编辑的参考图、参数和用量规则统一见 [FACT-QWEN-IMAGE-EDIT-001](#qwen-image-editing-qianwen)。旧 `qwen-image-edit` 基础版固定 `n:1` 且无 `size` 为历史文档范围，不外推到新系列。
 - 响应提图的键：qwen 系 content 项只有 `image` 键，wan 系多一个
   `type:"image"`——提图逻辑不得依赖 `type` 存在。
 
@@ -181,14 +262,16 @@ qwen-image / wan / z-image **不走 compatible-mode**——出图只有原生 `/
 
 | 模型 | 约束 | 比例上限 | 关键字 |
 | --- | --- | --- | --- |
-| `qwen-image-3.0(-pro)`、`qwen-image-2.0(-pro)` | **总像素** 512²–2048² | 1:8–8:1 | 不收 |
+| `z-image-turbo` | [当前尺寸说明与未明边界](#z-image-turbo-qianwen) | 页面未单列 | 仅文档化宽*高 |
+| Qwen 3.0／2.1／2.0 文生图 | [当前文生图尺寸契约](#qwen-text-to-image-qianwen)（2026-11-03 文档） | 按系列 | 不收 |
+| Qwen 3.0／2.1／2.0 图像编辑 | [当前尺寸契约](#qwen-image-editing-qianwen)（2026-11-03 文档） | 按系列；2.0 页面未单列输出比例限制 | 不收 |
 | `qwen-image-edit-max` / `qwen-image-edit-plus` | **单边** 512–2048（不是面积）；缺省约 1024² 且保持原图比例 | 由单边区间推出，最多 4:1 | 不收 |
 | `qwen-image` / `qwen-image-plus` / `qwen-image-max`（初代文生图） | **只收五个固定值**：`1664*928`（缺省）、`1472*1104`、`1328*1328`、`1104*1472`、`928*1664` ⚠ | — | 不收 |
 | `qwen-image-edit`（基础版） | 不支持 `size` | — | — |
-| `wan2.7-image` | 总像素 768²–2048² | 1:8–8:1 | `1K` `2K` |
-| `wan2.7-image-pro` | 总像素 768²–4096²（4K 文档只在文生图语境下出现，改图是否接受未写明 ⚠） | 1:8–8:1 | `1K` `2K` `4K` |
+| `wan2.7-image` | [当前场景规则](#wan27-image-editing) | 同正文 | 同正文 |
+| `wan2.7-image-pro` | [当前场景规则](#wan27-image-editing)，编辑不支持 4K | 同正文 | 同正文 |
 
-所有边长落在 [speech-recognition](speech-recognition.md) 的倍数上。
+Qwen 当前编辑文档未要求边长为 16 的倍数，不应把实现中的取整策略当作服务端限制。
 
 **wan 官方推荐尺寸不是精确比例**【文档 2026-09-19】：`1K`=1024²、`2K`=2048²、`4K`=4096²；
 16:9 → 1696×960 / 2688×1536 / 4096×2304；4:3 → 1472×1104 / 2368×1728 / 4096×3072
@@ -196,8 +279,7 @@ qwen-image / wan / z-image **不走 compatible-mode**——出图只有原生 `/
 哪个比例芯片」会把官方格子认成自定义比例。反查要给容差（参考实现用 3%），
 认出芯片后改用芯片的精确比例继续算。
 
-**计费档按面积落档**：qwen 按输出面积分 `qima_output_1k` / `qima_output_2k` 两档，
-wan 按张计费，usage 里回显 `size`。
+**用量与价格分开**：Qwen 同步计量字段及分档见 [编辑契约](#qwen-image-editing-qianwen)，文生图同步／异步差异见 [FACT-QWEN-T2I-002](#qwen-text-to-image-qianwen)，不能由档位名字推断单价倍数；wan 既有记录按张计费，usage 回显 `size`。
 
 **实测结果**【实测 2026-09-19，北京节点，每次 `n:1`、`prompt_extend:false`】：
 返回图片的像素（读 PNG IHDR）与发送的 `size` 完全一致。
@@ -208,30 +290,28 @@ wan 按张计费，usage 里回显 `size`。
 | qwen-image-3.0 | `2304*1728`（4:3，≈3.98 MP） | 2304×1728 | `{output_width:2304, output_height:1728, output_image_type:"qima_output_2k", input_image_type:"qima_input_2k"}` |
 | wan2.7-image | `960*1696`（9:16 · 1K） | 960×1696 | `{image_count:1, size:"960*1696"}` |
 
-推论：自由 `宽*高` 在这两个家族上照原样出图，不会被悄悄改尺寸；qwen 越过
-1024² 面积就落进 2K 档。给用户做尺寸选择器时，应当把计费档标出来。
-- `task_id` 与结果 URL 均 24h 有效；官方建议轮询 5–10s。
+这些样本仅证明所列尺寸原样返回；单个 3.98 MP 样本不能定位分档边界，也不能保证全部尺寸原样输出。当前 Qwen 分档按上方文档处理，实际规格仍读取产物与 usage。
 
 ### 异步任务流（wan2.7，用户可选的第二条路）
 
-提交 `POST /services/aigc/image-generation/generation` + 请求头
-`X-DashScope-Async: enable`（**路径与同步的 `multimodal-generation` 不同**，
-body 完全一致）→ 拿 `output.task_id` → 轮询 `GET /tasks/{id}`，
-`task_status: PENDING/RUNNING → SUCCEEDED/FAILED/CANCELED/UNKNOWN`
-（过期也报 UNKNOWN）。轮询循环的设计点：
+📄【文档 2026-11-03】[查询结果](https://platform.qianwenai.com/docs/api-reference/image-generation/wan27-image-gen-edit/query-result)，请求参数见 [FACT-WAN27-IMAGE-001](#wan27-image-editing)。原生 base 为 `https://maas.qianwenaiapi.com/api/v1`，提交与查询均带 Bearer Key。
+
+提交 `POST /services/aigc/image-generation/generation`，JSON + `X-DashScope-Async: enable`；同步路径为 `/services/aigc/multimodal-generation/generation`。创建返回 `request_id`、`output.task_id` 和初始 `PENDING`，不代表图片完成。随后 `GET /tasks/{task_id}`，建议间隔 5–10 秒；不要重新提交来查询进度。
+
+状态为 `PENDING/RUNNING` 或终态 `SUCCEEDED/FAILED/CANCELED/UNKNOWN`，UNKNOWN 表示 ID 无效或过期。成功时从 `output.choices[].message.content[].image` 提图，**不是 `output.results[].url`**；usage 与同步同形。失败详情在 `output.code/message`；usage 仅文档化于成功响应，缺失不能认定零费用。保留 `submit_time/scheduled_time/end_time`、`finished` 与 request/task ID。任务 ID 和产物 URL 均有 24 小时有效期。文档列出 CANCELED 状态不等于提供了取消端点，本地停止轮询也不代表服务端取消。
+
+轮询循环的设计点：
 
 1. **一个总 deadline 罩住整个任务**（参考值 600s，提交、全部轮询、下载都在
    其内）——生成以分钟计，逐请求的 180s 帽子在这里语义就是错的。总 deadline
    与调用方 `signal` 合成一个信号，喂给每次 fetch **和轮询间的 sleep**
    （`sleep(ms, signal)`，abort 即拒绝）——用户按「停止」必须立刻生效，
    而不是等下一次轮询醒来。
-2. **节奏**：~3s 起步，十来次后放缓到 5s（官方建议前 30s 密集）。
-3. **瞬时失败限次容忍**：任务已经付费、轮询是廉价 GET，网络抖动或 429 值得
-   重试——但连续 3 次就是真错误，照抛。
+2. **节奏**：使用上方文档的轮询间隔；项目若需要退避或抖动，应标为客户端策略。
+3. **瞬时失败限次容忍**：查询遇到网络抖动或 429 可有界重试，遵守总 deadline；达到上限时保留 task_id 供续查，不断言服务端任务失败，也不重复提交。
 4. **task_id 提交成功后立刻写进 API 日志**（mid-call note，见 §7）——轮询
    挂死时这是唯一能拿去查任务状态的线索，等成功日志就永远拿不到了。
-5. FAILED/CANCELED/未知状态 → 抛错误，把 `output` 整段作为错误 body（code
-   与 message 在里面，统一错误解析能读到）。
+5. `FAILED` 读取 `output.code/message`；`CANCELED` 单独记录取消，`UNKNOWN` 单独记录 ID 无效或过期，不要求后二者也带错误字段。未识别的状态保留原始响应并报协议异常，不能等同于文档中的 `UNKNOWN`。
 
 ## 4.1 火山方舟 Seedream（字节跳动 · 豆包）
 

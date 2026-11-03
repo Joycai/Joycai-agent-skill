@@ -153,3 +153,21 @@ OrcaRouter Messages 上 Sonnet/Opus 4.6 在 adaptive+low、反向提示下，具
 ## 2026-10-27：计费参考实现的适用范围修正
 
 旧文保留了“视频不收输入图片费”“未交付即输入免费”，并将 GPT Image 文本/图像输入差价列为未覆盖且可忽略。前两项与已有视频观测及入口原则冲突，后者不能精确覆盖当前官方分模态定价。原 request 公式遗漏输入图项亦已修正（笔误）。当前规则见 [核算规则](../../ai-usage-accounting/references/pricing-rules.md)、[视频独立结算](../../ai-usage-accounting/references/recording.md)；GPT Image 官方来源与证据边界见 [FACT-OPENAI-IMAGE-BILLING-001–003](../../ai-media-api-integration/references/image-generation.md#gpt-image-token-accounting)。本次为文档审查和参考模型修正，未新增实扣验证。
+
+## HIST-QWEN-IMAGE-EDIT-001
+
+2026-11-03 修正：旧正文将 Qwen 全系参考图限制为 1–3，默认按首图比例规整、强制 size 与边长 16 倍数，并由 2304×1728 的单个 2K 样本推断“超过 1024² 就进 2K”。这些泛化不足以作为当前契约；当前文档按系列区分参考图、缺省尺寸与参数，3.0 计量阈值为 2,250,000 输出像素。旧“2K 两倍价”不能由本编辑 API 页确认。
+
+历史【外部实测 2026-09-04】称省略 size 得到 2048²，768×1376 输入得到 1520×2736；原始请求、型号对应与日志位置待补，仅保留观测，不作为通用默认值。2026-09-19 的明确尺寸样本仍留正文，未被删除或冒充新实测。
+
+来源及当前结论：[FACT-QWEN-IMAGE-EDIT-001](../../ai-media-api-integration/references/image-generation.md#qwen-image-editing-qianwen) 所引官方文档；本次无 API 实测。
+
+## HIST-WAN27-IMAGE-001
+
+2026-11-03：替换旧“n 默认 4、四倍收费”“size 默认 1K”“Pro 改图 4K 未明确”“异步 results[].url”“官方建议前 30 秒密集轮询”。当前官方创建、同步、查询文档分别明确模式相关默认张数、2K 默认值、编辑不支持 4K、choices 结果与 5–10 秒轮询。原文档／实现的版本及原始定位待补；保留 2026-09-19 的明确请求样本，不把它们外推为所有尺寸精确返回。
+
+当前规则及来源：[FACT-WAN27-IMAGE-001](../../ai-media-api-integration/references/image-generation.md#wan27-image-editing)。本次无 API 实测。
+
+## HIST-QWEN-T2I-001
+
+旧矩阵写“qwen 仅同步”、异步仅列 Wan；正文称出图只有原生协议，并遗漏当前文生图独立契约。2026-11-03 对照千问AI平台同步、异步提交和查询官方页后替代：Qwen 3.0／2.1 文生图明确支持异步，查询 results 与同步 choices 分开；2.0 文生图缺省尺寸不能套用编辑规则。原生章节不再排除其他入口。来源与现行结论见 [FACT-QWEN-T2I-001／002](../../ai-media-api-integration/references/image-generation.md#qwen-text-to-image-qianwen)。仅文档复核，无 API 实测；旧型号五档尺寸记录不受此修订外推。

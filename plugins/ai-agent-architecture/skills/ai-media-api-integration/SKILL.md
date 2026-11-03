@@ -3,8 +3,8 @@ name: ai-media-api-integration
 description: >-
   Integrate or debug image, video, and speech-transcription APIs: request formats, uploads, async jobs, polling, cancellation, downloads, and timestamps. Use for API engineering, not media creation with existing tools.
 metadata:
-  version: "1.1.2"
-  updated: "2026-10-27"
+  version: "1.1.7"
+  updated: "2026-11-03"
 ---
 
 # 媒体模型 API 接入
@@ -17,6 +17,10 @@ metadata:
 | --- | --- |
 | 查平台 × 端点/线格式 × 模型的支持情况 | [媒体矩阵](references/media-matrix.md) |
 | 图片生成与编辑、尺寸、参考图、同步/流式返回 | [图片 API](references/image-generation.md) |
+| 千问AI平台 Qwen 无参考图文生图、异步提交与查询 | [Qwen 文生图契约](references/image-generation.md#qwen-text-to-image-qianwen) |
+| 千问AI平台 Qwen 图生图／图像编辑 | [Qwen 编辑契约与旧百炼范围](references/image-generation.md#qwen-image-editing-qianwen) |
+| Z-Image 文生图、提示词改写与用量 | [Z-Image 契约](references/image-generation.md#z-image-turbo-qianwen) |
+| Wan 2.7／Pro 编辑、选区、组图与异步任务 | [Wan 当前契约](references/image-generation.md#wan27-image-editing) |
 | 视频提交、轮询、取消与产物 | [视频 API](references/video-generation.md) |
 | 录音上传、转写、说话人与时间码 | [ASR API](references/speech-recognition.md) |
 | 平台鉴权、套餐和网关变体 | [共享平台索引](../llm-api-integration/references/platform-matrix.md) |
