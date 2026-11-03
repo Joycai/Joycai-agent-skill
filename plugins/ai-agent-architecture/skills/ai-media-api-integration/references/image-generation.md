@@ -319,7 +319,36 @@ Qwen 当前编辑文档未要求边长为 16 的倍数，不应把实现中的�
 > **2026-09-23 增补**（simple-ai-writer，对照 09-22 版文档：新增 5.0 flash、透明背景两款都收）：套餐 key
 > 31 次零成本探测 + 4 张计费；见下文「5.0 pro / flash 的透明背景」「不支持的参数都在出图前 400」。
 > 供应商行（按量/套餐两个 base、套餐挑拼写、`ep-…` 接入点）见[provider-layering](../../llm-api-integration/references/provider-layering.md) §9.3。
-> 控制台文档是 SPA：WebFetch 只拿到标题，要浏览器渲染后取正文。
+> 2026-11-03 复核：普通文生图、单／多图生图以以下 FACT-SEEDREAM50-GEN-001 为准；交互编辑、拆图层未在本次复核范围内。官方页面可追加 `.md` 读取正文。
+
+<a id="seedream50-generation"></a>
+### Seedream 5.0 Pro / Flash 普通图片生成契约
+
+**FACT-SEEDREAM50-GEN-001**（火山方舟按量 `/api/v3`，文生图、单／多参考图生图；【文档 2026-11-03 核对】，教程更新于 2026-11-02；无新增 API 实测）。来源：[Pro / Flash 教程](https://console.volcengine.com/ark/region:cn-beijing/docs/seedream-5-0-pro)、[图片生成 API](https://ark.volcengine.com/region:cn-beijing/docs/image-generation-api.md)、[基础教程](https://ark.volcengine.com/region:cn-beijing/docs/image-generation-tutorial.md)。套餐别名与 2026-09 实测只代表当时渠道，不作为当前按量模型 ID 或可用性的替代证据。
+
+- **请求**：`POST https://ark.cn-beijing.volces.com/api/v3/images/generations`，Bearer API Key、`Content-Type: application/json`。Pro 的 Model ID 为 `doubao-seedream-5-0-pro-260628`，Flash 为 `doubao-seedream-5-0-flash-260915`；也可使用已绑定该模型的 Endpoint ID。文生图省略 `image`；单图传字符串或单元素数组，多图传有序 `string[]`（2–10 张），提示词中的图 1、图 2 对应数组次序。图生图仍走同一 JSON 生成端点，不切 `/images/edits` 或 multipart。
+- **必填提示词**：普通图片生成必须有 `prompt`。中文不超过 300 字、英文不超过 600 词是效果建议，**不是硬性长度上限或自动截断契约**；不可据此拒绝或截断请求。不要把拆图层允许无 prompt 的规则带入普通生图。
+- **输入图片校验**：可访问的 URL 或 `data:image/<小写格式>;base64,...`。支持 jpeg/png/webp/bmp/tiff/gif/heic/heif；每张 ≤30 MB，宽、高均 >14 px，宽高比 1/16–16，总像素 196–36,000,000；面积限制不是单边 ≤6000。边长条件与面积条件同时满足，不能因面积下界 196 就放过 14×14。最多 10 张包括待改源图；没有额外的“源图名额”。本页未说明动图取帧方式或 30 MB 的 Base64 计量阶段，勿移植其他厂商规则。
+- **输出尺寸**：默认 `2K`，支持 `1K` / `1.5K` / `2K`；也可传小写 `x` 分隔的 `宽x高`，同时满足面积 921600–4624220 和宽高比 1/16–16。普通生图不套用拆图层的 `auto`，也不沿用 Lite 的 3K/4K。档位模式可在 prompt 描述比例；官方映射表是常见参考值，**不是穷举白名单**。可采用其中的 1K 方图 `1024x1024`、1.5K 方图 `1536x1536`、2K 横图 `2816x1584`，其他满足约束的像素尺寸也可用；未规定 16 倍数校验。
+- **能力与默认值**：每请求生成单张图片，Pro、Flash 均不支持组图、联网搜索、流式；**不支持配置 `sequential_image_generation`**，不能为了“单张”照搬 Lite 示例发 `disabled`。按能力省略组图配置、`stream` 和 `tools`。`optimize_prompt_options.mode` 默认 `standard`，仅 Pro 还支持 `fast`。`output_format` 默认 `jpeg`，可选 `png/jpeg`；`response_format` 默认 `url`，可选 `url/b64_json`；`watermark` 默认 `true`，按产品选择显式发送。本页未列出 `n`、`quality`、`seed`、`negative_prompt`、`strength`，不能从 OpenAI 或其他模型继承这些字段；未列字段的具体拒绝／忽略行为未实测。
+- **普通返回**：同步 JSON 顶层 `model`、`created`（Unix 秒）、`data[]`、`usage`。读取 `data[].url` 或 `b64_json`，并保存 `size`（实际宽x高）和 `output_format`；不能只在透明模式读取格式。URL 需在 24 小时有效期内保存。`usage.generated_images` 是成功生成张数，`input_images` 是输入张数；`output_tokens = floor(sum(宽×高)/256)`，`total_tokens` 当前与它相等（不计输入 token）。保留原始字段但不将像素 token 自动套用文本 token 单价；输入 token 不计不等于输入图片免费，当前价格另查价格页。旧套餐返回模型别名的观测不应变成固定去日期算法。
+
+最小普通文生图请求体（也适用于 Flash，仅替换正式 Model ID）：
+
+```json
+{
+  "model": "doubao-seedream-5-0-pro-260628",
+  "prompt": "一只橘猫坐在窗台上，午后自然光，横向构图",
+  "size": "2K",
+  "output_format": "png",
+  "response_format": "url",
+  "watermark": false
+}
+```
+
+单图生图在此基础上添加 `"image":"https://example.com/source.png"` 并改写 prompt；多图使用 `"image":["https://example.com/source.png","https://example.com/reference.png"]` 与例如“将图1的服装换为图2的服装”的 prompt（URL 为占位符）。OpenAI Python SDK 使用 `images.generate`，厂商字段 `image`、`watermark`、`optimize_prompt_options` 放 `extra_body`；不要把原生 SDK 参数写法直接套给 OpenAI SDK。基础教程包含 Lite 的组图／流式示例，不能仅替换 model 就用于 Pro / Flash。
+
+### 跨版本适配与既有观测
 
 **为什么是一条独立 route 而不是 `images-api` 的变体**：路径与 OpenAI 生成端点同形
 （`{base}/images/generations`），`model`/`prompt`/`size`/`response_format` 同名同义，但
@@ -327,16 +356,16 @@ body 是**超集且缺字段**——没有 `n`/`quality`，参考图走 JSON 的
 的 multipart），张数由组图开关表达。body 形状不同 = 配一个枚举值（[provider-layering](../../llm-api-integration/references/provider-layering.md) §2）。
 好处是：只要中转站原样透传 Images API 的 body，同一 route 在中转上也能用（[provider-layering](../../llm-api-integration/references/provider-layering.md) §9.3 的中转例外）。
 
-- **仅同步**（`stream:true` 例外，逐张推事件，5.0 pro 不支持）：一次请求等到**全部**图画完才
+- **仅同步**（`stream:true` 例外，逐张推事件，5.0 pro / flash 不支持）：一次请求等到**全部**图画完才
   返回。实测 5.0 pro 1K 单张 **43 s**、5.0 lite 2K 单张 26 s；组图最多 15 张。逐请求超时必须
   **按一次请求可能画的张数放宽**（参考：5 分钟起，每多一张 +40 s，封顶 15 分钟；图层拆分按 17
   张算）——固定 3 分钟的帽子会在组图上把一个已计费的请求判超时。
-- **`watermark` 默认 `true`**：不写就在右下角加「AI 生成」字样，照常计费，文档每个示例都显式写
-  `false`。客户端**永远明发**这个字段，UI 默认关。
+- **`watermark` 默认 `true`**：不写就在右下角加「AI 生成」字样。客户端显式发送产品选择；UI 默认关是参考实现策略，
+  不是官方要求（当前官方示例也有 `true`）。
 - **尺寸两种写法不可混用**：档位（`1K`/`1.5K`/`2K`/`3K`/`4K`，**按模型不同**）或 `WxH`。
   填档位时宽高比由模型**从提示词里猜**（实测 5.0 pro `1K` 无比例提示回了 `1248x832`，3:2）。
-  所以 UI 做成「档位 + 比例」两个控件：比例为自动 = 只发档位；选了比例 = 查文档给的
-  「档位 × 比例 → 像素」映射表发 `WxH`（表是 L3 数据，协议只查表，不自己算）。
+  所以 UI 做成「档位 + 比例」两个控件：比例为自动 = 只发档位；选了比例可查文档给的
+  「档位 × 比例 → 像素」参考表发 `WxH`；查表是实现选择，不应把参考表当作唯一合法尺寸。
   `WxH` 约束的是**总像素乘积**，不是单边：5.0 lite 下限 3686400（2560×1440），`1500x1500` 无效；
   5.0 pro 区间 [921600, 4624220]。`1.5K` 这类**小数档位**会撞上按 `\d+K` 解析/排序的通用代码。
 - **能力逐版本建档**（坑全在档位差里）：
@@ -352,7 +381,7 @@ body 是**超集且缺字段**——没有 `n`/`quality`，参考图走 JSON 的
   发了不支持的字段就是 400——`output_format` 只能发给 5.0，`fast` 只能发给 5.0 pro / 4.0
   （lite 实测 400「optimize_prompt_options.mode must be 'standard'」【实测 2026-09-23】）。
   flash 与 pro 参数表相同、只少 `fast`，客户端可复用 pro 的尺寸方言，但「能否 fast」要单独判。
-- **组图**：`sequential_image_generation:"auto"` + `sequential_image_generation_options.max_images`
+- **组图（仅 Lite / 4.5 / 4.0，Pro / Flash 不发这些字段）**：`sequential_image_generation:"auto"` + `sequential_image_generation_options.max_images`
   （1–15，**默认 15**）。`auto` 时模型**自行决定**画几张，`max_images` 只是上限；且**参考图数 +
   生成数 ≤ 15**——客户端发送前按参考图数收紧上限，不要让端点 400。
 - **参考图**：URL 或 `data:image/<fmt>;base64,…`，**`<fmt>` 必须小写**（`image/PNG` 被拒）。
@@ -422,7 +451,7 @@ body 是**超集且缺字段**——没有 `n`/`quality`，参考图走 JSON 的
 
 ### 流式出图（`stream:true`，2026-09-18 实测 5.0 lite）
 
-5.0 lite / 4.5 / 4.0 支持，5.0 pro 回 `400 InvalidParameter param:"stream"`。标准 SSE，`event:` 与
+5.0 lite / 4.5 / 4.0 支持，5.0 pro / flash 当前文档均不支持；旧套餐实测 5.0 pro 回 `400 InvalidParameter param:"stream"`。标准 SSE，`event:` 与
 `data.type` 同名：
 
 ```
@@ -446,7 +475,7 @@ data: [DONE]
   请求失败、扔掉已到的图。只对不认识的事件做信封检查。
 - **边到边存、按已送达记账**：每张到了就下载落盘；后面失败或用户取消，已落盘的保留，用量按已
   送达张数记（原先只在流跑完时记 = 取消的任务在统计里消失，钱照扣）。
-- 只在官方渠道、且表上声明了流式的版本发 `stream:true`；中转与 5.0 pro 照旧同步——中转是否透传
+- 只在官方渠道、且表上声明了流式的版本发 `stream:true`；中转与 5.0 pro / flash 照旧同步——中转是否透传
   SSE 未知，拒收 `stream` 的中转会把能用的渠道变成 400。
 - App 内实测（套餐、5.0 lite、`2K`、组图上限 2）：第一张 **27.9 s** 落盘，第二张 **48.4 s**；只发档位
   时模型两张都自选了 16:9（2848×1600）。
@@ -644,7 +673,8 @@ data: [DONE]
       已原生地址均通过）；`extraBody` 并进 `parameters`；尺寸发出前归一成
       `宽*高`；错误解析兼容顶层 `{code,message}` 与 `{error:{…}}` 两种形状。
 - [ ] ark route（火山方舟 Seedream）：`watermark` 恒明发（上游默认 true）；档位与 `WxH` 不混发，
-      选了比例才查表发像素；按版本出参数表，不支持的字段不发；`max_images` 按参考图数收紧；
+      尺寸同时校验面积与比例，参考表不是白名单；Pro / Flash 普通生成见 FACT-SEEDREAM50-GEN-001；
+      按版本出参数表，不支持的字段不发；仅支持组图的型号按参考图数收紧 `max_images`；
       5.0 pro 的拆图层/透明背景在发请求前校验「恰好 1 张参考图」；参考图上限把改图的源图算进去；
       透明背景成对发 `background` + `output_format:"png"`，「无透明像素」400 去字段重试一次，要填满背景的
       改图不开透明（判定交给写指令的一方）；组图单项 `error` 不判整次失败；

@@ -171,3 +171,7 @@ OrcaRouter Messages 上 Sonnet/Opus 4.6 在 adaptive+low、反向提示下，具
 ## HIST-QWEN-T2I-001
 
 旧矩阵写“qwen 仅同步”、异步仅列 Wan；正文称出图只有原生协议，并遗漏当前文生图独立契约。2026-11-03 对照千问AI平台同步、异步提交和查询官方页后替代：Qwen 3.0／2.1 文生图明确支持异步，查询 results 与同步 choices 分开；2.0 文生图缺省尺寸不能套用编辑规则。原生章节不再排除其他入口。来源与现行结论见 [FACT-QWEN-T2I-001／002](../../ai-media-api-integration/references/image-generation.md#qwen-text-to-image-qianwen)。仅文档复核，无 API 实测；旧型号五档尺寸记录不受此修订外推。
+
+## HIST-SEEDREAM50-GEN-001
+
+旧结论：Flash 流式能力仍未知；普通生图选比例必须只查预设像素表；水印示例全部为 false。2026-11-03 官方 API 已明确 Pro / Flash 均不支持流式，尺寸映射仅常见参考值，当前教程有 watermark:true。分别改为按能力省略字段、校验面积与比例、按产品选择水印。旧套餐模型别名／400 观测保留其日期和渠道，不外推当前按量。来源与当前事实见 [FACT-SEEDREAM50-GEN-001](../../ai-media-api-integration/references/image-generation.md#seedream50-generation)。无新增 API 实测。
