@@ -2,6 +2,8 @@
 
 本篇导航：
 
+- [GPT Image 2.6：Flare / Sunburst](#gpt-image-26)
+
 - [1. 出图入口是对话流式入口的兄弟，不是变体](#1-出图入口是对话流式入口的兄弟不是变体)
 - [2. ImageRoute：按端点分发，不按供应商](#2-imageroute按端点分发不按供应商)
 - [3. 能力声明而非探测（ImageCaps）](#3-能力声明而非探测imagecaps)
@@ -498,6 +500,31 @@ data: [DONE]
 **FACT-OPENAI-IMAGE-BILLING-003** — 📄 缓存与组合请求边界【文档 2026-10-27】。GPT Image 2/2.5 的缓存价仅适用于 Responses 图像工具，直连 Images（含 edits）不适用；图像工具的缓存命中计数不在 Responses 输出中，不能用响应验证优惠。Responses 还包含主模型费用，二者按独立范围记录。partial 每张额外 100 图像输出 token；最终 usage 是否已包含这部分须核对，不能无条件再加。尺寸/质量估算仅覆盖输出且随模型变化，不沿用旧模型 token 表。来源：[图像生成指南：成本](https://developers.openai.com/api/docs/guides/image-generation#cost-and-latency)。
 
 适配层保留原始 usage、模型、API 路径、服务档位和调用范围，再规范化模态桶；核算公式、缺失缓存的估算口径及报价覆盖规则见 [计费规则](../../ai-usage-accounting/references/pricing-rules.md)。将全部输入 token 乘文本价会少算，额外按参考图张数收费会双算。未验证回包、缓存账单与 partial 包含关系见 [待核实项](../../llm-api-integration/references/open-questions.md#gpt-image-billing-verification)。
+
+<a id="gpt-image-26"></a>
+
+### GPT Image 2.6：Flare / Sunburst
+
+**FACT-GPT-IMAGE26-001** · OpenAI 官方直连 · Images API · 📄【文档 2026-11-06】；无 API 实测，样本量 0。不外推到兼容网关或 Responses 工具的参数支持。
+
+- 显式使用 `gpt-image-2.6-flare`（快速迭代）或 `gpt-image-2.6-sunburst`（精细构图／编辑）；不将系列名 `gpt-image-2.6` 当作已确认的 API ID，也不自行拼接日期快照。
+- 文生图走 `POST /v1/images/generations`，编辑走 `POST /v1/images/edits`。编辑接口缺省模型仍列为 2.5 Sunburst，应显式传 model。
+- `complexity: low/medium/high` 调整规划计算，和 `quality` 独立；省略使用模型默认，不能推断默认为 medium。普通编辑可从 low complexity 开始，再按所需细节选 quality。
+- 基础请求示例（未执行）：`{"model":"gpt-image-2.6-flare","prompt":"A blue ceramic cup on a plain background","size":"1024x1024","quality":"medium","complexity":"low","output_format":"png"}`。解析 `data[].b64_json`，保留原始 usage；不能把 base64 当作 URL。
+
+**FACT-GPT-IMAGE26-002** · 新输出／编辑模式 · 📄【文档 2026-11-06】；无实测。
+
+| 模式 | 接入要点 |
+| --- | --- |
+| 标注编辑 | `markup` 为透明 PNG，尺寸匹配首图经方向校正后的尺寸且含透明像素；对象引用 `file_id` 或 `image_url`，与 mask 互斥。指南确认 2.6，编辑参考字段说明仍只提 2.5，记录为文档口径差异。 |
+| SVG | 生成请求设 `output_format: "svg"`；n=1，不用 streaming、partial images、prompt_rewriter、output_compression；不支持 SVG 编辑。base64 解码为 UTF-8 XML，保存 .svg。若开启 SVG 作者模型选择，`svg.model` 必填；未开放时省略 svg 对象。作者 reasoning 与图像 complexity 分开。 |
+| GIF | 先按生成端点接入，`output_format: "gif"`，`frame_count` 2–16（默认 9），`frame_duration_ms` 默认 200；需相应模型 GIF preview 权限。按实际动画字节保存 .gif，不能转成单帧 PNG。 |
+
+GIF 使用 `size: "auto"` 可避免臆造逐型号像素上限；显式尺寸还需满足帧数、n 与总像素预算。禁用流式、partial images、自定义压缩和 prompt_rewriter。指南给帧时长 20–2000 ms、按 10 ms 取整；参考页给最小 20、编码上限 655350 ms。指南称 edits 不支持 GIF，但 edits schema 列出 GIF 字段：这些差异待核实，暂不开放 GIF 编辑或超过 2000 ms 的请求，不据此断言服务端必然拒绝。
+
+不这样会怎样：沿用旧参数白名单会丢 complexity／新格式；把 GIF 当静态图会丢动画；盲目套用 schema 会发送尚未证实的编辑请求。发送前按模型、端点与格式校验组合，失败不能自动改模式重发。
+
+来源（均于 2026-11-06 查阅）：[发布说明](https://openai.com/index/introducing-images-2-6/)、[生成参考](https://developers.openai.com/api/reference/resources/images/methods/generate)、[编辑参考](https://developers.openai.com/api/reference/resources/images/methods/edit)、[图像指南](https://developers.openai.com/api/docs/guides/image-generation)。价格、权限与限额使用前重新查当前文档。
 
 ## 4.2 其余几家的逐家事实（按 route）
 

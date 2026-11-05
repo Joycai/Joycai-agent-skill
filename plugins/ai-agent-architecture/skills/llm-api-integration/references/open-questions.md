@@ -212,3 +212,7 @@
 
 - **OQ-GPT-IMAGE-BILLING-001**：官方 Images 的 2/2.5 同步、流式终态 usage 完整性与 output_tokens_details 的实际形状；API 参考保留旧模型限定文字，本轮仅文档审查。需要已授权样本后再提升证据等级。
 - **OQ-GPT-IMAGE-BILLING-002**：Responses 图像工具缓存账单、主模型与工具范围及 partial 是否已含在终态 usage 中；官方明确工具缓存计数不回报，不能设计依赖该缺失字段的精确结算。对照账单时保留调用 id、模型、档位、partial 数量与原始 usage。正文见 [图像 token 计量](../../ai-media-api-integration/references/image-generation.md#gpt-image-token-accounting)。
+
+## GPT Image 2.6 文档差异（2026-11-06）
+
+- 待核实：GIF edits 支持、frame_duration_ms 上限，以及 markup 字段说明的 2.6 覆盖范围。指南与 API schema 不一致；当前按生成端点和指南时长范围接入。来源与具体差异见 [FACT-GPT-IMAGE26-002](../../ai-media-api-integration/references/image-generation.md#gpt-image-26)。后续优先复核官方勘误；若授权实测，记录模型、端点、请求、HTTP 状态与产物帧信息，不隐式付费探测。

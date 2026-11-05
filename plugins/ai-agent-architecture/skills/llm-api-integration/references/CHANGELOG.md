@@ -4,6 +4,7 @@
 
 | 日期 | 入口 | 文件 | 一句话 |
 | --- | --- | --- | --- |
+| 2026-11-06 | C | 媒体 skill、图片正文、媒体矩阵、待核实项、插件版本 | 增加 GPT Image 2.6 Flare / Sunburst 与 complexity、markup、SVG／GIF 契约及文档差异；skill 1.1.9，无 API 实测 |
 | 2026-11-03 | C | 媒体 skill、图片正文、媒体矩阵、待核实项、结论历史 | 复核 Seedream 5.0 Pro / Flash 普通文生图与单／多图生图，补充模型 ID、输入／尺寸／默认值和响应契约，纠正 Flash 流式未知及尺寸白名单化；skill 1.1.8，无交互编辑审查或 API 实测 |
 | 2026-11-03 | C | 媒体 skill、图片正文、媒体矩阵、待核实项 | 补齐 Z-Image 同步文生图独立契约、800 字符限制、竖图默认尺寸、改写费用与响应／usage；保留尺寸范围语义和错误码待核实；skill 1.1.7，无 API 实测 |
 | 2026-11-03 | C | 媒体 skill、图片正文、媒体矩阵、结论历史 | 核对 Qwen 文生图同步／异步／查询：纠正仅同步判断，补充型号范围、无图参数和默认尺寸，区分 choices/results、task_metric/task_metrics 与 usage 契约；skill 1.1.6，无 API 实测 |

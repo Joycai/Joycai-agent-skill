@@ -1,5 +1,7 @@
 # ai-agent-architecture
 
+<img src="assets/icon.png" alt="AI Agent Architecture：中央核心连接五个能力模块" width="160" height="160">
+
 一个插件，五个按任务加载的 skill。插件安装名不变，4.0.0 调整了三个 skill 名称，并拆出媒体 API 接入。
 
 | 任务 | 显式调用 |
@@ -19,6 +21,10 @@
 - 知识维护规范由聊天 API skill 保存，媒体 skill 引用；只有维护请求才写回知识库。
 
 入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
+
+## 4.0.8 更新
+
+补充 GPT Image 2.6 Flare / Sunburst 官方文档知识，涵盖 complexity、标注编辑、SVG 与 GIF 输出，并记录指南和接口参考的差异。媒体 skill 1.1.9；未执行付费 API 实测。
 
 ## 4.0.7 更新
 
