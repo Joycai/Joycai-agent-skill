@@ -40,6 +40,7 @@ route 按**端点**分发、不按供应商；L3 可声明，默认按协议族�
 
 | route | 平台 | 模型 id（含被接受的拼法） | 请求关键 | 尺寸规则 | 编辑／参考图 | 响应 | 计费 | 不支持参数的报法 | 静默失败 | 证据 | 详见 | 坑 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| images-api | OpenAI 官方 | gpt-image-2.6-flare / gpt-image-2.6-sunburst | 📄 complexity 独立控制 | 按格式校验 | 标注编辑；GIF 编辑待核 | base64；PNG／SVG／GIF 分开处理 | 保留原始 usage | 格式互斥见正文 | 不套用旧白名单 | 【文档 2026-11-06】无实测 | [FACT-GPT-IMAGE26-001／002](image-generation.md#gpt-image-26) | — |
 | images-api | OpenAI ／ 兼容 | 通用（route 级） | 编辑 multipart 字段名跟张数走；文件 part 显式 `Content-Type`，整体头不手设 | `sizes` 空 = 不带 `size`；回显 `size`／`quality` 是定了的规格 | `images` 非空即编辑；`mask` 仅此 route | `data[].b64_json`／`url`；mime 嗅探 | `input_tokens`／`output_tokens`；图像输入 $8/M vs 文本 $5/M | ❌ 中继对 `octet-stream` part 400【实测 2026-09-05】；`param:"x"` = 丢字段即可修 | 🔇 200 + HTML；200 + `{"error"}` 零张图 | 【实测 2026-09-05】（Content-Type）；其余【实现／文档】 | [image-generation](image-generation.md) §1、§3、§4.2、§5、§6、§7 | 57、93 |
 | images-api | OpenAI | `dall-e-2` | `/images/edits` multipart | — | 单张必须 `image`（单数） | `data[]` | — | ❌ 只发 `image[]` 对单张 400 | — | 【实现】 | [image-generation](image-generation.md) §4.2 | 93 |
 | images-api | OpenAI | `dall-e-3` | 同上 | — | — | 逐项回 `revised_prompt` | — | — | — | 【文档／实现】 | [image-generation](image-generation.md) §1、§4.2 | — |
