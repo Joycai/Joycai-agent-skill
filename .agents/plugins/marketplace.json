@@ -1,0 +1,44 @@
+{
+  "name": "joycai-agent-skill",
+  "interface": {
+    "displayName": "Joycai Agent Skills"
+  },
+  "plugins": [
+    {
+      "name": "ai-agent-architecture",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ai-agent-architecture"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "dev-workflow",
+      "source": {
+        "source": "local",
+        "path": "./plugins/dev-workflow"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "reference-image-studio",
+      "source": {
+        "source": "local",
+        "path": "./plugins/reference-image-studio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

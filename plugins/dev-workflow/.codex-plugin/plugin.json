@@ -1,0 +1,16 @@
+{
+  "name": "dev-workflow",
+  "version": "1.1.0",
+  "description": "标准化的需求实现 / bug 修复流程：定位范围、设计文档、可用设计工具出 UI 稿、执行计划、分片提交、review 与 PR，支持 Codex 和 Claude",
+  "author": {
+    "name": "Joycai"
+  },
+  "keywords": [
+    "workflow",
+    "feature",
+    "bugfix",
+    "review",
+    "pull-request"
+  ],
+  "skills": "./skills"
+}

@@ -1,16 +1,22 @@
 # 参考图工作室
 
+支持 Codex 与 Claude，共用同一套 skills。[安装与使用说明](../../README.md)。Codex 可在技能选择器中选择技能，或明确说“使用 `<skill-name>`”；本文 `/插件名:技能名` 示例用于 Claude Code。
+
 一个插件，六个 skill，共用工作区内的可信参考索引。
+
+## 1.4.3 更新
+
+增加 Codex 插件清单，与 Claude 共用六个 skills；补充双平台安装入口。此次仅调整打包和说明，skill 内容版本保持不变。
 
 ## 安装与调用
 
-添加本仓库的 marketplace 后安装：
+Claude Code 添加本仓库的 marketplace 后安装（Codex 步骤见根 README）：
 
 ```bash
 claude plugin install reference-image-studio@joycai-agent-skill
 ```
 
-显式调用：
+Claude Code 显式调用：
 
 ```text
 /reference-image-studio:reference-image-workspace
@@ -64,6 +70,7 @@ python3 plugins/reference-image-studio/skills/reference-image-workspace/scripts/
 
 ```text
 .claude-plugin/plugin.json
+.codex-plugin/plugin.json
 skills/
 ├── reference-image-workspace/   # 入口、初始化脚本与模板
 ├── reference-image-dashboard/   # 仓库结构、逐次记录、离线浏览与对比
@@ -73,7 +80,7 @@ skills/
 └── reference-image-cosplay-photo/ # 真人穿着摄影、可选面部参考与场景材质核对
 ```
 
-按本仓库的 Claude marketplace 格式打包，六个 skill 一起安装，保留相互引用。各 skill 的 `agents/openai.yaml` 是附带的界面元数据，不代表提供了独立的 Codex 插件安装包。
+同时提供 `.claude-plugin/plugin.json` 和 `.codex-plugin/plugin.json`；两端安装相同的六个 skill，保留相互引用。各 skill 的 `agents/openai.yaml` 提供 Codex 界面元数据。
 
 验证清单：在仓库根目录运行 `claude plugin validate .` 和 `claude plugin validate plugins/reference-image-studio`。
 

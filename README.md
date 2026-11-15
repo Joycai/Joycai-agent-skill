@@ -1,27 +1,63 @@
 # Joycai-agent-skill
 
-Joycai 自用的 Claude 插件市场（marketplace）。架构相关的五个 skill 合在 `ai-agent-architecture` 插件中，按任务选用；`dev-workflow` 和 `reference-image-studio` 是独立插件。
+Joycai 自用的 **Codex / Claude 双平台插件市场**。三个插件共用 skills、脚本和参考资料，分别提供两端的市场与插件清单。当前都是 skills 插件，不附带 MCP 服务；图片生成、设计工具和子代理能力由使用它的宿主环境提供。
 
-## 添加市场
+## Codex：安装
 
-Claude Code / Claude 桌面端的 `/plugin` 面板，或命令行：
+在支持插件的 Codex CLI 中添加市场，再按需安装（可先运行 `codex plugin --help` 检查本机支持）：
 
 ```bash
-# 本地目录
-claude plugin marketplace add /Users/caizhengxu/github/Joycai-agent-skill
-# 或推到 GitHub 后
-claude plugin marketplace add Joycai/Joycai-agent-skill
+codex plugin marketplace add Joycai/Joycai-agent-skill
+codex plugin add ai-agent-architecture@joycai-agent-skill
+codex plugin add dev-workflow@joycai-agent-skill
+codex plugin add reference-image-studio@joycai-agent-skill
 ```
 
-## 安装插件
+本地开发时，先进入本仓库根目录，用本地来源替代上面的 GitHub 来源：
 
 ```bash
+codex plugin marketplace add .
+codex plugin marketplace list
+```
+
+桌面端可打开插件目录，选择 **Joycai Agent Skills** 市场，按需安装并启用。添加本地市场后重启桌面端，在新聊天中检查技能是否可选。若 CLI 没有 `plugin add` 子命令，使用桌面端安装，或升级支持插件管理的客户端。
+
+Codex 的市场入口是 `.agents/plugins/marketplace.json`，插件入口是各插件的 `.codex-plugin/plugin.json`（官方仍支持的兼容格式）。原有 Claude 格式也能被部分 Codex 客户端识别；本仓库现在提供独立的 Codex 清单。同一个市场请选择 GitHub 或本地来源之一。
+
+## Claude Code：安装
+
+```bash
+claude plugin marketplace add Joycai/Joycai-agent-skill
 claude plugin install ai-agent-architecture@joycai-agent-skill
 claude plugin install dev-workflow@joycai-agent-skill
 claude plugin install reference-image-studio@joycai-agent-skill
 ```
 
-会话内 `/plugin marketplace add …`、`/plugin install …` 同理。本地目录添加的市场，改完文件后 `/reload-plugins` 或重开会话即生效。
+本地开发时在仓库根目录运行 `claude plugin marketplace add .`，替代 GitHub 来源。也可在 Claude Code 会话中打开 `/plugin` 面板添加市场并安装；会话内命令为 `/plugin marketplace add …`、`/plugin install …`。Claude 桌面端的插件入口随产品模式而异，以上命令用于 Claude Code。
+
+## 使用
+
+- **Codex**：在技能选择器中选择目标技能，或明确说“使用 llm-api-integration 检查这个 API 接入”“使用 dev-workflow 实现这个需求”。选择器展示的完整名称以实际加载结果为准。
+- **Claude Code**：使用 `/插件名:技能名`，例如 `/ai-agent-architecture:llm-api-integration`、`/dev-workflow:dev-workflow`、`/reference-image-studio:reference-image-workspace`。
+- 两端都可以用自然语言描述任务，让宿主按 skill 描述选择。插件需要先安装、启用并在当前会话中加载。
+
+`dev-workflow` 的新任务文件使用 `.agent-tasks/<slug>/`，旧的 `.claude/tasks/<slug>/` 任务继续原位恢复。Claude 的 sonnet / opus 建议不用于 Codex，Codex 默认继承当前模型。没有子代理时分阶段自行 review；没有设计工具时产出 UI 规格或本地原型。图片创作需宿主提供实际可用的图片生成 / 编辑工具，安装 skills 不会自动配置这些服务。
+
+## 更新与本地调试
+
+上述 GitHub 安装命令默认读取仓库默认分支，PR 合并后才能获取本次修改。合并前请用本地目录测试；Codex 也可用 `codex plugin marketplace add Joycai/Joycai-agent-skill --ref codex/dual-platform-plugins` 指定已推送的开发分支。
+
+```bash
+# Codex：刷新市场，再按需重新安装目标插件
+codex plugin marketplace upgrade joycai-agent-skill
+codex plugin add ai-agent-architecture@joycai-agent-skill
+
+# Claude Code：刷新市场与目标插件
+claude plugin marketplace update joycai-agent-skill
+claude plugin update ai-agent-architecture@joycai-agent-skill
+```
+
+其余插件同理。Codex 使用安装缓存，改源码后应刷新 / 重新安装并新开聊天；桌面端必要时重启。Claude Code 更新后执行 `/reload-plugins` 或重开会话。本地直接调试单个 Claude 插件也可用 `claude --plugin-dir ./plugins/dev-workflow`。
 
 ## 插件列表
 
@@ -42,21 +78,37 @@ claude plugin install reference-image-studio@joycai-agent-skill
 
 参考图插件的调用方式与工作区初始化说明见 [reference-image-studio](plugins/reference-image-studio/README.md)。
 
-## 目录约定
+## 目录与维护
 
-```
-.claude-plugin/marketplace.json     市场清单（name / owner / plugins[]）
+```text
+.claude-plugin/marketplace.json      Claude 市场清单（维护源）
+.agents/plugins/marketplace.json     Codex 市场清单（生成）
 plugins/<plugin>/
-  .claude-plugin/plugin.json        插件清单（name 必须与市场条目一致）
-  skills/<skill>/SKILL.md           skill 入口
-  skills/<skill>/references/        按需加载的资料
+  .claude-plugin/plugin.json         插件元数据（维护源）
+  .codex-plugin/plugin.json          Codex 插件清单（生成）
+  skills/<skill>/SKILL.md            两端共用入口
+  skills/<skill>/references/         按需加载的资料
+scripts/sync-plugin-manifests.ps1    同步与检查双平台清单
 ```
 
-给已有插件新增 skill：放进该插件的 `skills/<skill>/`，写 `SKILL.md`，按需添加 `references/`。只有新增独立插件时，才新建插件目录与 `plugin.json`，并在 `marketplace.json` 的 `plugins` 数组加一项（`source` 用相对市场根的路径，不能含 `..`）。
+新增 skill 放进对应插件的 `skills/<skill>/`。新增独立插件时，先添加 Claude 插件清单与市场条目，再生成 Codex 清单。Codex 市场的 `source.path` 相对仓库根目录，而非 `.agents/plugins/` 目录。不要手改生成的 JSON。
 
-插件版本在市场清单与插件清单中保持一致；各 skill 的 `metadata.version` 独立记录内容版本，纯目录迁移不改变 skill 版本。
+插件版本在 Claude 市场条目和插件清单中同步递增，再运行同步脚本；skill 的 `metadata.version` 仅在内容改变时递增。本次插件版本：架构 4.0.9、工作流 1.1.0、参考图 1.4.3。
 
-校验：`claude plugin validate .`，以及对每个 `plugins/<plugin>` 运行 `claude plugin validate plugins/<plugin>`。
+需要 PowerShell 7（Windows / macOS / Linux 均可安装）：
+
+```powershell
+pwsh -File scripts/sync-plugin-manifests.ps1
+pwsh -File scripts/sync-plugin-manifests.ps1 -Check
+claude plugin validate .
+claude plugin validate plugins/ai-agent-architecture
+claude plugin validate plugins/dev-workflow
+claude plugin validate plugins/reference-image-studio
+```
+
+架构资料的内部链接与结构检查：`python3 plugins/ai-agent-architecture/scripts/validate_structure.py`。清单检查不等于两端实际模型行为测试；安装后应在新会话中分别调用目标 skill 验证。
+
+格式与安装依据：[OpenAI 插件打包文档](https://developers.openai.com/plugins/build/plugins)、[Claude Code 插件文档](https://code.claude.com/docs/en/plugins)。CLI 子命令以本机 `--help` 为准。
 
 ## 从旧版迁移
 
