@@ -1,5 +1,7 @@
 # ai-agent-architecture
 
+支持 Codex 与 Claude，共用同一套 skills。[安装与使用说明](../../README.md)。Codex 可在技能选择器中选择技能，或明确说“使用 `<skill-name>`”；本文 `/插件名:技能名` 示例用于 Claude Code。
+
 <img src="assets/icon.png" alt="AI Agent Architecture：中央核心连接五个能力模块" width="160" height="160">
 
 一个插件，五个按任务加载的 skill。插件安装名不变，4.0.0 调整了三个 skill 名称，并拆出媒体 API 接入。
@@ -21,6 +23,10 @@
 - 知识维护规范由聊天 API skill 保存，媒体 skill 引用；只有维护请求才写回知识库。
 
 入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
+
+## 4.0.9 更新
+
+增加 Codex 插件清单，与 Claude 共用五个 skills；安装与更新步骤见仓库根 README。此次仅调整打包和说明，skill 内容版本保持不变。
 
 ## 4.0.8 更新
 
