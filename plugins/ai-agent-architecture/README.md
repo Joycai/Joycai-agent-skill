@@ -24,6 +24,10 @@
 
 入口只加载当前任务所需资料。参考实现与带日期的证据需区分，历史记录不代表当前所有端点的保证。单纯使用已有工具生成图片不触发 API 工程 skill；图片创作使用独立的 reference-image-studio 插件。
 
+## 4.0.10 更新
+
+加入 [Qwen4-Max](skills/llm-api-integration/references/qwen4-max.md) 的百炼四协议接入知识，涵盖思考强度、摘要与密文回传、结构化输出、工具约束及显式缓存，修正旧款规则的适用范围。LLM skill 内容版本为 2.2.11。
+
 ## 4.0.9 更新
 
 增加 Codex 插件清单，与 Claude 共用五个 skills；安装与更新步骤见仓库根 README。此次仅调整打包和说明，skill 内容版本保持不变。

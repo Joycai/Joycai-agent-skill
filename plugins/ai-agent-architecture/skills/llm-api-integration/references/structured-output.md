@@ -257,7 +257,7 @@ JSON 输出场景对 `max_tokens` 截断尤其敏感：截断的 JSON 解析失�
 - **schema 仍然 `strictify`**：既然端点会按 strict 规则执法（全必填、`additionalProperties:false`），发出去的 schema 就得符合，与请求里有没有 `strict` 这个词无关。
 - 这一条与工具定义**方向相反**（[protocol-differences](protocol-differences.md) §7.1：工具要显式 `strict:false`）——同一个自动 strict 事实，结构化输出要它、自由工具不要它。
 - `json_object` 缺 "json" 字样同样 400（与 ① 族同一条隐藏前置），cue 规则照搬。
-- 千问 Responses 面文档没有 `text` 字段；它是报错还是忽略未验，回退靠"学 400"的通用机制兜。
+- 百炼 Responses 已提供 `text.format`，schema 文档使用嵌套的 `json_schema` 对象，不能照搬上方 OpenAI 原生平铺格式；Qwen4 的模型支持与工具选择条件见 [Qwen4-Max](qwen4-max.md)。
 
 **中转站上游对照（【实测 2026-09-24】，同一个 `gpt-5.6-sol`，schema 把 `answer` 锁成 `7`，§2 的冲突测法；上游分类见[provider-layering](provider-layering.md) §9.2「同一个 GPT，两类上游」）**：
 

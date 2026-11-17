@@ -1,5 +1,7 @@
 # 四族协议差异对照
 
+Qwen4-Max 的百炼四协议参数、密文回传、工具约束与缓存 usage 见 [Qwen4-Max 接入](qwen4-max.md)。
+
 ## 当前结果（2026-10-25，OrcaRouter）
 
 当前 11 条路由的流式文本、PNG 输入和单页文本 PDF 已有成功样例，见 [汇总](model-support-status.md) 与 [附件/请求形状](orcarouter-multimodal-effort-verification.md#inputs)。仅验证自包含 base64/data URL，不覆盖公网 URL、扫描件、复杂版面或长文档。

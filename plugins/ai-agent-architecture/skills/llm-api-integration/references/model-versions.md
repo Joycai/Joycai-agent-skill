@@ -8,6 +8,7 @@
 - [Claude Opus 4.8、Fable 5 和 5.1](#claude-versions)
 - [Gemini 3.5 和 3.7 Flash](#gemini-versions)
 - [Gemini 4 Argon](#gemini-4-argon)
+- [Qwen4-Max](qwen4-max.md)
 - [Qwen3.8-27B](#qwen-27b)
 - [DeepSeek V4.1 Flash](#deepseek-flash)
 - [Kimi K3.1 Pro](#kimi-k31)

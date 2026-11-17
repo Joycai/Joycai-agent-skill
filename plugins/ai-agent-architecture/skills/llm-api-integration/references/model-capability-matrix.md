@@ -258,13 +258,15 @@
 
 > 【官方文档 2026-10-25】新增 [Qwen3.8-27B](model-versions.md#qwen-27b) 开源模型记录；自部署参数、上下文与托管 Max / Flash 分开，见 [思考参数](reasoning.md#official-model-updates)。
 
-### 家族固有特性（跨平台一致，仅测于 DashScope 百炼）
+### 百炼旧款特性与历史记录
+
+Qwen4-Max 使用独立的[四协议接入契约](qwen4-max.md)：默认 high 思考，支持摘要与密文、结构化输出和显式缓存。以下旧款记录不作为 Qwen4 或其他平台的默认规则。
 
 - 两代思考控制：商业款**默认关**（`enable_thinking`）；3.5+ **默认开**；3.7+ 收 `reasoning_effort`；部分开源版强制 `stream: true`。【文档／参考实现】坑 9；[reasoning](reasoning.md) §3 `switch`
 - 思考开时 `tool_choice` 只 `auto／none` → 降 `auto`。[structured-output](structured-output.md) §4
 - 结构化：`json_object` 全线（缺 "json" ❌ 400）；`json_schema` 只最新两三代。【文档】[structured-output](structured-output.md) §2
 - ① 私有顶层 `enable_search`（无痕）、`agent_max`、`enable_code_interpreter`；后两者与 `tools` 同发 ❌ 400；`enable_code_interpreter` 非流式 ❌ 400。【实测 2026-09-17】坑 10、74；[tools-and-server-tools](tools-and-server-tools.md) §5
-- ② 面 `web_search`／`web_extractor`／`web_search_image`／`code_interpreter`；无 `encrypted_content`，回传明文 `summary`；文档无 `text` 字段 ⚠。【文档】【实测 2026-09-17】坑 70、76；[reasoning](reasoning.md) §7.2、§7.3、[tools-and-server-tools](tools-and-server-tools.md) §5、[structured-output](structured-output.md) §5.1
+- ② 面 `web_search`／`web_extractor`／`web_search_image`／`code_interpreter`；旧文档仅记明文 `summary`；Qwen4 的密文和当前 `text.format` 见 [接入契约](qwen4-max.md)。【文档】【实测 2026-09-17】坑 70、76；[reasoning](reasoning.md) §7.2、§7.3、[tools-and-server-tools](tools-and-server-tools.md) §5、[structured-output](structured-output.md) §5.1
 - 视频 `video_url` + `fps`（私有扩展）；`vl_high_resolution_images` 私有。【文档】[protocol-differences](protocol-differences.md) §1
 - 一把 key 三张 chat 脸：①、Ⓓ、④ `/apps/anthropic`（只服务模型子集；新旧 host 等价）。【文档 2026-09】【实测 2026-09-28】[provider-layering](provider-layering.md) §8.1、[reasoning](reasoning.md) §3.5
 - ④ 面千问默认想、`disabled` 真关；`signature` 恒空串；qwen-turbo 从不想。【实测 2026-09-28】[reasoning](reasoning.md) §3.5、§4.1
@@ -274,7 +276,7 @@
 | 型号 | 平台·渠道 | 面 | 思考控制 | 取回／回传 | 结构化 | tool_choice | 服务端 | 多模态 | 上限／采样 | 静默要点 | 证据 | 详见 | 坑 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Qwen（通用：商业款 ／ 3.5+ ／ 3.7+） | 阿里百炼 DashScope compatible-mode | ① | 📄 按代：商业款默认关、`enable_thinking`；3.5+ 默认开；3.7+ 收 `reasoning_effort` | `reasoning_content` | `json_object` ✅；缺 "json" ❌ 400；`json_schema` 只最新两三代 📄 | 思考开时只 `auto／none` 📄 | 见 §14：`enable_search` ✅ 无痕 ／ `agent_max` ✅ ／ `enable_code_interpreter` 按型号 | `video_url` ✅（见 qwen3-vl-plus）；PDF 仅 qwen3.8-max | 按次价低三个数量级；无上限字段 | 不发开关永不思考 🔇；辅助请求继承服务端工具多花钱 | 【文档／参考实现】+【实测 2026-09-17】 | [reasoning](reasoning.md) §3；[structured-output](structured-output.md) §2、§4；[tools-and-server-tools](tools-and-server-tools.md) §5 | 9、10、74、77 |
-| Qwen（通用） | 阿里百炼 DashScope | ② | ⚠ | 文档 `reasoning_text.delta`；回传明文 `summary` 📄 | 文档无 `text` 字段 ⚠ | — | 见 §14：`web_search` ✅ ／ `web_extractor` 仅随搜索 ／ `code_interpreter` ✅ 按模型 id | 文档说不支持 PDF ⚠ | `usage.x_tools.code_interpreter.count` | `response.failed` 在 HTTP 200 里；画图链接约 12 小时过期 | 【文档】【实测 2026-09-17】第六个样本 | [reasoning](reasoning.md) §7.2、§7.3；[structured-output](structured-output.md) §5.1；[tools-and-server-tools](tools-and-server-tools.md) §5；[provider-layering](provider-layering.md) §9.2 | 70、76、78 |
+| Qwen（旧款记录；Qwen4 见专篇） | 阿里百炼 DashScope | ② | ⚠ | 旧文档 `reasoning_text.delta`；Qwen4 支持密文，见 [专篇](qwen4-max.md) | 当前支持 `text.format`，见 [专篇](qwen4-max.md) | — | 见 §14：`web_search` ✅ ／ `web_extractor` 仅随搜索 ／ `code_interpreter` ✅ 按模型 id | 文档说不支持 PDF ⚠ | `usage.x_tools.code_interpreter.count` | `response.failed` 在 HTTP 200 里；画图链接约 12 小时过期 | 【文档】【实测 2026-09-17】第六个样本 | [reasoning](reasoning.md) §7.2、§7.3；[structured-output](structured-output.md) §5.1；[tools-and-server-tools](tools-and-server-tools.md) §5；[provider-layering](provider-layering.md) §9.2 | 70、76、78 |
 | `qwen3-vl-plus` | 阿里百炼 DashScope | ① | — | — | — | — | — | `video_url` ✅、**`fps` 生效**；小纯色片段 ❌ 400 | — | 夹具太小误判「不读视频」 | 【实测 2026-09-28】第十九个样本 | [protocol-differences](protocol-differences.md) §1；[platform-matrix](platform-matrix.md) §3 百炼节 | 206–208 |
 | `qwen3.8-max` | 阿里百炼 DashScope | ① | — | — | — | — | — | PDF `file` 部件 **仅此款** | — | — | 【文中陈述】⚠ | [protocol-differences](protocol-differences.md) §1 | — |
 | `qwen3.8-flash` ／ qwen3.8 全系 | 阿里百炼 DashScope | ①／② | — | — | — | — | 见 §14：① `agent_max`／`enable_code_interpreter` ❌ 400 ／ ② `code_interpreter` ✅ | — | — | — | 【实测 2026-09-17】 | [tools-and-server-tools](tools-and-server-tools.md) §5 | 75、78 |
