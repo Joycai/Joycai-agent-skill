@@ -1,5 +1,7 @@
 # 平台表（平台 × 面 × 地址鉴权 × 目录 × 手脚 × 计费）
 
+Qwen4-Max 的百炼四协议参数、密文回传、工具约束与缓存 usage 见 [Qwen4-Max 接入](qwen4-max.md)。
+
 ## 当前结果（2026-10-25，OrcaRouter）
 
 火山套餐 `kimi-k3.1-pro` 的最新记录见 [专节](#kimi-k31-ark)。
@@ -153,7 +155,7 @@
 ### 阿里百炼（千问 DashScope）
 
 - **正文所在**：[provider-layering](provider-layering.md) §8.1、§8.4；[reasoning](reasoning.md) §3、§3.5、§4.1、§7；[structured-output](structured-output.md) §4、§5.1；[tools-and-server-tools](tools-and-server-tools.md) §5「代码解释器」；[errors-probing-observability](errors-probing-observability.md) §2；[image-generation](../../ai-media-api-integration/references/image-generation.md) §4（含「自由尺寸的规则」）；[video-generation](../../ai-media-api-integration/references/video-generation.md) §2；[speech-recognition](../../ai-media-api-integration/references/speech-recognition.md) §4–§9；[protocol-differences](protocol-differences.md) §1 表后；坑 9、10、13、56–59、70、74–78、101–104、115–121、206–208、217–219。模型级行为：[model-capability-matrix](model-capability-matrix.md) §8 与各家族节的「阿里百炼 · ④」行（MiniMax-M2.5 §11、glm-5.3 §9、kimi §13、deepseek-v4-pro §7）。【实测 2026-09-28 ④ 面（每条一次）与视频输入；2026-09-19 出图；2026-09-17 服务端工具；2026-09-13 ASR；2026-08-29 视频；文档 2026-09】
-- 六条 wire（同一把 key）：① `/compatible-mode/v1`；Ⓓ `/api/v1/services/aigc/text-generation/…`（Qwen-Audio 仅此面）；④ `/apps/anthropic/v1/messages`（旧：模型子集，具体未给 → 新：2026-09-28 实测到 qwen3.8-flash / 3.7-flash / 3.5-plus / qwen-turbo 与托管的 MiniMax-M2.5 / glm-5.3 / kimi-k2-thinking / kimi-k2.6 / deepseek-v4-pro；完整名单仍未枚举）；② DashScope Responses（文档无 `text` 字段、说不支持 PDF，都未验）；🖼 同步 + 异步（提交路径不同，不是 header 切换；型号归属见 [image-generation](../../ai-media-api-integration/references/image-generation.md) §4）；🎬 仅异步；🎤 同步／`-filetrans` 异步（上传经 OSS，[speech-recognition](../../ai-media-api-integration/references/speech-recognition.md) §4–9）。
+- 六条 wire（同一把 key）：① `/compatible-mode/v1`；Ⓓ `/api/v1/services/aigc/text-generation/…`（Qwen-Audio 仅此面）；④ `/apps/anthropic/v1/messages`（旧：模型子集，具体未给 → 新：2026-09-28 实测到 qwen3.8-flash / 3.7-flash / 3.5-plus / qwen-turbo 与托管的 MiniMax-M2.5 / glm-5.3 / kimi-k2-thinking / kimi-k2.6 / deepseek-v4-pro；完整名单仍未枚举）；② DashScope Responses（支持 `text.format`；Qwen4 支持推理密文，见 [接入契约](qwen4-max.md)；PDF 按具体模型核对）；🖼 同步 + 异步（提交路径不同，不是 header 切换；型号归属见 [image-generation](../../ai-media-api-integration/references/image-generation.md) §4）；🎬 仅异步；🎤 同步／`-filetrans` 异步（上传经 OSS，[speech-recognition](../../ai-media-api-integration/references/speech-recognition.md) §4–9）。
 - 路径推导：剥 `/compatible-mode/v1` 再拼，只认路径不认 host，幂等。
 - ④ 面平台层【实测 2026-09-28，普通 `sk-` key 走 `x-api-key`，每条一次】：新旧 host（`{WorkspaceId}.cn-beijing.maas.aliyuncs.com` 与 `dashscope.aliyuncs.com`）同一把 key 等价；**翻译层把上游的拒绝原样传回**——④ 的 `thinking` 被翻成 ① 方言 `enable_thinking` 下发，托管的第三方模型拒绝时点名的是别家协议的字段（坑 219）；面级校验会响：`thinking.type:"bogus"`（不点名）、未知模型、`temperature:2.5`、`budget_tokens` ≥ `max_tokens` 各 400（原文见 [errors-probing-observability](errors-probing-observability.md) §2、[reasoning](reasoning.md) §3.5）；顶层未知字段与 ① 的 `reasoning_effort` 200 放过；`adaptive` 也收。各模型的默认值与关闭结局见 [model-capability-matrix](model-capability-matrix.md) §8「阿里百炼 · ④」行及 §7 / §9 / §11 / §13 的托管行。
 - 模型级行为（服务端工具放行规则、两代思考控制、`tool_choice`、结构化、视频输入）见 [model-capability-matrix](model-capability-matrix.md) §8 对应行。

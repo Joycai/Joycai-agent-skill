@@ -3,8 +3,8 @@ name: llm-api-integration
 description: >-
   Design, implement, audit, or debug conversational LLM API integrations and check platform × protocol × model compatibility. Use for request/response formats, streaming, reasoning, structured output, tools, and endpoint failures. Media generation and transcription APIs use ai-media-api-integration; merely mentioning a vendor or using an existing generation tool does not trigger this skill.
 metadata:
-  version: "2.2.10"
-  updated: "2026-10-27"
+  version: "2.2.11"
+  updated: "2026-11-17"
 ---
 
 # LLM API 接入
@@ -19,6 +19,7 @@ metadata:
 
 | 任务 | 资料 |
 | --- | --- |
+| 接入百炼 Qwen4-Max | [模型、四协议、思考密文、结构化输出与缓存](references/qwen4-max.md) |
 | 核实型号、别名、弃用与版本归属 | [模型版本](references/model-versions.md) |
 | 接入 Gemini 4 Argon | [型号与能力](references/model-versions.md#gemini-4-argon)、[接口与长输出](references/protocol-differences.md#gemini-4-argon)、[渠道参数差异](references/reasoning.md#gemini-4-argon)（官方文档，未实测） |
 | 查看本轮 OrcaRouter 目标模型支持情况 | [实测汇总](references/model-support-status.md) |

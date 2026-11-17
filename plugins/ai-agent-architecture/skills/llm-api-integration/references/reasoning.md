@@ -1,5 +1,7 @@
 # 思考/推理的统一处理
 
+Qwen4-Max 的开关、强度映射、摘要与加密使用[独立契约](qwen4-max.md)，不要套用下文旧款 switch 方言的停发 effort 或空签名规则。
+
 > Gemini 4 Argon 的档位、预算参数与渠道差异见 [专节](#gemini-4-argon)；旧 Flash 的实测不能外推。
 
 ## 当前结果（2026-10-25，OrcaRouter）
@@ -440,7 +442,7 @@ ThinkingDialect = `adaptive | extended | switch | none`，各族发出的 body �
 
 - OpenAI（经中转站）：`store:false` 时 reasoning 条目自带 `encrypted_content`，不需要 `include`。
 - xAI：**必须**发 `include:["reasoning.encrypted_content"]` 才有；不带它回传第二轮照样 200——缺的只是推理延续。
-- 千问 Responses 面：没有 `encrypted_content`，回传的是明文 `summary`。
+- 百炼 Qwen4-Max Responses：设置 `reasoning.summary="auto"` 后返回摘要与 `encrypted_content`，历史密文原样回传；Chat 与 Anthropic 的对应字段、流式处理及档位见 [Qwen4-Max](qwen4-max.md)。旧款明文 summary 记录不能作为整个千问家族的约束。
 
 所以载体设计成"不解释、整组带回"才能同时装下三家；回传缺失在此族**不报错**，与 ④ 族一样只能靠日志对照验证。官方端点不发 `include` 是否丢加密推理**未经官方 key 验证**，参考实现暂不发。
 

@@ -1,5 +1,7 @@
 # 工具协议与 server tools
 
+Qwen4-Max 的百炼四协议参数、密文回传、工具约束与缓存 usage 见 [Qwen4-Max 接入](qwen4-max.md)。
+
 ## 当前结果（2026-10-25，OrcaRouter）
 
 当前 11 条路由均返回过预期普通函数名与参数，Gemini 3.8 的 [工具超时项已重试成功](orcarouter-extended-verification.md#gemini38-retry)。工具从未执行，结果回传闭环仍未验证。
